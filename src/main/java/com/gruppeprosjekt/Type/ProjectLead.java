@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 
 /**
- * The project lead holds the primary responsibility of a project
+ * The project lead holds the primary responsibility of a project.
+ * Project Lead can view all projects,
+ * and edit and mark as finished the project(s) they are assigned to.
  */
 public class ProjectLead extends UserType {
 
