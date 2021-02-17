@@ -1,4 +1,11 @@
 package com.gruppeprosjekt.Type;
 
-public class UserType {
+import java.util.ArrayList;
+
+public abstract class UserType {
+    String name;
+    ArrayList<String> permissions;
+
+    public abstract String getName();
+    public abstract ArrayList<String> getPermissions();
 }
