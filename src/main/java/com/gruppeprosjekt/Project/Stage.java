@@ -11,6 +11,7 @@ public class Stage extends TaskMasterClass {
 
 
     private ArrayList<Task> tasks;
+
     public Stage(String name) {
         setName(name);
     }
