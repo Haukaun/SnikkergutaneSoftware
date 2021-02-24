@@ -1,6 +1,5 @@
 package com.gruppeprosjekt.Project;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**

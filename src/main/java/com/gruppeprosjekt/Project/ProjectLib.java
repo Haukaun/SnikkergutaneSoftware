@@ -12,8 +12,11 @@ import static java.util.Collections.addAll;
  * deletion of projects in the application.
  */
 public class ProjectLib {
-    private TreeMap<String,Project> projects;
+    private final TreeMap<String, Project> projects;
 
+    public ProjectLib() {
+        this.projects = new TreeMap<>();
+    }
     /**
      * Returns the project with given name.
      * @param name name of the project.
