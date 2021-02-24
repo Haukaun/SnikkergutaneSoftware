@@ -1,6 +1,5 @@
 package com.gruppeprosjekt.Project;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +10,7 @@ public class Stage extends TaskMasterClass {
 
 
     private ArrayList<Task> tasks;
+
     public Stage(String name) {
         setName(name);
     }
