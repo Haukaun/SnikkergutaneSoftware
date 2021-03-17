@@ -1,4 +1,6 @@
-package com.gruppeprosjekt.Project;
+package com.snikkergutane.project;
+
+import com.snikkergutane.project.task.Task;
 
 import java.util.ArrayList;
 
@@ -7,7 +9,6 @@ import java.util.ArrayList;
  * containing a number of tasks to be finished.
  */
 public class Stage extends TaskMasterClass {
-
 
     private ArrayList<Task> tasks;
 

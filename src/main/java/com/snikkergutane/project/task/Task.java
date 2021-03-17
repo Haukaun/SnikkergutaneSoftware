@@ -1,11 +1,13 @@
-package com.gruppeprosjekt.Project;
+package com.snikkergutane.project.task;
+
+import com.snikkergutane.project.TaskMasterClass;
 
 import java.time.LocalDate;
 
 /**
  * A single task in a stage.
  */
-public class Task extends TaskMasterClass{
+public class Task extends TaskMasterClass {
 
     private String description;
 

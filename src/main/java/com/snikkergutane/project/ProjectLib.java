@@ -1,10 +1,8 @@
-package com.gruppeprosjekt.Project;
+package com.snikkergutane.project;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import static java.util.Collections.addAll;
 
 /**
  * A collection of projects.

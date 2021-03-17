@@ -1,4 +1,4 @@
-package com.gruppeprosjekt.Project;
+package com.snikkergutane.project;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Represents a project containing
  * a number of stages to be completed.
  */
-public class Project extends TaskMasterClass{
+public class Project extends TaskMasterClass {
 
     private final ArrayList<Stage> stages;
 

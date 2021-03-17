@@ -1,4 +1,4 @@
-package com.gruppeprosjekt.Project;
+package com.snikkergutane.project;
 
 import java.time.LocalDate;
 

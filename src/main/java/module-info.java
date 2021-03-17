@@ -1,5 +1,7 @@
-module com.gruppeprosjekt {
+module org.example {
     requires javafx.controls;
     requires javafx.fxml;
-    exports com.gruppeprosjekt.Util;
+
+    opens com.snikkergutane to javafx.fxml;
+    exports com.snikkergutane;
 }

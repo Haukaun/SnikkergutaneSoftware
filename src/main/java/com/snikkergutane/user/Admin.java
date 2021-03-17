@@ -1,4 +1,4 @@
-package com.gruppeprosjekt.Type;
+package com.snikkergutane.user;
 
 import java.util.ArrayList;
 

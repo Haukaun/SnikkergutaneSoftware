@@ -1,4 +1,4 @@
-package com.gruppeprosjekt.Type;
+package com.snikkergutane.user;
 
 import java.time.LocalDate;
 
@@ -51,7 +51,4 @@ public class UserProfile {
         }
         return checkPassword;
     }
-
-
-
 }
