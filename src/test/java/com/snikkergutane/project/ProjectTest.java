@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -43,10 +41,6 @@ class ProjectTest {
         assertEquals(null, project.getStage(null));
     }
 
-    @Test
-    void getStages() {
-    }
-
     /**
      * Test add stage method.
      */
@@ -64,8 +58,26 @@ class ProjectTest {
         project.addStage(null);
         assertEquals(2,project.getStages().size());
     }
-
+/**
+ * To positive test to removeStage() method.
+ * 1) Remove an object that is in the project.
+ * 2) Remove an object that is NOT in the project.
+ */
     @Test
-    public void removeStage() {
+    public void testRemoveStageWithValidInput() {
+        project.removeStage("Stage1");
+        assertEquals(null, project.getStage("Stage1"));
+        assertEquals(1,project.getStages().size());
+
+        project.removeStage("NotInTheProject");
+        assertEquals(1,project.getStages().size());
+    }
+    /**
+     * A negative test to removeStage() method.
+     * Remove a stage with input null.
+     */
+    public void testRemoveStageWithInvalidInputNull(){
+        project.removeStage(null);
+        assertEquals(2,project.getStages().size());
     }
 }
