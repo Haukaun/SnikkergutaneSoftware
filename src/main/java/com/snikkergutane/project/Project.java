@@ -45,7 +45,9 @@ public class Project extends TaskMasterClass {
      * @param stage {@code Stage} the stage to be added.
      */
     public void addStage(Stage stage) {
+        if(stage != null){
         this.stages.add(stage);
+        }
     }
 
     /**

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -14,8 +16,9 @@ class ProjectTest {
     private Project project;
     private Stage stage1;
     private Stage stage2;
+
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         this.project = new Project("Project1");
         this.stage1 = new Stage("Stage1");
         this.stage2 = new Stage("Stage2");
@@ -31,10 +34,10 @@ class ProjectTest {
      * Test to get a stage from a project.
      */
     @Test
-    void testGetStage() {
-        //positive test
-        assertEquals(this.stage1, project.getStage("Stage1"));
-        assertEquals(null,project.getStage("Nothing"));
+    public void testGetStage() {
+        //To positive test.
+        assertEquals(stage1, project.getStage("Stage1"));
+        assertEquals(null, project.getStage("Nothing"));
         //assertEquals("Stage1", project.getStage("Stage1").getName());
         //negative test with null input.
         assertEquals(null, project.getStage(null));
@@ -44,11 +47,25 @@ class ProjectTest {
     void getStages() {
     }
 
+    /**
+     * Test add stage method.
+     */
     @Test
-    void addStage() {
+    public void testAddStageWithValidInput() {
+        // positive test with a valid parameter stage3.
+        Stage stage3 = new Stage("Stage3");
+        project.addStage(stage3);
+        assertEquals(3, project.getStages().size());
     }
 
     @Test
-    void removeStage() {
+    public void testAddStageWithInvalidInputNull() {
+    // negative test with a invalid parameter null.
+        project.addStage(null);
+        assertEquals(2,project.getStages().size());
+    }
+
+    @Test
+    public void removeStage() {
     }
 }
