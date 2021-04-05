@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="675.0" maxWidth="1200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.MainController">
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0">
+         <bottom>
+            <HBox style="-fx-background-color: lightgrey; -fx-border-color: grey;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Label" />
+               </children>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </HBox>
+         </bottom>
+         <left>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Projects" />
+                  <ListView fx:id="projectsListView" minWidth="200.0" onMouseClicked="#projectSelected" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Button fx:id="newProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" />
+                        <Button fx:id="editProjectButton" mnemonicParsing="false" />
+                        <Button fx:id="deleteProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToLogin" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </left>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <center>
+            <TabPane fx:id="projectPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+              <tabs>
+                  <Tab closable="false" text="Project Info">
+                     <content>
+                        <ScrollPane fx:id="projectInfoScrollPane" fitToWidth="true" minWidth="1000.0">
+                           <padding>
+                              <Insets left="18.0" />
+                           </padding>
+                           <content>
+                              <VBox fx:id="projectInfoVBox" minWidth="-Infinity" prefWidth="900.0">
+                                 <children>
+                                    <GridPane fx:id="gridPane1">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="kundeLabel" minWidth="200.0" prefWidth="800.0" text="Kunde:">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox fx:id="pdfHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                             <children>
+                                                <Label fx:id="stedLabel" minWidth="200.0" prefWidth="800.0" text="Addresse:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="exportPDFButton" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane2">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="customerNameLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Ola Nordmann">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label fx:id="projectAddressLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Portveien 4" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane3">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="telefonLabel" minWidth="200.0" prefWidth="800.0" text="Telefon:">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="epostLabel" minWidth="200.0" prefWidth="800.0" text="E-post:" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane4" layoutX="10.0" layoutY="40.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="customerPhoneNumberLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="12345678">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label fx:id="customerEmailLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="ola.nordmann@norge.no" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane5">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="oppstartsdatoLabel" minWidth="200.0" prefWidth="1600.0" text="Oppstartsdato:">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane6" layoutX="10.0" layoutY="40.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="projectStartDateLabel" prefWidth="1200.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Tirsdag 30.03.21">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane7">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="arbeidsbeskrivelseLabel" minWidth="200.0" prefWidth="1600.0" text="Arbeidsbeskrivelse:">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </GridPane>
+                                    <GridPane fx:id="stageListPane" style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="1. Skifte balkongdør på stue mot sør" />
+                                          <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="2. Skfite balkongdør på kjøkken mot øst (Utvide døråpning)" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="3. Montere Walls2Paint veggplate (ekstra)" GridPane.rowIndex="2" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <padding>
+                                          <Insets left="30.0" />
+                                       </padding>
+                                    </GridPane>
+                                    <GridPane fx:id="gridPane8" layoutX="10.0" layoutY="240.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="kommentarLabel" prefWidth="1600.0" text="Kommentar:">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                    <TextArea fx:id="projectDescriptionTextArea" prefHeight="160.0" prefWidth="200.0" style="-fx-border-width: 2; -fx-border-color: BLACK;" text="Døråpning på kjøkken må utvides. Dette er en gavlvegg, så det skal ikke være noe bæring.&#10;Kontroller og vurder om bæring bør legges inn.&#10;Det er et hulrom under eksisterende dør, vurder å skjære opp losholt for å legge inn isolasjon.&#10;Enklere å ta vudering på stedet.&#10;Det må klargjøres for parkett inn mot balkongdøren.&#10;&#10;OBS! Listverk må være klassisk hvite!" wrapText="true" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="30.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                     <graphic>
+                        <Button fx:id="editCurrentProjectButton" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" />
+                     </graphic>
+                  </Tab>
+                <Tab text="Stage 1: Balkongdør Stue">
+                     <content>
+                        <ScrollPane fx:id="stageScrollPane" fitToWidth="true" maxWidth="980.0" minWidth="0.0">
+                           <content>
+                              <VBox>
+                                 <children>
+                                    <HBox prefHeight="100.0">
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <Button fx:id="mainImageButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="mainImage">
+                                                   <graphic>
+                                                      <ImageView fx:id="mainImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@images/1.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                </Button>
+                                                <ScrollPane fx:id="thumbnailScrollPane" minHeight="-Infinity" prefHeight="60.0" prefWidth="200.0" vbarPolicy="NEVER">
+                                                   <content>
+                                                      <FlowPane maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+                                                         <children>
+                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
+                                                               <graphic>
+                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@images/1.jpg" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </Button>
+                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
+                                                               <graphic>
+                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@images/2.jpg" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </Button>
+                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
+                                                               <graphic>
+                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@images/3.jpg" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </Button>
+                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
+                                                               <graphic>
+                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@images/4.jpg" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </Button>
+                                                         </children>
+                                                      </FlowPane>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
+                                          <VBox minWidth="-Infinity" prefHeight="200.0" prefWidth="700.0">
+                                             <children>
+                                                <Label fx:id="stageDescriptionLabel" text="Arbeidsbeskrivelse:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <VBox minHeight="200.0" minWidth="706.0" style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                                   <children>
+                                                      <TextArea fx:id="stageDescriptionArea" editable="false" maxWidth="800.0" minWidth="600.0" prefHeight="136.0" prefWidth="720.0" text="Skifte balkongdør på stue.&#10;&#10;Så mye tekst som ønskelig kan legges til her for å tilstrekkelig formidle informasjon nødvendig for utførelse av oppgaven." wrapText="true" VBox.vgrow="ALWAYS" />
+                                                      <HBox fx:id="dateHBox">
+                                                         <children>
+                                                            <Label fx:id="startDateLabel" text="Startdato: 30/03/2021" />
+                                                            <Region fx:id="dateRegion" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="finishDateLabel" text="Fullført dato: 31/03/2021" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets left="5.0" right="5.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <padding>
+                                                <Insets left="20.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <Label text="Kommentarer:">
+                                       <padding>
+                                          <Insets top="25.0" />
+                                       </padding>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <GridPane prefWidth="840.0" style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="NEVER" />
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                          <ColumnConstraints hgrow="SOMETIMES" />
+                                          <ColumnConstraints hgrow="NEVER" prefWidth="60.0" />
+                                          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="30/03/2021">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Label text="User404" GridPane.columnIndex="1">
+                                             <padding>
+                                                <Insets left="5.0" right="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label text="Mangler hammer, så får ikke utført oppgaven i tide." wrapText="true" GridPane.columnIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Button contentDisplay="GRAPHIC_ONLY" layoutX="310.0" layoutY="43.0" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" />
+                                          <Label text="31/03/2021" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Label text="User404" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <padding>
+                                                <Insets left="5.0" right="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label text="Døråpning for smal, må utvide. Veggen er bærevegg, så ekstra bæring må settes inn. Bilde vedlagt." wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                             <graphic>
+                                                <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/4.jpg" />
+                                                   </image>
+                                                   <viewport>
+                                                      <Rectangle2D />
+                                                   </viewport>
+                                                </ImageView>
+                                             </graphic>
+                                          </Button>
+                                          <Button contentDisplay="GRAPHIC_ONLY" layoutX="410.0" layoutY="13.0" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                          <Label text="31/03/2021" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Label text="User404" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <padding>
+                                                <Insets left="5.0" right="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label text="Oppgaven fullført per instruks. (Sluttkommentar)" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </GridPane>
+                                 </children>
+                              </VBox>
+                           </content>
+                           <padding>
+                              <Insets left="18.0" right="18.0" />
+                           </padding>
+                        </ScrollPane>
+                     </content>
+                     <graphic>
+                        <Button fx:id="editStageButton" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" />
+                     </graphic>
+                </Tab>
+                  <Tab text="Stage 2: Balkongdør Kjøkken">
+                     <content>
+                        <ScrollPane fitToWidth="true" minWidth="0.0">
+                           <content>
+                              <HBox>
+                                 <children>
+                                    <Region maxWidth="10.0" minWidth="10.0" prefWidth="10.0" HBox.hgrow="NEVER" />
+                                    <VBox HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Kunde:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Sted:" GridPane.columnIndex="1">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <GridPane gridLinesVisible="true">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="Ola Nordmann">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label prefWidth="200.0" text="Portveien 4" GridPane.columnIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <HBox />
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Telefon:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="E-post:" GridPane.columnIndex="1">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <GridPane gridLinesVisible="true" layoutX="10.0" layoutY="40.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="12345678">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label prefWidth="200.0" text="ola.nordmann@norge.no" GridPane.columnIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Oppstartsdato:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <GridPane gridLinesVisible="true" layoutX="10.0" layoutY="40.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="Tirsdag 30.03.21">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="300.0" text="Arbeidsbeskrivelse:">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="20.0" />
+                                             </VBox.margin>
+                                          </GridPane>
+                                          <GridPane style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="1. Skifte balkongdør på stue mot sør" />
+                                                <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="2. Skfite balkongdør på kjøkken mot øst (Utvide døråpning)" GridPane.rowIndex="1" />
+                                                <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="3. Montere Walls2Paint veggplate (ekstra)" GridPane.rowIndex="2" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets left="30.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <GridPane layoutX="10.0" layoutY="240.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="Kommentar:">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <TextArea prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 2; -fx-border-color: BLACK;" text="Døråpning på kjøkken må utvides. Dette er en gavlvegg, så det skal ikke være noe bæring.&#10;Kontroller og vurder om bæring bør legges inn.&#10;Det er et hulrom under eksisterende dør, vurder å skjære opp losholt for å legge inn isolasjon.&#10;Enklere å ta vudering på stedet.&#10;Det må klargjøres for parkett inn mot balkongdøren.&#10;&#10;OBS! Listverk må være klassisk hvite!" />
+                                       </children>
+                                    </VBox>
+                                    <Region minWidth="15.0" HBox.hgrow="NEVER" />
+                                 </children>
+                              </HBox>
+                           </content>
+                           <padding>
+                              <Insets left="18.0" top="1.0" />
+                           </padding>
+                        </ScrollPane>
+                     </content>
+                     <graphic>
+                        <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" />
+                     </graphic>
+                  </Tab>
+                  <Tab text="Stage 3: Walls2Paint">
+                     <content>
+                        <ScrollPane fitToWidth="true" minWidth="0.0">
+                           <content>
+                              <HBox>
+                                 <children>
+                                    <Region maxWidth="10.0" minWidth="10.0" prefWidth="10.0" HBox.hgrow="NEVER" />
+                                    <VBox HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Kunde:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Sted:" GridPane.columnIndex="1">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <GridPane gridLinesVisible="true">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="Ola Nordmann">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label prefWidth="200.0" text="Portveien 4" GridPane.columnIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <HBox />
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Telefon:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="E-post:" GridPane.columnIndex="1">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <GridPane gridLinesVisible="true" layoutX="10.0" layoutY="40.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="12345678">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label prefWidth="200.0" text="ola.nordmann@norge.no" GridPane.columnIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="200.0" text="Oppstartsdato:">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <GridPane gridLinesVisible="true" layoutX="10.0" layoutY="40.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="Tirsdag 30.03.21">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label minWidth="200.0" prefWidth="300.0" text="Arbeidsbeskrivelse:">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="20.0" />
+                                             </VBox.margin>
+                                          </GridPane>
+                                          <GridPane style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="1. Skifte balkongdør på stue mot sør" />
+                                                <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="2. Skfite balkongdør på kjøkken mot øst (Utvide døråpning)" GridPane.rowIndex="1" />
+                                                <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="3. Montere Walls2Paint veggplate (ekstra)" GridPane.rowIndex="2" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets left="30.0" />
+                                             </padding>
+                                          </GridPane>
+                                          <GridPane layoutX="10.0" layoutY="240.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label prefWidth="200.0" text="Kommentar:">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </GridPane>
+                                          <TextArea prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 2; -fx-border-color: BLACK;" text="Døråpning på kjøkken må utvides. Dette er en gavlvegg, så det skal ikke være noe bæring.&#10;Kontroller og vurder om bæring bør legges inn.&#10;Det er et hulrom under eksisterende dør, vurder å skjære opp losholt for å legge inn isolasjon.&#10;Enklere å ta vudering på stedet.&#10;Det må klargjøres for parkett inn mot balkongdøren.&#10;&#10;OBS! Listverk må være klassisk hvite!" />
+                                       </children>
+                                    </VBox>
+                                    <Region minWidth="15.0" HBox.hgrow="NEVER" />
+                                 </children>
+                              </HBox>
+                           </content>
+                           <padding>
+                              <Insets left="18.0" top="1.0" />
+                           </padding>
+                        </ScrollPane>
+                     </content>
+                     <graphic>
+                        <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" />
+                     </graphic>
+                  </Tab>
+                <Tab closable="false">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                     <graphic>
+                        <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" />
+                     </graphic>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </center>
+      </BorderPane>
+      <Button fx:id="backgroundButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" visible="false">
+         <graphic>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="667.0" opacity="0.35" stroke="BLACK" strokeType="INSIDE" width="1184.0" />
+         </graphic>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Button>
+      <ImageView fx:id="largeImageView" fitHeight="650.0" fitWidth="1000.0" layoutX="166.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@images/1.jpg" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

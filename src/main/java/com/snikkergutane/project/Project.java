@@ -8,12 +8,20 @@ import java.util.ArrayList;
  */
 public class Project extends TaskMasterClass {
 
+    private String customerName;
+    private String customerEmail;
+    private String customerPhoneNumber;
+    private String address;
     private final ArrayList<Stage> stages;
 
-    public Project (String name) {
-        setName(name);
+    public Project (String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
+        setName(projectName);
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.address = address;
         setFinished(false);
-        setDeadline(null);
+        setEndDate(null);
         this.stages = new ArrayList<>();
     }
 
@@ -62,5 +70,37 @@ public class Project extends TaskMasterClass {
             }
         }
         stages.remove(removeStage);
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public String getCustomerPhoneNumber() {
+        return customerPhoneNumber;
+    }
+
+    public void setCustomerPhoneNumber(String customerPhoneNumber) {
+        this.customerPhoneNumber = customerPhoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

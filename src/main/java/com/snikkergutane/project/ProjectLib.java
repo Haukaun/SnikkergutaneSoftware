@@ -1,5 +1,6 @@
 package com.snikkergutane.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -62,5 +63,25 @@ public class ProjectLib {
      */
     public List<String> listProjects() {
         return new ArrayList<>(projects.keySet());
+    }
+
+    public void loadDemoProject() {
+        Stage stage = new Stage("Balkongdør Stue");
+        stage.setDescription("Skifte balkongdør på stue.\n" +
+                "\n" +
+                "Så mye tekst som ønskelig kan legges til her for å tilstrekkelig formidle informasjon nødvendig for utførelse av oppgaven.");
+        stage.setStartDate(LocalDate.now());
+        stage.addImage("com/snikkergutane/images/1.jpg");
+        stage.addImage("com/snikkergutane/images/2.jpg");
+        stage.addImage("com/snikkergutane/images/3.jpg");
+        stage.addImage("com/snikkergutane/images/4.jpg");
+
+        Project newProject = new Project("Portveien 4", "Anne Knutsdotter", "anne.knutsdotter@Steinroys.no", "12345678", "Der ingen skulle tru at nokon kunne bu");
+        newProject.setStartDate(LocalDate.now());
+        newProject.addStage(stage);
+
+        if (this.projects.size() == 0) {
+            this.projects.put(newProject.getName(), newProject);
+        }
     }
 }

@@ -30,7 +30,7 @@ public class Task extends TaskMasterClass {
     public Task(String name, String description, LocalDate deadline) {
         setName(name);
         this.description = description;
-        setDeadline(deadline);
+        setEndDate(deadline);
     }
 
     public void setDescription(String description) {
