@@ -10,6 +10,9 @@ import java.util.ArrayList;
  */
 public class ProjectLead extends UserType {
 
+    /**
+     * Instantiates a new Project lead.
+     */
     public ProjectLead() {
         this.name = "Project Lead";
         this.permissions = new ArrayList<>();

@@ -17,7 +17,7 @@ class ProjectTest {
 
     @BeforeEach
     public void setUp() {
-        this.project = new Project("Project1");
+        this.project = new Project("Project1", "Snikkerguttane", "test@hotmail.com", "98454796", "test 12");
         this.stage1 = new Stage("Stage1");
         this.stage2 = new Stage("Stage2");
         this.project.addStage(stage1);

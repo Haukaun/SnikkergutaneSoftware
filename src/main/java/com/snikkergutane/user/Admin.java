@@ -10,6 +10,9 @@ import java.util.ArrayList;
  */
 public class Admin extends UserType {
 
+    /**
+     * Instantiates a new Admin.
+     */
     public Admin() {
         this.name = "Admin";
         this.permissions = new ArrayList<>();

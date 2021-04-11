@@ -10,6 +10,9 @@ import java.util.ArrayList;
  */
 public class BasicUser extends UserType {
 
+    /**
+     * Instantiates a new Basic user.
+     */
     public BasicUser() {
         this.name = "Basic";
         this.permissions = new ArrayList<>();
