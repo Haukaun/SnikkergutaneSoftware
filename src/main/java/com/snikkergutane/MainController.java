@@ -96,8 +96,6 @@ public class MainController {
 
     @FXML
     private void stageButtonClicked(Stage stage) {
-        ScrollPane stagePane = new ScrollPane();
-        stagePane.setPadding(new Insets(0,18,0,18));
 
         HBox stageHBox = new HBox();
 
@@ -130,7 +128,14 @@ public class MainController {
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
                 button.setGraphic(image);
-                button.setOnAction(e -> mainImageButton.setGraphic(image));
+                button.setOnAction(e -> {
+                    ImageView largeImage = new ImageView(imageURL);
+                    largeImage.setPreserveRatio(true);
+                    largeImage.setFitWidth(200);
+                    largeImage.setFitHeight(150);
+                    mainImageButton.setGraphic(largeImage);
+                    mainImageButton.setOnAction(a -> mainImageButtonClicked(imageURL));
+                });
                 thumbnailPane.getChildren().add(button);
             });
         }
@@ -195,6 +200,7 @@ public class MainController {
         stageHBox.getChildren().add(vBox1);
 
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPadding(new Insets(0,18,0,18));
         scrollPane.setContent(stageHBox);
 
         projectPane.getTabs().add(new Tab(stage.getName(), scrollPane));

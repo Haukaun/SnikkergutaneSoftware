@@ -46,9 +46,30 @@
                   <ListView fx:id="projectsListView" minWidth="200.0" onMouseClicked="#projectSelected" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
-                        <Button fx:id="newProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#newProjectButtonClicked" />
-                        <Button fx:id="editProjectButton" mnemonicParsing="false" />
-                        <Button fx:id="deleteProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToLogin" />
+                        <Button fx:id="newProjectButton" contentDisplay="GRAPHIC_ONLY" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#newProjectButtonClicked">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@Icons/pluss-icon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
+                        <Button fx:id="editProjectButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@Icons/gear-icon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
+                        <Button fx:id="deleteProjectButton" contentDisplay="GRAPHIC_ONLY" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToLogin">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@Icons/trash%20can.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
                      </children>
                   </HBox>
                </children>
