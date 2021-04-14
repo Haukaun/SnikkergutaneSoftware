@@ -22,8 +22,21 @@ public class App extends Application {
         stage.show();
     }
 
+    static void newWindow(String URL) throws IOException {
+        Stage stage = new Stage();
+        Scene scene = new Scene(loadFXML(URL));
+        stage.setScene(scene);
+        stage.show();
+    }
+
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
+    }
+
+    static void setSize(int width, int height) {
+        scene.getWindow().setWidth(width);
+        scene.getWindow().setHeight(height);
+        scene.getWindow().centerOnScreen();
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

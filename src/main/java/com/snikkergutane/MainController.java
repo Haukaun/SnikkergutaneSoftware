@@ -5,53 +5,50 @@ import java.io.IOException;
 import com.snikkergutane.project.Project;
 import com.snikkergutane.project.ProjectLib;
 import com.snikkergutane.project.Stage;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class MainController {
 
     private final ProjectLib projectLib = new ProjectLib();
-    public Button mainImageButton;
-    public Button backgroundButton;
-    public ImageView largeImageView;
-    public ListView<String> projectsListView;
-    public Button newProjectButton;
-    public Button editProjectButton;
-    public ScrollPane projectInfoScrollPane;
-    public VBox projectInfoVBox;
-    public GridPane gridPane1;
-    public GridPane gridPane2;
-    public GridPane gridPane3;
-    public GridPane gridPane4;
-    public GridPane gridPane5;
-    public GridPane gridPane6;
-    public GridPane gridPane7;
-    public GridPane gridPane8;
-    public GridPane stageListPane;
-    public HBox pdfHBox;
-    public Label kundeLabel;
-    public Label stedLabel;
-    public Label telefonLabel;
-    public Label epostLabel;
-    public Label oppstartsdatoLabel;
-    public Label arbeidsbeskrivelseLabel;
-    public Label kommentarLabel;
-    public Button deleteProjectButton;
-    public Button exportPDFButton;
-    public Label customerNameLabel;
-    public Label projectAddressLabel;
-    public Label customerPhoneNumberLabel;
-    public Label customerEmailLabel;
-    public Label projectStartDateLabel;
-    public TextArea projectDescriptionTextArea;
-    public Button editCurrentProjectButton;
-    public TabPane projectPane;
+    @FXML private Button backgroundButton;
+    @FXML private ImageView largeImageView;
+    @FXML private ListView<String> projectsListView;
+    @FXML private Button newProjectButton;
+    @FXML private Button editProjectButton;
+    @FXML private ScrollPane projectInfoScrollPane;
+    @FXML private VBox projectInfoVBox;
+    @FXML private GridPane gridPane1;
+    @FXML private GridPane gridPane2;
+    @FXML private GridPane gridPane3;
+    @FXML private GridPane gridPane4;
+    @FXML private GridPane gridPane5;
+    @FXML private GridPane gridPane6;
+    @FXML private GridPane gridPane7;
+    @FXML private GridPane gridPane8;
+    @FXML private GridPane stageListPane;
+    @FXML private HBox pdfHBox;
+    @FXML private Label kundeLabel;
+    @FXML private Label stedLabel;
+    @FXML private Label telefonLabel;
+    @FXML private Label epostLabel;
+    @FXML private Label oppstartsdatoLabel;
+    @FXML private Label arbeidsbeskrivelseLabel;
+    @FXML private Label kommentarLabel;
+    @FXML private Button deleteProjectButton;
+    @FXML private Button exportPDFButton;
+    @FXML private Label customerNameLabel;
+    @FXML private Label projectAddressLabel;
+    @FXML private Label customerPhoneNumberLabel;
+    @FXML private Label customerEmailLabel;
+    @FXML private Label projectStartDateLabel;
+    @FXML private TextArea projectDescriptionTextArea;
+    @FXML private Button editCurrentProjectButton;
+    @FXML private TabPane projectPane;
 
     @FXML
     private void initialize() {
@@ -99,6 +96,9 @@ public class MainController {
 
     @FXML
     private void stageButtonClicked(Stage stage) {
+        ScrollPane stagePane = new ScrollPane();
+        stagePane.setPadding(new Insets(0,18,0,18));
+
         HBox stageHBox = new HBox();
 
         //Information pane
@@ -109,10 +109,13 @@ public class MainController {
 
         Button mainImageButton = new Button("");
         String imageUrl = "images/1.jpg";
-        if (stage.getImageURLs().size() > 0) {
+        if (!stage.getImageURLs().isEmpty()) {
             imageUrl = stage.getImageURLs().get(0);
         }
-        mainImageButton.setGraphic(new ImageView(imageUrl));
+        ImageView mainImage = new ImageView(imageUrl);
+        mainImage.setFitHeight(150);
+        mainImage.setFitWidth(200);
+        mainImageButton.setGraphic(mainImage);
         String finalImageUrl = imageUrl;
         mainImageButton.setOnAction(e -> mainImageButtonClicked(finalImageUrl));
 
@@ -120,18 +123,14 @@ public class MainController {
         thumbnailPane.setPrefHeight(50);
         thumbnailPane.setMaxHeight(50);
 
-        if (stage.getImageURLs().size() > 0) {
+        if (!stage.getImageURLs().isEmpty()) {
             stage.getImageURLs().forEach(imageURL -> {
                 Button button = new Button("");
                 ImageView image = new ImageView(imageURL);
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
                 button.setGraphic(image);
-                ImageView mainImage = new ImageView(imageURL);
-                mainImage.setPreserveRatio(true);
-                mainImage.setFitHeight(150);
-                mainImage.setFitWidth(200);
-                button.setOnAction(e -> mainImageButton.setGraphic(mainImage));
+                button.setOnAction(e -> mainImageButton.setGraphic(image));
                 thumbnailPane.getChildren().add(button);
             });
         }
@@ -169,10 +168,11 @@ public class MainController {
             datesHBox.getChildren().add(new Label("Fullføres innen: " + stage.getEndDate()));
         }
 
+        vBox4.setPadding(new Insets(0,0,0,20));
+        vBox4.getChildren().add(new Label("Arbeidsbeskrivelse:"));
         vBox4.getChildren().add(stageDescriptionArea);
         vBox4.getChildren().add(datesHBox);
 
-        stageDescriptionVBox.getChildren().add(new Label("Arbeidsbeskrivelse:"));
         stageDescriptionVBox.getChildren().add(vBox4);
 
 
@@ -198,6 +198,15 @@ public class MainController {
         scrollPane.setContent(stageHBox);
 
         projectPane.getTabs().add(new Tab(stage.getName(), scrollPane));
+    }
+
+    @FXML
+    private void newProjectButtonClicked() {
+        try {
+            App.newWindow("login");
+        } catch (Exception e) {
+
+        }
     }
 
     @FXML

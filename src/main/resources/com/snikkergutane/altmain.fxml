@@ -46,7 +46,7 @@
                   <ListView fx:id="projectsListView" minWidth="200.0" onMouseClicked="#projectSelected" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
-                        <Button fx:id="newProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" />
+                        <Button fx:id="newProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#newProjectButtonClicked" />
                         <Button fx:id="editProjectButton" mnemonicParsing="false" />
                         <Button fx:id="deleteProjectButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchToLogin" />
                      </children>
@@ -952,7 +952,7 @@
             </TabPane>
          </center>
       </BorderPane>
-      <Button fx:id="backgroundButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" visible="false">
+      <Button fx:id="backgroundButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#backgroundButtonClicked" style="-fx-background-color: TRANSPARENT;" visible="false">
          <graphic>
             <Rectangle arcHeight="5.0" arcWidth="5.0" height="667.0" opacity="0.35" stroke="BLACK" strokeType="INSIDE" width="1184.0" />
          </graphic>
