@@ -58,40 +58,41 @@ public class MainController {
 
     @FXML
     private void projectSelected() {
-        Project selectedProject = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
+        if (projectsListView.getSelectionModel().getSelectedItem() != null) {
+            Project selectedProject = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
 
-        customerNameLabel.setText(selectedProject.getCustomerName());
-        customerEmailLabel.setText(selectedProject.getCustomerEmail());
-        customerPhoneNumberLabel.setText(selectedProject.getCustomerPhoneNumber());
-        projectAddressLabel.setText(selectedProject.getAddress());
-        projectStartDateLabel.setText("" + selectedProject.getStartDate());
+            customerNameLabel.setText(selectedProject.getCustomerName());
+            customerEmailLabel.setText(selectedProject.getCustomerEmail());
+            customerPhoneNumberLabel.setText(selectedProject.getCustomerPhoneNumber());
+            projectAddressLabel.setText(selectedProject.getAddress());
+            projectStartDateLabel.setText("" + selectedProject.getStartDate());
 
-        stageListPane.getChildren().clear();
-        int y = 0;
-        ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
-        finishedImage.setPreserveRatio(true);
-        finishedImage.setFitHeight(30);
-        ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
-        unfinishedImage.setPreserveRatio(true);
-        unfinishedImage.setFitHeight(30);
-        for (Stage stage : selectedProject.getStages()) {
-            Button button = new Button(stage.getName());
-            button.setBackground(Background.EMPTY);
-            button.setOnAction(e -> stageButtonClicked(stage));
+            stageListPane.getChildren().clear();
+            int y = 0;
+            ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
+            finishedImage.setPreserveRatio(true);
+            finishedImage.setFitHeight(30);
+            ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
+            unfinishedImage.setPreserveRatio(true);
+            unfinishedImage.setFitHeight(30);
+            for (Stage stage : selectedProject.getStages()) {
+                Button button = new Button(stage.getName());
+                button.setBackground(Background.EMPTY);
+                button.setOnAction(e -> stageButtonClicked(stage));
 
-            stageListPane.add(button,0,y);
+                stageListPane.add(button, 0, y);
 
-            if (stage.isFinished()) {
-                stageListPane.add(finishedImage,1,y);
+                if (stage.isFinished()) {
+                    stageListPane.add(finishedImage, 1, y);
+                } else {
+                    stageListPane.add(unfinishedImage, 1, y);
+                }
+                y++;
             }
-            else {
-                stageListPane.add(unfinishedImage,1,y);
-            }
-            y++;
+
+            projectPane.getTabs().clear();
+            projectPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
         }
-
-        projectPane.getTabs().clear();
-        projectPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
     }
 
     @FXML
