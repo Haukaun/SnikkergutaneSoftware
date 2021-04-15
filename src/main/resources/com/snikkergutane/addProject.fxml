@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="365.0" prefWidth="553.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.AddProject">
+<AnchorPane prefHeight="365.0" prefWidth="553.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.AddProjectController">
    <children>
-      <AnchorPane prefHeight="365.0" prefWidth="626.0" style="-fx-background-color: transpernt;">
+      <AnchorPane prefHeight="365.0" prefWidth="626.0" style="-fx-background-color: transparent;">
          <children>
             <TextField fx:id="add" layoutX="229.0" layoutY="208.0" style="-fx-border-color: blue; -fx-background-color: lightgrey;" />
             <TextField fx:id="addCustomerBox" layoutX="229.0" layoutY="132.0" style="-fx-border-color: blue; -fx-background-color: lightgrey;" />
