@@ -208,9 +208,9 @@ public class MainController {
     }
 
     @FXML
-    private void newProjectButtonClicked() {
+    private void addProjectButtonClicked() {
         try {
-            App.newWindow("login");
+            App.newWindow("addProject");
         } catch (Exception e) {
 
         }

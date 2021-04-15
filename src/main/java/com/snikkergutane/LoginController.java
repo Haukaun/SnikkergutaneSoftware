@@ -7,7 +7,7 @@ public class LoginController {
 
     @FXML
     private void switchToMain() throws IOException {
-        App.setRoot("altmain");
+        App.setRoot("main");
         App.setSize(1216,714);
     }
 

@@ -21,7 +21,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("login"));
         stage.setTitle("Snikkergutane Software");
-        stage.getIcons().add(new Image("com/snikkergutane/images/logoSG .png"));
+        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
         stage.setScene(scene);
         stage.show();
     }
