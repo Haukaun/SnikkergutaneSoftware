@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -9,15 +8,18 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -26,13 +28,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="675.0" maxWidth="1200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.MainController">
+<AnchorPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.MainController">
    <children>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0">
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <HBox style="-fx-background-color: lightgrey; -fx-border-color: grey;" BorderPane.alignment="CENTER">
                <children>
-                  <Label text="Label" />
+                  <Label text="Status: " />
+                  <Label fx:id="statusLabel" />
                </children>
                <padding>
                   <Insets left="5.0" />
@@ -40,7 +43,7 @@
             </HBox>
          </bottom>
          <left>
-            <VBox BorderPane.alignment="CENTER">
+            <VBox prefHeight="2000.0" BorderPane.alignment="CENTER">
                <children>
                   <Label text="Projects" />
                   <ListView fx:id="projectsListView" minWidth="200.0" onMouseClicked="#projectSelected" prefWidth="200.0" VBox.vgrow="ALWAYS" />
@@ -71,6 +74,9 @@
                               </ImageView>
                            </graphic></Button>
                      </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </HBox>
                </children>
                <padding>
@@ -83,6 +89,9 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
+                        <MenuItem mnemonicParsing="false" onAction="#importProjectButtonClicked" text="importer .csv..." />
+                        <MenuItem mnemonicParsing="false" text="Lagre .csv..." />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
@@ -100,16 +109,16 @@
             </MenuBar>
          </top>
          <center>
-            <TabPane fx:id="projectPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <TabPane fx:id="projectTabPane" minHeight="10.0" minWidth="10.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <tabs>
                   <Tab closable="false" text="Project Info">
                      <content>
-                        <ScrollPane fx:id="projectInfoScrollPane" fitToWidth="true" minWidth="1000.0">
+                        <ScrollPane fx:id="projectInfoScrollPane" fitToWidth="true">
                            <padding>
                               <Insets left="18.0" />
                            </padding>
                            <content>
-                              <VBox fx:id="projectInfoVBox" minWidth="-Infinity" prefWidth="900.0">
+                              <VBox fx:id="projectInfoVBox">
                                  <children>
                                     <GridPane fx:id="gridPane1">
                                        <columnConstraints>
@@ -120,7 +129,7 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Label fx:id="kundeLabel" minWidth="200.0" prefWidth="800.0" text="Kunde:">
+                                          <Label fx:id="kundeLabel" text="Kunde:">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
@@ -147,12 +156,12 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Label fx:id="customerNameLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Ola Nordmann">
+                                          <Label fx:id="customerNameLabel" prefWidth="2000.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Ola Nordmann">
                                              <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </Label>
-                                          <Label fx:id="projectAddressLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Portveien 4" GridPane.columnIndex="1">
+                                          <Label fx:id="projectAddressLabel" prefWidth="2000.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Portveien 4" GridPane.columnIndex="1">
                                              <GridPane.margin>
                                                 <Insets left="5.0" />
                                              </GridPane.margin>
@@ -198,12 +207,12 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Label fx:id="customerPhoneNumberLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="12345678">
+                                          <Label fx:id="customerPhoneNumberLabel" prefWidth="2000.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="12345678">
                                              <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </Label>
-                                          <Label fx:id="customerEmailLabel" prefWidth="800.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="ola.nordmann@norge.no" GridPane.columnIndex="1">
+                                          <Label fx:id="customerEmailLabel" prefWidth="2000.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="ola.nordmann@norge.no" GridPane.columnIndex="1">
                                              <GridPane.margin>
                                                 <Insets left="5.0" />
                                              </GridPane.margin>
@@ -239,7 +248,7 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Label fx:id="projectStartDateLabel" prefWidth="1200.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Tirsdag 30.03.21">
+                                          <Label fx:id="projectStartDateLabel" prefWidth="2000.0" style="-fx-border-color: BLACK; -fx-border-width: 2;" text="Tirsdag 30.03.21">
                                              <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
@@ -271,10 +280,10 @@
                                           <Insets top="20.0" />
                                        </VBox.margin>
                                     </GridPane>
-                                    <GridPane fx:id="stageListPane" style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                    <GridPane fx:id="stageListGridPane" style="-fx-border-color: BLACK; -fx-border-width: 2;">
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="50.0" />
                                        </columnConstraints>
                                        <rowConstraints>
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -303,7 +312,7 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Label fx:id="kommentarLabel" prefWidth="1600.0" text="Kommentar:">
+                                          <Label fx:id="commentLabel" prefWidth="1600.0" text="Kommentar:">
                                              <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
@@ -328,79 +337,68 @@
                   </Tab>
                 <Tab text="Stage 1: Balkongdør Stue">
                      <content>
-                        <ScrollPane fx:id="stageScrollPane" fitToWidth="true" maxWidth="980.0" minWidth="0.0">
+                        <ScrollPane fx:id="stageScrollPane" fitToWidth="true">
                            <content>
                               <VBox>
                                  <children>
-                                    <HBox prefHeight="100.0">
+                                    <HBox>
                                        <children>
                                           <VBox>
                                              <children>
-                                                <Button fx:id="mainImageButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="mainImage">
-                                                   <graphic>
-                                                      <ImageView fx:id="mainImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                                         <image>
-                                                            <Image url="@images/1.jpg" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </graphic>
-                                                </Button>
-                                                <ScrollPane fx:id="thumbnailScrollPane" minHeight="-Infinity" prefHeight="60.0" prefWidth="200.0" vbarPolicy="NEVER">
+                                                <ImageView fx:id="mainImageView" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/1.jpg" />
+                                                   </image>
+                                                </ImageView>
+                                                <ScrollPane fx:id="thumbnailScrollPane" minHeight="-Infinity" prefHeight="60.0" prefWidth="190.0" vbarPolicy="NEVER">
+                                                   <effect>
+                                                      <InnerShadow />
+                                                   </effect>
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
                                                    <content>
-                                                      <FlowPane maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+                                                      <HBox prefHeight="100.0" prefWidth="200.0" spacing="1.0">
                                                          <children>
-                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@images/1.jpg" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@images/2.jpg" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@images/3.jpg" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="50.0" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="50.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@images/4.jpg" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
+                                                            <ImageView fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@images/1.jpg" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@images/2.jpg" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@images/3.jpg" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@images/4.jpg" />
+                                                               </image>
+                                                            </ImageView>
                                                          </children>
-                                                      </FlowPane>
+                                                      </HBox>
                                                    </content>
                                                 </ScrollPane>
                                              </children>
+                                             <HBox.margin>
+                                                <Insets top="5.0" />
+                                             </HBox.margin>
                                           </VBox>
-                                          <VBox minWidth="-Infinity" prefHeight="200.0" prefWidth="700.0">
+                                          <VBox HBox.hgrow="SOMETIMES">
                                              <children>
                                                 <Label fx:id="stageDescriptionLabel" text="Arbeidsbeskrivelse:">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <VBox minHeight="200.0" minWidth="706.0" style="-fx-border-color: BLACK; -fx-border-width: 2;">
+                                                <VBox minHeight="200.0">
                                                    <children>
-                                                      <TextArea fx:id="stageDescriptionArea" editable="false" maxWidth="800.0" minWidth="600.0" prefHeight="136.0" prefWidth="720.0" text="Skifte balkongdør på stue.&#10;&#10;Så mye tekst som ønskelig kan legges til her for å tilstrekkelig formidle informasjon nødvendig for utførelse av oppgaven." wrapText="true" VBox.vgrow="ALWAYS" />
+                                                      <TextArea fx:id="stageDescriptionArea" editable="false" text="Skifte balkongdør på stue.&#10;&#10;Så mye tekst som ønskelig kan legges til her for å tilstrekkelig formidle informasjon nødvendig for utførelse av oppgaven." wrapText="true" VBox.vgrow="ALWAYS" />
                                                       <HBox fx:id="dateHBox">
                                                          <children>
                                                             <Label fx:id="startDateLabel" text="Startdato: 30/03/2021" />
@@ -428,91 +426,39 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <GridPane prefWidth="840.0" style="-fx-border-color: BLACK; -fx-border-width: 2;">
-                                      <columnConstraints>
-                                        <ColumnConstraints hgrow="NEVER" />
-                                        <ColumnConstraints hgrow="SOMETIMES" />
-                                          <ColumnConstraints hgrow="SOMETIMES" />
-                                          <ColumnConstraints hgrow="NEVER" prefWidth="60.0" />
-                                          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
+                                    <TableView prefHeight="200.0" prefWidth="200.0">
+                                      <columns>
+                                        <TableColumn maxWidth="2000.0" prefWidth="75.0" text="Dato" />
+                                        <TableColumn prefWidth="75.0" text="Bruker" />
+                                          <TableColumn prefWidth="75.0" text="Kommentar" />
+                                          <TableColumn maxWidth="2000.0" prefWidth="75.0" text="Bilder" />
+                                      </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                    <HBox>
                                        <children>
-                                          <Label text="30/03/2021">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="User404" GridPane.columnIndex="1">
-                                             <padding>
-                                                <Insets left="5.0" right="5.0" />
-                                             </padding>
-                                          </Label>
-                                          <Label text="Mangler hammer, så får ikke utført oppgaven i tide." wrapText="true" GridPane.columnIndex="2">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Button contentDisplay="GRAPHIC_ONLY" layoutX="310.0" layoutY="43.0" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" />
-                                          <Label text="31/03/2021" GridPane.rowIndex="1">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="User404" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                             <padding>
-                                                <Insets left="5.0" right="5.0" />
-                                             </padding>
-                                          </Label>
-                                          <Label text="Døråpning for smal, må utvide. Veggen er bærevegg, så ekstra bæring må settes inn. Bilde vedlagt." wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                          <Button mnemonicParsing="false" text="Rediger valgt kommentar">
                                              <graphic>
-                                                <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
+                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@images/4.jpg" />
+                                                      <Image url="@Icons/gear-icon.png" />
                                                    </image>
-                                                   <viewport>
-                                                      <Rectangle2D />
-                                                   </viewport>
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <Button contentDisplay="GRAPHIC_ONLY" layoutX="410.0" layoutY="13.0" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                          <Label text="31/03/2021" GridPane.rowIndex="2">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="User404" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                             <padding>
-                                                <Insets left="5.0" right="5.0" />
-                                             </padding>
-                                          </Label>
-                                          <Label text="Oppgaven fullført per instruks. (Sluttkommentar)" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                        </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                    </GridPane>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </content>
                            <padding>
                               <Insets left="18.0" right="18.0" />
                            </padding>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
                         </ScrollPane>
                      </content>
                      <graphic>

@@ -1,7 +1,5 @@
 package com.snikkergutane.project;
 
-import javafx.scene.image.Image;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public abstract class TaskMasterClass {
         return this.startDate;
     }
 
-    public ArrayList<String> getImageURLs() {
+    public List<String> getImageURLs() {
         return this.imageURLs;
     }
 

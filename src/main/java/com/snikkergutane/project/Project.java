@@ -1,27 +1,50 @@
 package com.snikkergutane.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents a project containing
  * a number of stages to be completed.
  */
-public class Project extends TaskMasterClass {
+public class Project {
 
+    private String name;
     private String customerName;
     private String customerEmail;
     private String customerPhoneNumber;
     private String address;
+    private boolean finished;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String description;
     private final ArrayList<Stage> stages;
 
-    public Project (String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
-        setName(projectName);
+    public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
+        this.name = projectName;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.customerPhoneNumber = customerPhoneNumber;
         this.address = address;
-        setFinished(false);
-        setEndDate(null);
+        this.startDate = null;
+        this.endDate = null;
+        this.stages = new ArrayList<>();
+    }
+
+    public Project(String projectName, String customerName, String customerEmail,
+                   String customerPhoneNumber, String address, LocalDate startDate,
+                   LocalDate endDate, String description) {
+
+        this.name = projectName;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.address = address;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
         this.stages = new ArrayList<>();
     }
 
@@ -44,7 +67,7 @@ public class Project extends TaskMasterClass {
      * Returns the stages of the project as an ArrayList.
      * @return {@code ArrayList<Stage>} of the projects stages.
      */
-    public ArrayList<Stage> getStages() {
+    public List<Stage> getStages() {
         return this.stages;
     }
 
@@ -103,4 +126,46 @@ public class Project extends TaskMasterClass {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public LocalDate getStartDate() {
+        return this.startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return this.endDate;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setStartDate(LocalDate date) {
+        this.startDate = date;
+    }
+
+    public void setEndDate(LocalDate date) {
+        this.endDate = date;
+        if (LocalDate.now().isAfter(date)) {
+            this.finished = true;
+        }
+    }
+
+    public List<String[]> getProjectAsStringArrayList() {
+
+        List<String> projectInfo = new ArrayList<>(Arrays.asList(this.getName(),this.customerName,
+                this.customerEmail,this.address,"" + this.getStartDate(),
+                "" + this.getEndDate(), this.getDescription()));
+
+        List<String[]> project = new ArrayList<>();
+        project.add(projectInfo.toArray(new String[0]));
+
+        this.getStages().forEach(stage -> project.addAll(stage.getStageAsStringArray()));
+
+        return project;
+    }
+
 }

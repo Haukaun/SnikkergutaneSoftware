@@ -1,10 +1,14 @@
 package com.snikkergutane;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 
+import com.snikkergutane.project.CsvManager;
 import com.snikkergutane.project.Project;
 import com.snikkergutane.project.ProjectLib;
 import com.snikkergutane.project.Stage;
+import com.snikkergutane.project.task.Comment;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -14,46 +18,28 @@ import javafx.scene.layout.*;
 
 public class MainController {
 
+    private CsvManager csvManager;
     private final ProjectLib projectLib = new ProjectLib();
+    @FXML Label statusLabel;
     @FXML private Button backgroundButton;
     @FXML private ImageView largeImageView;
+    @FXML private ImageView mainImageView;
     @FXML private ListView<String> projectsListView;
-    @FXML private Button newProjectButton;
-    @FXML private Button editProjectButton;
     @FXML private ScrollPane projectInfoScrollPane;
-    @FXML private VBox projectInfoVBox;
-    @FXML private GridPane gridPane1;
-    @FXML private GridPane gridPane2;
-    @FXML private GridPane gridPane3;
-    @FXML private GridPane gridPane4;
-    @FXML private GridPane gridPane5;
-    @FXML private GridPane gridPane6;
-    @FXML private GridPane gridPane7;
-    @FXML private GridPane gridPane8;
-    @FXML private GridPane stageListPane;
-    @FXML private HBox pdfHBox;
-    @FXML private Label kundeLabel;
-    @FXML private Label stedLabel;
-    @FXML private Label telefonLabel;
-    @FXML private Label epostLabel;
-    @FXML private Label oppstartsdatoLabel;
-    @FXML private Label arbeidsbeskrivelseLabel;
-    @FXML private Label kommentarLabel;
-    @FXML private Button deleteProjectButton;
-    @FXML private Button exportPDFButton;
+    @FXML private GridPane stageListGridPane;
+    @FXML private Label commentLabel;
     @FXML private Label customerNameLabel;
     @FXML private Label projectAddressLabel;
     @FXML private Label customerPhoneNumberLabel;
     @FXML private Label customerEmailLabel;
     @FXML private Label projectStartDateLabel;
     @FXML private TextArea projectDescriptionTextArea;
-    @FXML private Button editCurrentProjectButton;
-    @FXML private TabPane projectPane;
+    @FXML private TabPane projectTabPane;
 
     @FXML
     private void initialize() {
         projectLib.loadDemoProject();
-        projectLib.listProjects().forEach(p -> projectsListView.getItems().add(p));
+        projectsListView.getItems().addAll(projectLib.listProjects());
     }
 
     @FXML
@@ -66,8 +52,9 @@ public class MainController {
             customerPhoneNumberLabel.setText(selectedProject.getCustomerPhoneNumber());
             projectAddressLabel.setText(selectedProject.getAddress());
             projectStartDateLabel.setText("" + selectedProject.getStartDate());
+            projectDescriptionTextArea.setText(selectedProject.getDescription());
 
-            stageListPane.getChildren().clear();
+            stageListGridPane.getChildren().clear();
             int y = 0;
             ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
             finishedImage.setPreserveRatio(true);
@@ -80,18 +67,18 @@ public class MainController {
                 button.setBackground(Background.EMPTY);
                 button.setOnAction(e -> stageButtonClicked(stage));
 
-                stageListPane.add(button, 0, y);
+                stageListGridPane.add(button, 0, y);
 
                 if (stage.isFinished()) {
-                    stageListPane.add(finishedImage, 1, y);
+                    stageListGridPane.add(finishedImage, 1, y);
                 } else {
-                    stageListPane.add(unfinishedImage, 1, y);
+                    stageListGridPane.add(unfinishedImage, 1, y);
                 }
                 y++;
             }
 
-            projectPane.getTabs().clear();
-            projectPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
+            projectTabPane.getTabs().clear();
+            projectTabPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
         }
     }
 
@@ -104,6 +91,112 @@ public class MainController {
         HBox informationPaneHBox = new HBox();
 
         //Image display
+        VBox imageDisplayVBox = createImageDisplayVBox(stage);
+        //Stage description
+        VBox stageDescriptionVBox = createStageDescriptionVBox(stage);
+
+        informationPaneHBox.getChildren().add(imageDisplayVBox);
+        informationPaneHBox.getChildren().add(stageDescriptionVBox);
+
+        //TODO: Comment section
+        //GridPane commentSectionGridPane = createCommentSectionGridPane();
+
+
+
+
+        VBox vBox1 = new VBox();
+        vBox1.getChildren().add(informationPaneHBox);
+        vBox1.getChildren().add(commentLabel);
+        //vBox1.getChildren().add(commentSectionGridPane);
+
+
+        stageHBox.getChildren().add(vBox1);
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPadding(new Insets(0,18,0,18));
+        scrollPane.setContent(stageHBox);
+
+        projectTabPane.getTabs().add(new Tab(stage.getName(), scrollPane));
+    }
+
+    @FXML
+    private void addProjectButtonClicked() {
+        Optional<Project> result = new AddProjectController(projectLib).showAndWait();
+        result.ifPresent(this.projectLib::addProject);
+    }
+
+    @FXML
+    private void importProjectButtonClicked() {
+        this.csvManager = new CsvManager(projectTabPane.getScene().getWindow());
+        ArrayList<List<String>> records = csvManager.importCsv();
+        if (!records.isEmpty() && records.size() > 1) {
+            List<String> projectInfo = records.get(0);
+            Project project = new Project(projectInfo.get(0), projectInfo.get(1),
+                    projectInfo.get(2),projectInfo.get(3),projectInfo.get(4),
+                    LocalDate.parse(projectInfo.get(5)),LocalDate.parse(projectInfo.get(6)),projectInfo.get(7));
+            records.remove(0);
+
+            List<Comment> commentList = new ArrayList<>();
+
+            records.forEach(line -> {
+                if (line.get(0).startsWith("+")) {
+                    String name = line.get(0).replace("+", "");
+                    LocalDate startDate = LocalDate.parse(line.get(1));
+                    LocalDate endDate = LocalDate.parse(line.get(2));
+                    String description = line.get(3);
+
+                    ArrayList<String> strings = new ArrayList<>(line);
+                    int numberOfImages = line.size() - 4;
+                    while (strings.size() > numberOfImages) {
+                        strings.remove(0);
+                    }
+
+                    Stage stage = new Stage(name, startDate, endDate, description, strings);
+                    commentList.forEach(stage::addComment);
+                    commentList.clear();
+                    project.addStage(stage);
+                } else {
+                    LocalDate date = LocalDate.parse(line.get(0));
+                    String user = line.get(1);
+                    String commentText = line.get(2);
+
+                    ArrayList<String> strings = new ArrayList<>(line);
+                    int numberOfImages = line.size() - 3;
+                    while (strings.size() > numberOfImages) {
+                        strings.remove(0);
+                    }
+
+                    commentList.add(new Comment(date, user, commentText, strings));
+                }
+            });
+            projectLib.addProject(project);
+            projectsListView.getItems().clear();
+            projectsListView.getItems().addAll(projectLib.listProjects());
+            projectsListView.getSelectionModel().selectLast();
+            projectSelected();
+            statusLabel.setText("Import successful");
+        }
+    }
+
+    @FXML
+    private void mainImageButtonClicked() {
+        backgroundButton.setVisible(true);
+        largeImageView.setImage(new Image(mainImageView.getImage().getUrl()));
+        largeImageView.setVisible(true);
+    }
+
+    @FXML
+    private void backgroundButtonClicked() {
+        backgroundButton.setVisible(false);
+        largeImageView.setVisible(false);
+    }
+
+    @FXML
+    private void switchToLogin() throws IOException {
+        App.setRoot("login");
+    }
+
+    private VBox createImageDisplayVBox(Stage stage) {
         VBox imageDisplayVBox = new VBox();
 
         Button mainImageButton = new Button("");
@@ -115,8 +208,7 @@ public class MainController {
         mainImage.setFitHeight(150);
         mainImage.setFitWidth(200);
         mainImageButton.setGraphic(mainImage);
-        String finalImageUrl = imageUrl;
-        mainImageButton.setOnAction(e -> mainImageButtonClicked(finalImageUrl));
+        mainImageButton.setOnAction(e -> mainImageButtonClicked());
 
         FlowPane thumbnailPane = new FlowPane();
         thumbnailPane.setPrefHeight(50);
@@ -135,7 +227,7 @@ public class MainController {
                     largeImage.setFitWidth(200);
                     largeImage.setFitHeight(150);
                     mainImageButton.setGraphic(largeImage);
-                    mainImageButton.setOnAction(a -> mainImageButtonClicked(imageURL));
+                    mainImageButton.setOnAction(a -> mainImageButtonClicked());
                 });
                 thumbnailPane.getChildren().add(button);
             });
@@ -147,13 +239,14 @@ public class MainController {
         thumbnailScroll.setMinHeight(Region.USE_PREF_SIZE);
         thumbnailScroll.setContent(thumbnailPane);
 
-        imageDisplayVBox.getChildren().add(mainImageButton);
+        imageDisplayVBox.getChildren().add(mainImage);
         imageDisplayVBox.getChildren().add(thumbnailScroll);
 
-        //Stage description
-        VBox stageDescriptionVBox = new VBox();
+        return imageDisplayVBox;
+    }
 
-        VBox vBox4 = new VBox();
+    private VBox createStageDescriptionVBox(Stage stage) {
+        VBox stageDescriptionVBox = new VBox();
 
         TextArea stageDescriptionArea = new TextArea(stage.getDescription());
         stageDescriptionArea.setWrapText(true);
@@ -174,65 +267,11 @@ public class MainController {
             datesHBox.getChildren().add(new Label("Fullføres innen: " + stage.getEndDate()));
         }
 
-        vBox4.setPadding(new Insets(0,0,0,20));
-        vBox4.getChildren().add(new Label("Arbeidsbeskrivelse:"));
-        vBox4.getChildren().add(stageDescriptionArea);
-        vBox4.getChildren().add(datesHBox);
+        stageDescriptionVBox.setPadding(new Insets(0,0,0,20));
+        stageDescriptionVBox.getChildren().add(new Label("Arbeidsbeskrivelse:"));
+        stageDescriptionVBox.getChildren().add(stageDescriptionArea);
+        stageDescriptionVBox.getChildren().add(datesHBox);
 
-        stageDescriptionVBox.getChildren().add(vBox4);
-
-
-        informationPaneHBox.getChildren().add(imageDisplayVBox);
-        informationPaneHBox.getChildren().add(stageDescriptionVBox);
-
-        //TODO: Comment section
-        GridPane gridPane1 = new GridPane();
-
-
-
-
-
-        VBox vBox1 = new VBox();
-        vBox1.getChildren().add(informationPaneHBox);
-        vBox1.getChildren().add(new Label("Kommentarer:"));
-        vBox1.getChildren().add(gridPane1);
-
-
-        stageHBox.getChildren().add(vBox1);
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPadding(new Insets(0,18,0,18));
-        scrollPane.setContent(stageHBox);
-
-        projectPane.getTabs().add(new Tab(stage.getName(), scrollPane));
+        return stageDescriptionVBox;
     }
-
-    @FXML
-    private void addProjectButtonClicked() {
-        try {
-            App.newWindow("addProject");
-        } catch (Exception e) {
-
-        }
-    }
-
-    @FXML
-    private void mainImageButtonClicked(String url) {
-        backgroundButton.setVisible(true);
-        largeImageView.setImage(new Image(url));
-        largeImageView.setVisible(true);
-    }
-
-    @FXML
-    private void backgroundButtonClicked() {
-        backgroundButton.setVisible(false);
-        largeImageView.setVisible(false);
-    }
-
-    @FXML
-    private void switchToLogin() throws IOException {
-        App.setRoot("login");
-    }
-
-
 }
