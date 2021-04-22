@@ -65,20 +65,23 @@ public class ProjectLib {
         return new ArrayList<>(projects.keySet());
     }
 
+    /**
+     * Creates a demo project and adds it to the projectLib.
+     */
     public void loadDemoProject() {
-        Stage stage = new Stage("Balkongdør Stue");
-        stage.setDescription("Skifte balkongdør på stue.\n" +
+        Task task = new Task("Balkongdør Stue");
+        task.setDescription("Skifte balkongdør på stue.\n" +
                 "\n" +
                 "Så mye tekst som ønskelig kan legges til her for å tilstrekkelig formidle informasjon nødvendig for utførelse av oppgaven.");
-        stage.setStartDate(LocalDate.now());
-        stage.addImage("com/snikkergutane/images/1.jpg");
-        stage.addImage("com/snikkergutane/images/2.jpg");
-        stage.addImage("com/snikkergutane/images/3.jpg");
-        stage.addImage("com/snikkergutane/images/4.jpg");
+        task.setStartDate(LocalDate.now());
+        task.addImage("com/snikkergutane/images/1.jpg");
+        task.addImage("com/snikkergutane/images/2.jpg");
+        task.addImage("com/snikkergutane/images/3.jpg");
+        task.addImage("com/snikkergutane/images/4.jpg");
 
         Project newProject = new Project("Portveien 4", "Anne Knutsdotter", "anne.knutsdotter@Steinroys.no", "12345678", "Der ingen skulle tru at nokon kunne bu");
         newProject.setStartDate(LocalDate.now());
-        newProject.addStage(stage);
+        newProject.addTask(task);
 
         if (this.projects.size() == 0) {
             this.projects.put(newProject.getName(), newProject);

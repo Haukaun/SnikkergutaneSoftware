@@ -1,32 +1,58 @@
 package com.snikkergutane.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents a project containing
  * a number of stages to be completed.
  */
-public class Project extends TaskMasterClass {
+public class Project {
 
-    private String projectName;
+    private String name;
     private String customerName;
     private String customerEmail;
     private String customerPhoneNumber;
     private String address;
-    private final ArrayList<Stage> stages;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalDate deadLine;
+    private String description;
+    private final ArrayList<Task> tasks;
 
-
-    public Project (String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
-
-        this.projectName = projectName;
+    public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
+        this.name = projectName;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.customerPhoneNumber = customerPhoneNumber;
         this.address = address;
+        this.startDate = null;
+        this.endDate = null;
+        this.deadLine = null;
+        this.tasks = new ArrayList<>();
+    }
 
-        setFinished(false);
-        setEndDate(null);
-        this.stages = new ArrayList<>();
+    public Project(String projectName, String customerName, String customerEmail,
+                   String customerPhoneNumber, String address, LocalDate startDate,
+                   LocalDate endDate, String description) {
+
+        this.name = projectName;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.address = address;
+        this.startDate = startDate;
+        this.description = description;
+        this.tasks = new ArrayList<>();
+        if (LocalDate.now().isBefore(endDate)) {
+            this.deadLine = endDate;
+            this.endDate = null;
+        } else {
+            this.endDate = endDate;
+            this.deadLine = null;
+        }
     }
 
     /**
@@ -34,58 +60,50 @@ public class Project extends TaskMasterClass {
      * @param name {@code String} name of the stage to be returned.
      * @return {@code Stage} with given name.
      */
-    public Stage getStage(String name) {
-        Stage returnStage = null;
-        for (Stage stage : stages) {
-            if (stage.getName().equals(name)) {
-                returnStage = stage;
+    public Task getTask(String name) {
+        Task returnTask = null;
+        for (Task task : tasks) {
+            if (task.getName().equals(name)) {
+                returnTask = task;
             }
         }
-        return returnStage;
+        return returnTask;
     }
 
     /**
      * Returns the stages of the project as an ArrayList.
      * @return {@code ArrayList<Stage>} of the projects stages.
      */
-    public ArrayList<Stage> getStages() {
-        return this.stages;
+    public List<Task> getTasks() {
+        return this.tasks;
     }
 
     /**
      * Adds a stage to the projects list of stages.
-     * @param stage {@code Stage} the stage to be added.
+     * @param task {@code Stage} the stage to be added.
      */
-    public void addStage(Stage stage) {
-        if(stage != null){
-        this.stages.add(stage);
+    public void addTask(Task task) {
+        if(task != null){
+        this.tasks.add(task);
         }
     }
 
     /**
      * Removes a stage from the project.
-     * @param stageName {@code String} the name of the project to be removed.
+     * @param taskName {@code String} the name of the project to be removed.
      */
-    public void removeStage(String stageName) {
-        Stage removeStage = null;
-        for (Stage stage : stages) {
-            if (stage.getName().equals(stageName)) {
-                removeStage = stage;
+    public void removeTask(String taskName) {
+        Task removeTask = null;
+        for (Task task : tasks) {
+            if (task.getName().equals(taskName)) {
+                removeTask = task;
             }
         }
-        stages.remove(removeStage);
+        tasks.remove(removeTask);
     }
 
     public String getCustomerName() {
         return customerName;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public void setCustomerName(String customerName) {
@@ -115,4 +133,59 @@ public class Project extends TaskMasterClass {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public LocalDate getStartDate() {
+        return this.startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return this.endDate;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setStartDate(LocalDate date) {
+        this.startDate = date;
+    }
+
+    public void setDeadLine(LocalDate date) {
+        this.deadLine = date;
+    }
+
+    public boolean isFinished() {
+        if (null != this.endDate) {
+            return LocalDate.now().isAfter(this.endDate);
+        } else {
+            return false;
+        }
+    }
+
+    public void setFinished(boolean finished) {
+        if (finished) {
+            this.endDate = LocalDate.now();
+        } else {
+            this.endDate = null;
+        }
+    }
+
+    public List<String[]> getProjectAsStringArrayList() {
+
+        List<String> projectInfo = new ArrayList<>(Arrays.asList(this.getName(),this.customerName,
+                this.customerEmail,this.address,"" + this.getStartDate(),
+                "" + this.getEndDate(), this.getDescription()));
+
+        List<String[]> project = new ArrayList<>();
+        project.add(projectInfo.toArray(new String[0]));
+
+        this.getTasks().forEach(task -> project.addAll(task.getStageAsStringArray()));
+
+        return project;
+    }
+
 }

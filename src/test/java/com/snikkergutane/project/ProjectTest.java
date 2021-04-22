@@ -12,16 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ProjectTest {
     private Project project;
-    private Stage stage1;
-    private Stage stage2;
+    private Task task1;
+    private Task task2;
 
     @BeforeEach
     public void setUp() {
         this.project = new Project("Project1", "Snikkerguttane", "test@hotmail.com", "98454796", "test 12");
-        this.stage1 = new Stage("Stage1");
-        this.stage2 = new Stage("Stage2");
-        this.project.addStage(stage1);
-        this.project.addStage(stage2);
+        this.task1 = new Task("Stage1");
+        this.task2 = new Task("Stage2");
+        this.project.addTask(task1);
+        this.project.addTask(task2);
     }
 
     @AfterEach
@@ -34,11 +34,11 @@ class ProjectTest {
     @Test
     public void testGetStage() {
         //To positive test.
-        assertEquals(stage1, project.getStage("Stage1"));
-        assertEquals(null, project.getStage("Nothing"));
+        assertEquals(task1, project.getTask("Stage1"));
+        assertEquals(null, project.getTask("Nothing"));
         //assertEquals("Stage1", project.getStage("Stage1").getName());
         //negative test with null input.
-        assertEquals(null, project.getStage(null));
+        assertEquals(null, project.getTask(null));
     }
 
     /**
@@ -46,17 +46,17 @@ class ProjectTest {
      */
     @Test
     public void testAddStageWithValidInput() {
-        // positive test with a valid parameter stage3.
-        Stage stage3 = new Stage("Stage3");
-        project.addStage(stage3);
-        assertEquals(3, project.getStages().size());
+        // positive test with a valid parameter task3.
+        Task task3 = new Task("Stage3");
+        project.addTask(task3);
+        assertEquals(3, project.getTasks().size());
     }
 
     @Test
     public void testAddStageWithInvalidInputNull() {
     // negative test with a invalid parameter null.
-        project.addStage(null);
-        assertEquals(2,project.getStages().size());
+        project.addTask(null);
+        assertEquals(2,project.getTasks().size());
     }
 /**
  * To positive test to removeStage() method.
@@ -65,19 +65,19 @@ class ProjectTest {
  */
     @Test
     public void testRemoveStageWithValidInput() {
-        project.removeStage("Stage1");
-        assertEquals(null, project.getStage("Stage1"));
-        assertEquals(1,project.getStages().size());
+        project.removeTask("Stage1");
+        assertEquals(null, project.getTask("Stage1"));
+        assertEquals(1,project.getTasks().size());
 
-        project.removeStage("NotInTheProject");
-        assertEquals(1,project.getStages().size());
+        project.removeTask("NotInTheProject");
+        assertEquals(1,project.getTasks().size());
     }
     /**
      * A negative test to removeStage() method.
      * Remove a stage with input null.
      */
     public void testRemoveStageWithInvalidInputNull(){
-        project.removeStage(null);
-        assertEquals(2,project.getStages().size());
+        project.removeTask(null);
+        assertEquals(2,project.getTasks().size());
     }
 }

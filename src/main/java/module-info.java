@@ -1,7 +1,8 @@
-module org.example {
+module com.snikkergutane {
     requires javafx.controls;
     requires javafx.fxml;
 
     opens com.snikkergutane to javafx.fxml;
     exports com.snikkergutane;
+    exports com.snikkergutane.project;
 }

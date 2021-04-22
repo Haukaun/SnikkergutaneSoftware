@@ -1,143 +1,308 @@
 package com.snikkergutane;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 
+import com.snikkergutane.project.CsvManager;
 import com.snikkergutane.project.Project;
 import com.snikkergutane.project.ProjectLib;
-import com.snikkergutane.project.Stage;
+import com.snikkergutane.project.Task;
+import com.snikkergutane.project.Comment;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
+/**
+ * Controller for the main.fxml,
+ * this will handle all main user interaction.
+ */
 public class MainController {
 
+    private CsvManager csvManager;
     private final ProjectLib projectLib = new ProjectLib();
+    private ObservableList<String> projectListWrapper;
+    @FXML Label statusLabel;
     @FXML private Button backgroundButton;
     @FXML private ImageView largeImageView;
+    @FXML private ImageView mainImageView;
     @FXML private ListView<String> projectsListView;
-    @FXML private Button newProjectButton;
-    @FXML private Button editProjectButton;
     @FXML private ScrollPane projectInfoScrollPane;
-    @FXML private VBox projectInfoVBox;
-    @FXML private GridPane gridPane1;
-    @FXML private GridPane gridPane2;
-    @FXML private GridPane gridPane3;
-    @FXML private GridPane gridPane4;
-    @FXML private GridPane gridPane5;
-    @FXML private GridPane gridPane6;
-    @FXML private GridPane gridPane7;
-    @FXML private GridPane gridPane8;
-    @FXML private GridPane stageListPane;
-    @FXML private HBox pdfHBox;
-    @FXML private Label kundeLabel;
-    @FXML private Label stedLabel;
-    @FXML private Label telefonLabel;
-    @FXML private Label epostLabel;
-    @FXML private Label oppstartsdatoLabel;
-    @FXML private Label arbeidsbeskrivelseLabel;
-    @FXML private Label kommentarLabel;
-    @FXML private Button deleteProjectButton;
-    @FXML private Button exportPDFButton;
+    @FXML private GridPane taskListGridPane;
     @FXML private Label customerNameLabel;
     @FXML private Label projectAddressLabel;
     @FXML private Label customerPhoneNumberLabel;
     @FXML private Label customerEmailLabel;
     @FXML private Label projectStartDateLabel;
     @FXML private TextArea projectDescriptionTextArea;
-    @FXML private Button editCurrentProjectButton;
-    @FXML private TabPane projectPane;
+    @FXML private TabPane projectTabPane;
 
+    /**
+     * loads the demo project on startup,
+     * and shows the projects in the project list.
+     */
     @FXML
     private void initialize() {
         projectLib.loadDemoProject();
-        projectLib.listProjects().forEach(p -> projectsListView.getItems().add(p));
+        projectListWrapper =FXCollections.observableArrayList
+                (this.projectLib.listProjects());
+        projectsListView.setItems(projectListWrapper);
     }
 
+    /**
+     * When a project in the project list is selected,
+     * creates and shows the project information tab.
+     */
     @FXML
     private void projectSelected() {
+        //Checks that a project is selected.
         if (projectsListView.getSelectionModel().getSelectedItem() != null) {
+
+            //Gets the selected project from the library.
             Project selectedProject = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
 
+            //Sets the text of the labels in the information tab to the information in the selected project.
             customerNameLabel.setText(selectedProject.getCustomerName());
             customerEmailLabel.setText(selectedProject.getCustomerEmail());
             customerPhoneNumberLabel.setText(selectedProject.getCustomerPhoneNumber());
             projectAddressLabel.setText(selectedProject.getAddress());
             projectStartDateLabel.setText("" + selectedProject.getStartDate());
+            projectDescriptionTextArea.setText(selectedProject.getDescription());
 
-            stageListPane.getChildren().clear();
+            //Updates the task list with the tasks from the selected project.
+            taskListGridPane.getChildren().clear();
             int y = 0;
-            ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
-            finishedImage.setPreserveRatio(true);
-            finishedImage.setFitHeight(30);
-            ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
-            unfinishedImage.setPreserveRatio(true);
-            unfinishedImage.setFitHeight(30);
-            for (Stage stage : selectedProject.getStages()) {
-                Button button = new Button(stage.getName());
+
+            for (Task task : selectedProject.getTasks()) {
+                Button button = new Button(task.getName());
                 button.setBackground(Background.EMPTY);
-                button.setOnAction(e -> stageButtonClicked(stage));
+                button.setOnAction(e -> taskButtonClicked(task));
 
-                stageListPane.add(button, 0, y);
+                taskListGridPane.add(button, 0, y);
 
-                if (stage.isFinished()) {
-                    stageListPane.add(finishedImage, 1, y);
+                if (task.isFinished()) {
+                    ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
+                    finishedImage.setPreserveRatio(true);
+                    finishedImage.setFitHeight(30);
+                    taskListGridPane.add(finishedImage, 1, y);
                 } else {
-                    stageListPane.add(unfinishedImage, 1, y);
+                    ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
+                    unfinishedImage.setPreserveRatio(true);
+                    unfinishedImage.setFitHeight(30);
+                    taskListGridPane.add(unfinishedImage, 1, y);
                 }
                 y++;
             }
 
-            projectPane.getTabs().clear();
-            projectPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
+            //Removes all tabs from the tab pane and adds the selected project's information tab.
+            projectTabPane.getTabs().clear();
+            projectTabPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
         }
     }
 
+    /**
+     * When a task in the project information tab is selected,
+     * creates and shows the information tab for the task.
+     * @param task the task to be viewed.
+     */
     @FXML
-    private void stageButtonClicked(Stage stage) {
-
-        HBox stageHBox = new HBox();
+    private void taskButtonClicked(Task task) {
 
         //Information pane
         HBox informationPaneHBox = new HBox();
 
         //Image display
+        informationPaneHBox.getChildren().add(createImageDisplayVBox(task));
+
+        //Stage description
+        informationPaneHBox.getChildren().add(createStageDescriptionVBox(task));
+
+        //Comments section
+        VBox commentSection = createCommentSection(task);
+
+        //Put it all together in a vbox
+        VBox stageVBox = new VBox();
+        stageVBox.getChildren().add(informationPaneHBox);
+        stageVBox.getChildren().add(commentSection);
+
+        //The main contents of the task tab.
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPadding(new Insets(0,18,0,18));
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setContent(stageVBox);
+
+        //Adds the tab to the tab pane.
+        projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
+    }
+
+    /**
+     * When the add new project button is clicked,
+     * opens a new project wizard that will generate
+     * a new project and add it to the projectLib
+     */
+    @FXML
+    private void addProjectButtonClicked() {
+        Optional<Project> result = new AddProjectController(projectLib).showAndWait();
+        result.ifPresent(this.projectLib::addProject);
+    }
+
+    /**
+     * Imports a project from a .csv file and adds it to the projectLib.
+     */
+    @FXML
+    private void importProjectButtonClicked() {
+        //Creates the csvManager to handle the import
+        this.csvManager = new CsvManager(projectTabPane.getScene().getWindow());
+        List<List<String>> records = csvManager.importCsv();
+        try {
+            //Checks if the csvManager was able to read the file properly
+            if (!records.isEmpty() && records.size() > 1) {
+                List<String> projectInfo = records.get(0);
+                Project project = new Project(projectInfo.get(0), projectInfo.get(1),
+                        projectInfo.get(2), projectInfo.get(3), projectInfo.get(4),
+                        LocalDate.parse(projectInfo.get(5)), LocalDate.parse(projectInfo.get(6)), projectInfo.get(7));
+                records.remove(0);
+
+                List<Comment> commentList = new ArrayList<>();
+                records.forEach(line -> {
+                    //if a line starts with "+" it is interpreted as a new task.
+                    if (line.get(0).startsWith("+")) {
+                        String name = line.get(0).replace("+", "");
+                        LocalDate startDate = LocalDate.parse(line.get(1));
+                        LocalDate endDate = LocalDate.parse(line.get(2));
+                        String description = line.get(3);
+
+                        //Removes the information we've already used so that only the image urls remain.
+                        ArrayList<String> imageUrls = new ArrayList<>(line);
+                        int numberOfImages = line.size() - 4;
+                        while (imageUrls.size() > numberOfImages) {
+                            imageUrls.remove(0);
+                        }
+
+                        //Creates the task
+                        Task task = new Task(name, startDate, endDate, description, imageUrls);
+                        commentList.forEach(task::addComment);
+                        commentList.clear();
+                        project.addTask(task);
+                    } else {
+                        //If the line does not start with "+", it is read as a new comment.
+                        LocalDate date = LocalDate.parse(line.get(0));
+                        String user = line.get(1);
+                        String commentText = line.get(2);
+
+                        //Removes the information we've already used so that only the image urls remain.
+                        ArrayList<String> imageUrls = new ArrayList<>(line);
+                        int numberOfImages = line.size() - 3;
+                        while (imageUrls.size() > numberOfImages) {
+                            imageUrls.remove(0);
+                        }
+
+                        commentList.add(new Comment(date, user, commentText, imageUrls.get(0)));
+                    }
+                });
+                //Adds the newly generated project to the project library,
+                // updates the project list, and displays the new project to the user.
+                projectLib.addProject(project);
+                updateProjectListWrapper();
+                projectsListView.getSelectionModel().selectLast();
+                projectSelected();
+                statusLabel.setText("Import successful");
+            }
+        } catch (Exception exception) {
+            statusLabel.setText("ERROR: Invalid format in .csv");
+        }
+    }
+
+    /**
+     * Displays a full size format of the image in the main image view.
+     */
+    @FXML
+    private void mainImageButtonClicked() {
+        backgroundButton.setVisible(true);
+        largeImageView.setImage(new Image(mainImageView.getImage().getUrl()));
+        largeImageView.setVisible(true);
+    }
+
+    /**
+     * Hides the full size image view from the user.
+     */
+    @FXML
+    private void backgroundButtonClicked() {
+        backgroundButton.setVisible(false);
+        largeImageView.setVisible(false);
+    }
+
+    /**
+     * If a project is selected in the project list, it is removed from the library and from the tab pane,
+     *  and the list is updated.
+     */
+    @FXML
+    private void deleteProjectButtonClicked() {
+        this.projectLib.removeProject
+                (this.projectsListView.getSelectionModel().getSelectedItem());
+        updateProjectListWrapper();
+        this.projectsListView.getSelectionModel().selectLast();
+        projectSelected();
+        if (this.projectLib.listProjects().isEmpty()) {
+            this.projectTabPane.getTabs().clear();
+        }
+    }
+
+    /**
+     * Switches back to the login screen.
+     * @throws IOException
+     */
+    @FXML
+    private void switchToLogin() throws IOException {
+        App.setRoot("login");
+    }
+
+    /**
+     * Creates an image display area to show the images in a task.
+     * @param task the task in question.
+     * @return {@code VBox} image display area.
+     */
+    private VBox createImageDisplayVBox(Task task) {
         VBox imageDisplayVBox = new VBox();
+        imageDisplayVBox.setPadding(new Insets(5,0,0,0));
 
         Button mainImageButton = new Button("");
         String imageUrl = "images/1.jpg";
-        if (!stage.getImageURLs().isEmpty()) {
-            imageUrl = stage.getImageURLs().get(0);
+        if (!task.getImageURLs().isEmpty()) {
+            imageUrl = task.getImageURLs().get(0);
         }
         ImageView mainImage = new ImageView(imageUrl);
         mainImage.setFitHeight(150);
         mainImage.setFitWidth(200);
         mainImageButton.setGraphic(mainImage);
-        String finalImageUrl = imageUrl;
-        mainImageButton.setOnAction(e -> mainImageButtonClicked(finalImageUrl));
+        mainImageButton.setOnAction(e -> mainImageButtonClicked());
 
         FlowPane thumbnailPane = new FlowPane();
         thumbnailPane.setPrefHeight(50);
         thumbnailPane.setMaxHeight(50);
 
-        if (!stage.getImageURLs().isEmpty()) {
-            stage.getImageURLs().forEach(imageURL -> {
-                Button button = new Button("");
+        if (!task.getImageURLs().isEmpty()) {
+            task.getImageURLs().forEach(imageURL -> {
                 ImageView image = new ImageView(imageURL);
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
-                button.setGraphic(image);
-                button.setOnAction(e -> {
+                image.setOnMouseClicked(e -> {
                     ImageView largeImage = new ImageView(imageURL);
                     largeImage.setPreserveRatio(true);
                     largeImage.setFitWidth(200);
                     largeImage.setFitHeight(150);
                     mainImageButton.setGraphic(largeImage);
-                    mainImageButton.setOnAction(a -> mainImageButtonClicked(imageURL));
+                    mainImageButton.setOnAction(a -> mainImageButtonClicked());
                 });
-                thumbnailPane.getChildren().add(button);
+                thumbnailPane.getChildren().add(image);
             });
         }
 
@@ -147,89 +312,132 @@ public class MainController {
         thumbnailScroll.setMinHeight(Region.USE_PREF_SIZE);
         thumbnailScroll.setContent(thumbnailPane);
 
-        imageDisplayVBox.getChildren().add(mainImageButton);
+        imageDisplayVBox.getChildren().add(mainImage);
         imageDisplayVBox.getChildren().add(thumbnailScroll);
 
-        //Stage description
+        return imageDisplayVBox;
+    }
+
+    /**
+     * Creates the task's description area.
+     * @param task the task in question.
+     * @return {@code VBox} task description area.
+     */
+    private VBox createStageDescriptionVBox(Task task) {
         VBox stageDescriptionVBox = new VBox();
+        HBox.setHgrow(stageDescriptionVBox, Priority.SOMETIMES);
 
-        VBox vBox4 = new VBox();
-
-        TextArea stageDescriptionArea = new TextArea(stage.getDescription());
+        TextArea stageDescriptionArea = new TextArea(task.getDescription());
         stageDescriptionArea.setWrapText(true);
         stageDescriptionArea.setEditable(false);
 
+
         Region r2 = new Region();
-        r2.setMinWidth(0);
-        r2.setPrefHeight(0);
-        r2.setPrefWidth(500);
+        HBox.setHgrow(r2,Priority.ALWAYS);
 
         HBox datesHBox = new HBox();
-        datesHBox.getChildren().add(new Label("Startdato: " + stage.getStartDate()));
+        datesHBox.getChildren().add(new Label("Startdato: " + task.getStartDate()));
         datesHBox.getChildren().add(r2);
-        if (stage.isFinished()) {
-            datesHBox.getChildren().add(new Label("Fullført dato: " + stage.getEndDate()));
+        if (task.isFinished()) {
+            datesHBox.getChildren().add(new Label("Fullført dato: " + task.getEndDate()));
         }
         else {
-            datesHBox.getChildren().add(new Label("Fullføres innen: " + stage.getEndDate()));
+            datesHBox.getChildren().add(new Label("Fullføres innen: " + task.getEndDate()));
         }
 
-        vBox4.setPadding(new Insets(0,0,0,20));
-        vBox4.getChildren().add(new Label("Arbeidsbeskrivelse:"));
-        vBox4.getChildren().add(stageDescriptionArea);
-        vBox4.getChildren().add(datesHBox);
+        Label taskDescriptionLabel = new Label("Arbeidsbeskrivelse:");
+        taskDescriptionLabel.setFont(new Font("System Bold", 12.0));
 
-        stageDescriptionVBox.getChildren().add(vBox4);
+        stageDescriptionVBox.setPadding(new Insets(0,0,0,20));
+        stageDescriptionVBox.getChildren().add(taskDescriptionLabel);
+        stageDescriptionVBox.getChildren().add(stageDescriptionArea);
+        stageDescriptionVBox.getChildren().add(datesHBox);
 
-
-        informationPaneHBox.getChildren().add(imageDisplayVBox);
-        informationPaneHBox.getChildren().add(stageDescriptionVBox);
-
-        //TODO: Comment section
-        GridPane gridPane1 = new GridPane();
-
-
-        VBox vBox1 = new VBox();
-        vBox1.getChildren().add(informationPaneHBox);
-        vBox1.getChildren().add(new Label("Kommentarer:"));
-        vBox1.getChildren().add(gridPane1);
-
-
-        stageHBox.getChildren().add(vBox1);
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPadding(new Insets(0,18,0,18));
-        scrollPane.setContent(stageHBox);
-
-        projectPane.getTabs().add(new Tab(stage.getName(), scrollPane));
+        return stageDescriptionVBox;
     }
 
-    @FXML
-    private void addProjectButtonClicked() {
-        try {
-            App.newWindow("addProject");
-        } catch (Exception e) {
+    /**
+     * Creates a task's comment section.
+     * @param task the task in question.
+     * @return {@code VBox} the task's comment section.
+     */
+    private VBox createCommentSection(Task task) {
+        //Create the table to display all comments in
 
-        }
+        //Define the columns
+        //The Date column
+        TableColumn<Comment, LocalDate> dateTableColumn = new TableColumn<>("Date");
+        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateTableColumn.setMinWidth(75);
+        dateTableColumn.setMaxWidth(100);
+
+        //The User column
+        TableColumn<Comment, String> userNameColumn = new TableColumn<>("User");
+        userNameColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
+        userNameColumn.setMinWidth(100);
+        userNameColumn.setMaxWidth(500);
+
+        //The Comment column
+        TableColumn<Comment, String> commentColumn = new TableColumn<>("Comment");
+        commentColumn.setCellValueFactory(new PropertyValueFactory<>("commentText"));
+
+        TableColumn<Comment, Image> imageColumn = new TableColumn<>("Image");
+        imageColumn.setMinWidth(50);
+        imageColumn.setMaxWidth(500);
+        imageColumn.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(30);
+            imageview.setFitWidth(50);
+
+            //Set up the Table cell
+            TableCell<Comment, Image> cell = new TableCell<>() {
+                @Override
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            //Attach the imageview to the cell
+            cell.setGraphic(imageview);
+            return cell;
+        });
+        imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
+
+        TableView<Comment> commentsTableView = new TableView<>();
+        commentsTableView.getColumns().addAll(dateTableColumn, userNameColumn, commentColumn, imageColumn);
+        commentsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        commentsTableView.setItems(FXCollections.observableArrayList(task.getComments()));
+        commentsTableView.setPrefHeight(1000);
+
+
+        //Edit Comment Button
+        ImageView gearIcon = new ImageView("/com/snikkergutane/Icons/gear-icon.png");
+        gearIcon.setPreserveRatio(true);
+        gearIcon.setFitWidth(20);
+        gearIcon.setFitHeight(20);
+
+        Button editSelectedCommentButton = new Button("Rediger valgt kommentar");
+        editSelectedCommentButton.setGraphic(gearIcon);
+
+        Label commentSectionLabel = new Label("Kommentarer:");
+        commentSectionLabel.setFont(new Font("System Bold", 12.0));
+
+        VBox commentSection = new VBox();
+        commentSection.setPadding(new Insets(25,0,40,0));
+
+        commentSection.getChildren().add(commentSectionLabel);
+        commentSection.getChildren().add(commentsTableView);
+        commentSection.getChildren().add(editSelectedCommentButton);
+
+        return commentSection;
     }
 
-    @FXML
-    private void mainImageButtonClicked(String url) {
-        backgroundButton.setVisible(true);
-        largeImageView.setImage(new Image(url));
-        largeImageView.setVisible(true);
+    /**
+     * Updates the project list view.
+     */
+    private void updateProjectListWrapper() {
+        this.projectListWrapper.setAll(this.projectLib.listProjects());
     }
-
-    @FXML
-    private void backgroundButtonClicked() {
-        backgroundButton.setVisible(false);
-        largeImageView.setVisible(false);
-    }
-
-    @FXML
-    private void switchToLogin() throws IOException {
-        App.setRoot("login");
-    }
-
-
 }
