@@ -8,18 +8,22 @@ import java.util.ArrayList;
  */
 public class Project extends TaskMasterClass {
 
+    private String projectName;
     private String customerName;
     private String customerEmail;
     private String customerPhoneNumber;
     private String address;
     private final ArrayList<Stage> stages;
 
+
     public Project (String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
-        setName(projectName);
+
+        this.projectName = projectName;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.customerPhoneNumber = customerPhoneNumber;
         this.address = address;
+
         setFinished(false);
         setEndDate(null);
         this.stages = new ArrayList<>();
@@ -74,6 +78,14 @@ public class Project extends TaskMasterClass {
 
     public String getCustomerName() {
         return customerName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public void setCustomerName(String customerName) {

@@ -189,9 +189,6 @@ public class MainController {
         GridPane gridPane1 = new GridPane();
 
 
-
-
-
         VBox vBox1 = new VBox();
         vBox1.getChildren().add(informationPaneHBox);
         vBox1.getChildren().add(new Label("Kommentarer:"));
