@@ -16,11 +16,11 @@ public class Project {
     private String customerEmail;
     private String customerPhoneNumber;
     private String address;
-    private boolean finished;
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalDate deadLine;
     private String description;
-    private final ArrayList<Stage> stages;
+    private final ArrayList<Task> tasks;
 
     public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
         this.name = projectName;
@@ -30,7 +30,8 @@ public class Project {
         this.address = address;
         this.startDate = null;
         this.endDate = null;
-        this.stages = new ArrayList<>();
+        this.deadLine = null;
+        this.tasks = new ArrayList<>();
     }
 
     public Project(String projectName, String customerName, String customerEmail,
@@ -43,9 +44,15 @@ public class Project {
         this.customerPhoneNumber = customerPhoneNumber;
         this.address = address;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.description = description;
-        this.stages = new ArrayList<>();
+        this.tasks = new ArrayList<>();
+        if (LocalDate.now().isBefore(endDate)) {
+            this.deadLine = endDate;
+            this.endDate = null;
+        } else {
+            this.endDate = endDate;
+            this.deadLine = null;
+        }
     }
 
     /**
@@ -53,46 +60,46 @@ public class Project {
      * @param name {@code String} name of the stage to be returned.
      * @return {@code Stage} with given name.
      */
-    public Stage getStage(String name) {
-        Stage returnStage = null;
-        for (Stage stage : stages) {
-            if (stage.getName().equals(name)) {
-                returnStage = stage;
+    public Task getTask(String name) {
+        Task returnTask = null;
+        for (Task task : tasks) {
+            if (task.getName().equals(name)) {
+                returnTask = task;
             }
         }
-        return returnStage;
+        return returnTask;
     }
 
     /**
      * Returns the stages of the project as an ArrayList.
      * @return {@code ArrayList<Stage>} of the projects stages.
      */
-    public List<Stage> getStages() {
-        return this.stages;
+    public List<Task> getTasks() {
+        return this.tasks;
     }
 
     /**
      * Adds a stage to the projects list of stages.
-     * @param stage {@code Stage} the stage to be added.
+     * @param task {@code Stage} the stage to be added.
      */
-    public void addStage(Stage stage) {
-        if(stage != null){
-        this.stages.add(stage);
+    public void addTask(Task task) {
+        if(task != null){
+        this.tasks.add(task);
         }
     }
 
     /**
      * Removes a stage from the project.
-     * @param stageName {@code String} the name of the project to be removed.
+     * @param taskName {@code String} the name of the project to be removed.
      */
-    public void removeStage(String stageName) {
-        Stage removeStage = null;
-        for (Stage stage : stages) {
-            if (stage.getName().equals(stageName)) {
-                removeStage = stage;
+    public void removeTask(String taskName) {
+        Task removeTask = null;
+        for (Task task : tasks) {
+            if (task.getName().equals(taskName)) {
+                removeTask = task;
             }
         }
-        stages.remove(removeStage);
+        tasks.remove(removeTask);
     }
 
     public String getCustomerName() {
@@ -147,10 +154,23 @@ public class Project {
         this.startDate = date;
     }
 
-    public void setEndDate(LocalDate date) {
-        this.endDate = date;
-        if (LocalDate.now().isAfter(date)) {
-            this.finished = true;
+    public void setDeadLine(LocalDate date) {
+        this.deadLine = date;
+    }
+
+    public boolean isFinished() {
+        if (null != this.endDate) {
+            return LocalDate.now().isAfter(this.endDate);
+        } else {
+            return false;
+        }
+    }
+
+    public void setFinished(boolean finished) {
+        if (finished) {
+            this.endDate = LocalDate.now();
+        } else {
+            this.endDate = null;
         }
     }
 
@@ -163,7 +183,7 @@ public class Project {
         List<String[]> project = new ArrayList<>();
         project.add(projectInfo.toArray(new String[0]));
 
-        this.getStages().forEach(stage -> project.addAll(stage.getStageAsStringArray()));
+        this.getTasks().forEach(task -> project.addAll(task.getStageAsStringArray()));
 
         return project;
     }

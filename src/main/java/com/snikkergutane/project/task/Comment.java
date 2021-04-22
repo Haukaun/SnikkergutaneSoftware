@@ -11,20 +11,23 @@ public class Comment {
     private LocalDate date;
     private final String user;
     private String commentText;
-    private final List<String> imageUrls;
+    private Image image;
+    private String imageUrl;
 
     public Comment(LocalDate date, String user, String commentText) {
         this.date = date;
         this.user = user;
         this.commentText = commentText;
-        this.imageUrls = new ArrayList<>();
+        this.image = null;
+        this.imageUrl = null;
     }
 
-    public Comment(LocalDate date, String user, String commentText, List<String> imageUrls) {
+    public Comment(LocalDate date, String user, String commentText,String imageUrl) {
         this.date = date;
         this.user = user;
         this.commentText = commentText;
-        this.imageUrls = imageUrls;
+        this.imageUrl = imageUrl;
+        this.image = new Image(imageUrl);
     }
 
     public LocalDate getDate() {
@@ -47,34 +50,28 @@ public class Comment {
         this.commentText = commentText;
     }
 
-    public List<String> getImageUrls() {
-        return imageUrls;
+    public Image getImage() {
+        return this.image;
     }
 
-    public void addImage(Image image) {
-
-        imageUrls.add(image.getUrl());
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void removeImage(Image image) {
-        String deleteImage = null;
-        for (String i : imageUrls) {
-            if (i.equals(image.getUrl())) {
-                deleteImage = i;
-            }
-        }
-        if (deleteImage != null) {
-            imageUrls.remove(deleteImage);
-        }
+    public void setImage(Image image) {
+
+        this.imageUrl = image.getUrl();
+        this.image = new Image(imageUrl);
     }
 
-    public boolean containsImages() {
-        return (!imageUrls.isEmpty());
+    public void removeImage() {
+        this.image = null;
+        this.imageUrl = null;
     }
+
 
     public String[] getCommentAsStringArray() {
-        List<String> commentInfo = new ArrayList<>(Arrays.asList("" + this.date, this.user, this.commentText));
-        commentInfo.addAll(this.getImageUrls());
+        List<String> commentInfo = new ArrayList<>(Arrays.asList("" + this.date, this.user, this.commentText, this.imageUrl));
         return commentInfo.toArray(new String[0]);
     }
 
@@ -90,6 +87,6 @@ public class Comment {
         return this.user.equals(emp.getUser())
                 && this.date.isEqual(emp.getDate())
                 && this.commentText.equals(emp.getCommentText())
-                && this.imageUrls.size() == emp.getImageUrls().size();
+                && this.imageUrl.equals(emp.getImageUrl());
     }
 }

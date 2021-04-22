@@ -7,27 +7,31 @@ import java.util.*;
 import com.snikkergutane.project.CsvManager;
 import com.snikkergutane.project.Project;
 import com.snikkergutane.project.ProjectLib;
-import com.snikkergutane.project.Stage;
+import com.snikkergutane.project.Task;
 import com.snikkergutane.project.task.Comment;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
 public class MainController {
 
     private CsvManager csvManager;
     private final ProjectLib projectLib = new ProjectLib();
+    private ObservableList<String> projectListWrapper;
     @FXML Label statusLabel;
     @FXML private Button backgroundButton;
     @FXML private ImageView largeImageView;
     @FXML private ImageView mainImageView;
     @FXML private ListView<String> projectsListView;
     @FXML private ScrollPane projectInfoScrollPane;
-    @FXML private GridPane stageListGridPane;
-    @FXML private Label commentLabel;
+    @FXML private GridPane taskListGridPane;
     @FXML private Label customerNameLabel;
     @FXML private Label projectAddressLabel;
     @FXML private Label customerPhoneNumberLabel;
@@ -39,7 +43,9 @@ public class MainController {
     @FXML
     private void initialize() {
         projectLib.loadDemoProject();
-        projectsListView.getItems().addAll(projectLib.listProjects());
+        projectListWrapper =FXCollections.observableArrayList
+                (this.projectLib.listProjects());
+        projectsListView.setItems(projectListWrapper);
     }
 
     @FXML
@@ -54,25 +60,27 @@ public class MainController {
             projectStartDateLabel.setText("" + selectedProject.getStartDate());
             projectDescriptionTextArea.setText(selectedProject.getDescription());
 
-            stageListGridPane.getChildren().clear();
+            taskListGridPane.getChildren().clear();
             int y = 0;
-            ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
-            finishedImage.setPreserveRatio(true);
-            finishedImage.setFitHeight(30);
-            ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
-            unfinishedImage.setPreserveRatio(true);
-            unfinishedImage.setFitHeight(30);
-            for (Stage stage : selectedProject.getStages()) {
-                Button button = new Button(stage.getName());
+
+
+            for (Task task : selectedProject.getTasks()) {
+                Button button = new Button(task.getName());
                 button.setBackground(Background.EMPTY);
-                button.setOnAction(e -> stageButtonClicked(stage));
+                button.setOnAction(e -> stageButtonClicked(task));
 
-                stageListGridPane.add(button, 0, y);
+                taskListGridPane.add(button, 0, y);
 
-                if (stage.isFinished()) {
-                    stageListGridPane.add(finishedImage, 1, y);
+                if (task.isFinished()) {
+                    ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
+                    finishedImage.setPreserveRatio(true);
+                    finishedImage.setFitHeight(30);
+                    taskListGridPane.add(finishedImage, 1, y);
                 } else {
-                    stageListGridPane.add(unfinishedImage, 1, y);
+                    ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
+                    unfinishedImage.setPreserveRatio(true);
+                    unfinishedImage.setFitHeight(30);
+                    taskListGridPane.add(unfinishedImage, 1, y);
                 }
                 y++;
             }
@@ -83,40 +91,35 @@ public class MainController {
     }
 
     @FXML
-    private void stageButtonClicked(Stage stage) {
+    private void stageButtonClicked(Task task) {
 
-        HBox stageHBox = new HBox();
+        VBox stageVBox = new VBox();
 
         //Information pane
         HBox informationPaneHBox = new HBox();
 
         //Image display
-        VBox imageDisplayVBox = createImageDisplayVBox(stage);
+        informationPaneHBox.getChildren().add(createImageDisplayVBox(task));
+
         //Stage description
-        VBox stageDescriptionVBox = createStageDescriptionVBox(stage);
+        informationPaneHBox.getChildren().add(createStageDescriptionVBox(task));
 
-        informationPaneHBox.getChildren().add(imageDisplayVBox);
-        informationPaneHBox.getChildren().add(stageDescriptionVBox);
+        //Comments section
+        VBox commentSection = createCommentSection(task);
 
-        //TODO: Comment section
-        //GridPane commentSectionGridPane = createCommentSectionGridPane();
+        //Put it all together
+        stageVBox.getChildren().add(informationPaneHBox);
+        stageVBox.getChildren().add(commentSection);
 
-
-
-
-        VBox vBox1 = new VBox();
-        vBox1.getChildren().add(informationPaneHBox);
-        vBox1.getChildren().add(commentLabel);
-        //vBox1.getChildren().add(commentSectionGridPane);
-
-
-        stageHBox.getChildren().add(vBox1);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setPadding(new Insets(0,18,0,18));
-        scrollPane.setContent(stageHBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setContent(stageVBox);
 
-        projectTabPane.getTabs().add(new Tab(stage.getName(), scrollPane));
+
+        projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
     }
 
     @FXML
@@ -128,53 +131,55 @@ public class MainController {
     @FXML
     private void importProjectButtonClicked() {
         this.csvManager = new CsvManager(projectTabPane.getScene().getWindow());
-        ArrayList<List<String>> records = csvManager.importCsv();
-        if (!records.isEmpty() && records.size() > 1) {
-            List<String> projectInfo = records.get(0);
-            Project project = new Project(projectInfo.get(0), projectInfo.get(1),
-                    projectInfo.get(2),projectInfo.get(3),projectInfo.get(4),
-                    LocalDate.parse(projectInfo.get(5)),LocalDate.parse(projectInfo.get(6)),projectInfo.get(7));
-            records.remove(0);
+        List<List<String>> records = csvManager.importCsv();
+        try {
+            if (!records.isEmpty() && records.size() > 1) {
+                List<String> projectInfo = records.get(0);
+                Project project = new Project(projectInfo.get(0), projectInfo.get(1),
+                        projectInfo.get(2), projectInfo.get(3), projectInfo.get(4),
+                        LocalDate.parse(projectInfo.get(5)), LocalDate.parse(projectInfo.get(6)), projectInfo.get(7));
+                records.remove(0);
 
-            List<Comment> commentList = new ArrayList<>();
+                List<Comment> commentList = new ArrayList<>();
+                records.forEach(line -> {
+                    if (line.get(0).startsWith("+")) {
+                        String name = line.get(0).replace("+", "");
+                        LocalDate startDate = LocalDate.parse(line.get(1));
+                        LocalDate endDate = LocalDate.parse(line.get(2));
+                        String description = line.get(3);
 
-            records.forEach(line -> {
-                if (line.get(0).startsWith("+")) {
-                    String name = line.get(0).replace("+", "");
-                    LocalDate startDate = LocalDate.parse(line.get(1));
-                    LocalDate endDate = LocalDate.parse(line.get(2));
-                    String description = line.get(3);
+                        ArrayList<String> strings = new ArrayList<>(line);
+                        int numberOfImages = line.size() - 4;
+                        while (strings.size() > numberOfImages) {
+                            strings.remove(0);
+                        }
 
-                    ArrayList<String> strings = new ArrayList<>(line);
-                    int numberOfImages = line.size() - 4;
-                    while (strings.size() > numberOfImages) {
-                        strings.remove(0);
+                        Task task = new Task(name, startDate, endDate, description, strings);
+                        commentList.forEach(task::addComment);
+                        commentList.clear();
+                        project.addTask(task);
+                    } else {
+                        LocalDate date = LocalDate.parse(line.get(0));
+                        String user = line.get(1);
+                        String commentText = line.get(2);
+
+                        ArrayList<String> strings = new ArrayList<>(line);
+                        int numberOfImages = line.size() - 3;
+                        while (strings.size() > numberOfImages) {
+                            strings.remove(0);
+                        }
+
+                        commentList.add(new Comment(date, user, commentText, strings.get(0)));
                     }
-
-                    Stage stage = new Stage(name, startDate, endDate, description, strings);
-                    commentList.forEach(stage::addComment);
-                    commentList.clear();
-                    project.addStage(stage);
-                } else {
-                    LocalDate date = LocalDate.parse(line.get(0));
-                    String user = line.get(1);
-                    String commentText = line.get(2);
-
-                    ArrayList<String> strings = new ArrayList<>(line);
-                    int numberOfImages = line.size() - 3;
-                    while (strings.size() > numberOfImages) {
-                        strings.remove(0);
-                    }
-
-                    commentList.add(new Comment(date, user, commentText, strings));
-                }
-            });
-            projectLib.addProject(project);
-            projectsListView.getItems().clear();
-            projectsListView.getItems().addAll(projectLib.listProjects());
-            projectsListView.getSelectionModel().selectLast();
-            projectSelected();
-            statusLabel.setText("Import successful");
+                });
+                projectLib.addProject(project);
+                updateProjectListWrapper();
+                projectsListView.getSelectionModel().selectLast();
+                projectSelected();
+                statusLabel.setText("Import successful");
+            }
+        } catch (Exception exception) {
+            statusLabel.setText("ERROR: Invalid format in .csv");
         }
     }
 
@@ -192,17 +197,30 @@ public class MainController {
     }
 
     @FXML
+    private void deleteProjectButtonClicked() {
+        this.projectLib.removeProject
+                (this.projectsListView.getSelectionModel().getSelectedItem());
+        updateProjectListWrapper();
+        this.projectsListView.getSelectionModel().selectLast();
+        projectSelected();
+        if (this.projectLib.listProjects().isEmpty()) {
+            this.projectTabPane.getTabs().clear();
+        }
+    }
+
+    @FXML
     private void switchToLogin() throws IOException {
         App.setRoot("login");
     }
 
-    private VBox createImageDisplayVBox(Stage stage) {
+    private VBox createImageDisplayVBox(Task task) {
         VBox imageDisplayVBox = new VBox();
+        imageDisplayVBox.setPadding(new Insets(5,0,0,0));
 
         Button mainImageButton = new Button("");
         String imageUrl = "images/1.jpg";
-        if (!stage.getImageURLs().isEmpty()) {
-            imageUrl = stage.getImageURLs().get(0);
+        if (!task.getImageURLs().isEmpty()) {
+            imageUrl = task.getImageURLs().get(0);
         }
         ImageView mainImage = new ImageView(imageUrl);
         mainImage.setFitHeight(150);
@@ -214,14 +232,12 @@ public class MainController {
         thumbnailPane.setPrefHeight(50);
         thumbnailPane.setMaxHeight(50);
 
-        if (!stage.getImageURLs().isEmpty()) {
-            stage.getImageURLs().forEach(imageURL -> {
-                Button button = new Button("");
+        if (!task.getImageURLs().isEmpty()) {
+            task.getImageURLs().forEach(imageURL -> {
                 ImageView image = new ImageView(imageURL);
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
-                button.setGraphic(image);
-                button.setOnAction(e -> {
+                image.setOnMouseClicked(e -> {
                     ImageView largeImage = new ImageView(imageURL);
                     largeImage.setPreserveRatio(true);
                     largeImage.setFitWidth(200);
@@ -229,7 +245,7 @@ public class MainController {
                     mainImageButton.setGraphic(largeImage);
                     mainImageButton.setOnAction(a -> mainImageButtonClicked());
                 });
-                thumbnailPane.getChildren().add(button);
+                thumbnailPane.getChildren().add(image);
             });
         }
 
@@ -245,33 +261,112 @@ public class MainController {
         return imageDisplayVBox;
     }
 
-    private VBox createStageDescriptionVBox(Stage stage) {
+    private VBox createStageDescriptionVBox(Task task) {
         VBox stageDescriptionVBox = new VBox();
+        HBox.setHgrow(stageDescriptionVBox, Priority.SOMETIMES);
 
-        TextArea stageDescriptionArea = new TextArea(stage.getDescription());
+        TextArea stageDescriptionArea = new TextArea(task.getDescription());
         stageDescriptionArea.setWrapText(true);
         stageDescriptionArea.setEditable(false);
 
+
         Region r2 = new Region();
-        r2.setMinWidth(0);
-        r2.setPrefHeight(0);
-        r2.setPrefWidth(500);
+        HBox.setHgrow(r2,Priority.ALWAYS);
 
         HBox datesHBox = new HBox();
-        datesHBox.getChildren().add(new Label("Startdato: " + stage.getStartDate()));
+        datesHBox.getChildren().add(new Label("Startdato: " + task.getStartDate()));
         datesHBox.getChildren().add(r2);
-        if (stage.isFinished()) {
-            datesHBox.getChildren().add(new Label("Fullført dato: " + stage.getEndDate()));
+        if (task.isFinished()) {
+            datesHBox.getChildren().add(new Label("Fullført dato: " + task.getEndDate()));
         }
         else {
-            datesHBox.getChildren().add(new Label("Fullføres innen: " + stage.getEndDate()));
+            datesHBox.getChildren().add(new Label("Fullføres innen: " + task.getEndDate()));
         }
 
+        Label taskDescriptionLabel = new Label("Arbeidsbeskrivelse:");
+        taskDescriptionLabel.setFont(new Font("System Bold", 12.0));
+
         stageDescriptionVBox.setPadding(new Insets(0,0,0,20));
-        stageDescriptionVBox.getChildren().add(new Label("Arbeidsbeskrivelse:"));
+        stageDescriptionVBox.getChildren().add(taskDescriptionLabel);
         stageDescriptionVBox.getChildren().add(stageDescriptionArea);
         stageDescriptionVBox.getChildren().add(datesHBox);
 
         return stageDescriptionVBox;
+    }
+
+    private VBox createCommentSection(Task task) {
+        //Create the table to display all comments in
+
+        //Define the columns
+        //The Date column
+        TableColumn<Comment, LocalDate> dateTableColumn = new TableColumn<>("Date");
+        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateTableColumn.setMinWidth(75);
+        dateTableColumn.setMaxWidth(100);
+
+        //The User column
+        TableColumn<Comment, String> userNameColumn = new TableColumn<>("User");
+        userNameColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
+        userNameColumn.setMinWidth(100);
+        userNameColumn.setMaxWidth(500);
+
+        //The Comment column
+        TableColumn<Comment, String> commentColumn = new TableColumn<>("Comment");
+        commentColumn.setCellValueFactory(new PropertyValueFactory<>("commentText"));
+
+        TableColumn<Comment, Image> imageColumn = new TableColumn<>("Image");
+        imageColumn.setMinWidth(50);
+        imageColumn.setMaxWidth(500);
+        imageColumn.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(30);
+            imageview.setFitWidth(50);
+
+            //Set up the Table cell
+            TableCell<Comment, Image> cell = new TableCell<>() {
+                @Override
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            //Attach the imageview to the cell
+            cell.setGraphic(imageview);
+            return cell;
+        });
+        imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
+
+        TableView<Comment> commentsTableView = new TableView<>();
+        commentsTableView.getColumns().addAll(dateTableColumn, userNameColumn, commentColumn, imageColumn);
+        commentsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        commentsTableView.setItems(FXCollections.observableArrayList(task.getComments()));
+        commentsTableView.setPrefHeight(1000);
+
+
+        //Edit Comment Button
+        ImageView gearIcon = new ImageView("/com/snikkergutane/Icons/gear-icon.png");
+        gearIcon.setPreserveRatio(true);
+        gearIcon.setFitWidth(20);
+        gearIcon.setFitHeight(20);
+
+        Button editSelectedCommentButton = new Button("Rediger valgt kommentar");
+        editSelectedCommentButton.setGraphic(gearIcon);
+
+        Label commentSectionLabel = new Label("Kommentarer:");
+        commentSectionLabel.setFont(new Font("System Bold", 12.0));
+
+        VBox commentSection = new VBox();
+        commentSection.setPadding(new Insets(25,0,40,0));
+
+        commentSection.getChildren().add(commentSectionLabel);
+        commentSection.getChildren().add(commentsTableView);
+        commentSection.getChildren().add(editSelectedCommentButton);
+
+        return commentSection;
+    }
+    private void updateProjectListWrapper() {
+        this.projectListWrapper.setAll(this.projectLib.listProjects());
     }
 }

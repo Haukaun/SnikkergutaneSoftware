@@ -101,7 +101,7 @@ public class CsvManager {
      * @return {@code List<List<String} of the content of the .csv file, returns an empty list if no file is chosen,
      *      and returns a List with one empty String if unable to parse file.
      */
-    public ArrayList<List<String>> importCsv() {
+    public List<List<String>> importCsv() {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser
                 .ExtensionFilter("CSV files (*.csv)", "*.csv");
