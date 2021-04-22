@@ -1,4 +1,4 @@
-package com.snikkergutane.project.task;
+package com.snikkergutane.project;
 
 import javafx.scene.image.Image;
 

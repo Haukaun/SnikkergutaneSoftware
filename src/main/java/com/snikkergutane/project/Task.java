@@ -1,13 +1,11 @@
 package com.snikkergutane.project;
 
-import com.snikkergutane.project.task.Comment;
-
 import java.time.LocalDate;
 import java.util.*;
 
 /**
- * A single stage in a project,
- * containing a number of tasks to be finished.
+ * Represents a task in the project, and has a start date, finish date and/or deadline.
+ * It also contains a list of comments, and a list of imageURLs.
  */
 public class Task {
 

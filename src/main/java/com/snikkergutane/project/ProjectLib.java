@@ -65,6 +65,9 @@ public class ProjectLib {
         return new ArrayList<>(projects.keySet());
     }
 
+    /**
+     * Creates a demo project and adds it to the projectLib.
+     */
     public void loadDemoProject() {
         Task task = new Task("Balkongdør Stue");
         task.setDescription("Skifte balkongdør på stue.\n" +

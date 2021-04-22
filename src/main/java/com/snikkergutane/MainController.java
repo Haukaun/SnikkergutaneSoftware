@@ -8,7 +8,7 @@ import com.snikkergutane.project.CsvManager;
 import com.snikkergutane.project.Project;
 import com.snikkergutane.project.ProjectLib;
 import com.snikkergutane.project.Task;
-import com.snikkergutane.project.task.Comment;
+import com.snikkergutane.project.Comment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +20,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
+/**
+ * Controller for the main.fxml,
+ * this will handle all main user interaction.
+ */
 public class MainController {
 
     private CsvManager csvManager;
@@ -40,6 +44,10 @@ public class MainController {
     @FXML private TextArea projectDescriptionTextArea;
     @FXML private TabPane projectTabPane;
 
+    /**
+     * loads the demo project on startup,
+     * and shows the projects in the project list.
+     */
     @FXML
     private void initialize() {
         projectLib.loadDemoProject();
@@ -48,11 +56,19 @@ public class MainController {
         projectsListView.setItems(projectListWrapper);
     }
 
+    /**
+     * When a project in the project list is selected,
+     * creates and shows the project information tab.
+     */
     @FXML
     private void projectSelected() {
+        //Checks that a project is selected.
         if (projectsListView.getSelectionModel().getSelectedItem() != null) {
+
+            //Gets the selected project from the library.
             Project selectedProject = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
 
+            //Sets the text of the labels in the information tab to the information in the selected project.
             customerNameLabel.setText(selectedProject.getCustomerName());
             customerEmailLabel.setText(selectedProject.getCustomerEmail());
             customerPhoneNumberLabel.setText(selectedProject.getCustomerPhoneNumber());
@@ -60,14 +76,14 @@ public class MainController {
             projectStartDateLabel.setText("" + selectedProject.getStartDate());
             projectDescriptionTextArea.setText(selectedProject.getDescription());
 
+            //Updates the task list with the tasks from the selected project.
             taskListGridPane.getChildren().clear();
             int y = 0;
-
 
             for (Task task : selectedProject.getTasks()) {
                 Button button = new Button(task.getName());
                 button.setBackground(Background.EMPTY);
-                button.setOnAction(e -> stageButtonClicked(task));
+                button.setOnAction(e -> taskButtonClicked(task));
 
                 taskListGridPane.add(button, 0, y);
 
@@ -85,15 +101,19 @@ public class MainController {
                 y++;
             }
 
+            //Removes all tabs from the tab pane and adds the selected project's information tab.
             projectTabPane.getTabs().clear();
             projectTabPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
         }
     }
 
+    /**
+     * When a task in the project information tab is selected,
+     * creates and shows the information tab for the task.
+     * @param task the task to be viewed.
+     */
     @FXML
-    private void stageButtonClicked(Task task) {
-
-        VBox stageVBox = new VBox();
+    private void taskButtonClicked(Task task) {
 
         //Information pane
         HBox informationPaneHBox = new HBox();
@@ -107,32 +127,43 @@ public class MainController {
         //Comments section
         VBox commentSection = createCommentSection(task);
 
-        //Put it all together
+        //Put it all together in a vbox
+        VBox stageVBox = new VBox();
         stageVBox.getChildren().add(informationPaneHBox);
         stageVBox.getChildren().add(commentSection);
 
-
+        //The main contents of the task tab.
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setPadding(new Insets(0,18,0,18));
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         scrollPane.setContent(stageVBox);
 
-
+        //Adds the tab to the tab pane.
         projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
     }
 
+    /**
+     * When the add new project button is clicked,
+     * opens a new project wizard that will generate
+     * a new project and add it to the projectLib
+     */
     @FXML
     private void addProjectButtonClicked() {
         Optional<Project> result = new AddProjectController(projectLib).showAndWait();
         result.ifPresent(this.projectLib::addProject);
     }
 
+    /**
+     * Imports a project from a .csv file and adds it to the projectLib.
+     */
     @FXML
     private void importProjectButtonClicked() {
+        //Creates the csvManager to handle the import
         this.csvManager = new CsvManager(projectTabPane.getScene().getWindow());
         List<List<String>> records = csvManager.importCsv();
         try {
+            //Checks if the csvManager was able to read the file properly
             if (!records.isEmpty() && records.size() > 1) {
                 List<String> projectInfo = records.get(0);
                 Project project = new Project(projectInfo.get(0), projectInfo.get(1),
@@ -142,36 +173,43 @@ public class MainController {
 
                 List<Comment> commentList = new ArrayList<>();
                 records.forEach(line -> {
+                    //if a line starts with "+" it is interpreted as a new task.
                     if (line.get(0).startsWith("+")) {
                         String name = line.get(0).replace("+", "");
                         LocalDate startDate = LocalDate.parse(line.get(1));
                         LocalDate endDate = LocalDate.parse(line.get(2));
                         String description = line.get(3);
 
-                        ArrayList<String> strings = new ArrayList<>(line);
+                        //Removes the information we've already used so that only the image urls remain.
+                        ArrayList<String> imageUrls = new ArrayList<>(line);
                         int numberOfImages = line.size() - 4;
-                        while (strings.size() > numberOfImages) {
-                            strings.remove(0);
+                        while (imageUrls.size() > numberOfImages) {
+                            imageUrls.remove(0);
                         }
 
-                        Task task = new Task(name, startDate, endDate, description, strings);
+                        //Creates the task
+                        Task task = new Task(name, startDate, endDate, description, imageUrls);
                         commentList.forEach(task::addComment);
                         commentList.clear();
                         project.addTask(task);
                     } else {
+                        //If the line does not start with "+", it is read as a new comment.
                         LocalDate date = LocalDate.parse(line.get(0));
                         String user = line.get(1);
                         String commentText = line.get(2);
 
-                        ArrayList<String> strings = new ArrayList<>(line);
+                        //Removes the information we've already used so that only the image urls remain.
+                        ArrayList<String> imageUrls = new ArrayList<>(line);
                         int numberOfImages = line.size() - 3;
-                        while (strings.size() > numberOfImages) {
-                            strings.remove(0);
+                        while (imageUrls.size() > numberOfImages) {
+                            imageUrls.remove(0);
                         }
 
-                        commentList.add(new Comment(date, user, commentText, strings.get(0)));
+                        commentList.add(new Comment(date, user, commentText, imageUrls.get(0)));
                     }
                 });
+                //Adds the newly generated project to the project library,
+                // updates the project list, and displays the new project to the user.
                 projectLib.addProject(project);
                 updateProjectListWrapper();
                 projectsListView.getSelectionModel().selectLast();
@@ -183,6 +221,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Displays a full size format of the image in the main image view.
+     */
     @FXML
     private void mainImageButtonClicked() {
         backgroundButton.setVisible(true);
@@ -190,12 +231,19 @@ public class MainController {
         largeImageView.setVisible(true);
     }
 
+    /**
+     * Hides the full size image view from the user.
+     */
     @FXML
     private void backgroundButtonClicked() {
         backgroundButton.setVisible(false);
         largeImageView.setVisible(false);
     }
 
+    /**
+     * If a project is selected in the project list, it is removed from the library and from the tab pane,
+     *  and the list is updated.
+     */
     @FXML
     private void deleteProjectButtonClicked() {
         this.projectLib.removeProject
@@ -208,11 +256,20 @@ public class MainController {
         }
     }
 
+    /**
+     * Switches back to the login screen.
+     * @throws IOException
+     */
     @FXML
     private void switchToLogin() throws IOException {
         App.setRoot("login");
     }
 
+    /**
+     * Creates an image display area to show the images in a task.
+     * @param task the task in question.
+     * @return {@code VBox} image display area.
+     */
     private VBox createImageDisplayVBox(Task task) {
         VBox imageDisplayVBox = new VBox();
         imageDisplayVBox.setPadding(new Insets(5,0,0,0));
@@ -261,6 +318,11 @@ public class MainController {
         return imageDisplayVBox;
     }
 
+    /**
+     * Creates the task's description area.
+     * @param task the task in question.
+     * @return {@code VBox} task description area.
+     */
     private VBox createStageDescriptionVBox(Task task) {
         VBox stageDescriptionVBox = new VBox();
         HBox.setHgrow(stageDescriptionVBox, Priority.SOMETIMES);
@@ -294,6 +356,11 @@ public class MainController {
         return stageDescriptionVBox;
     }
 
+    /**
+     * Creates a task's comment section.
+     * @param task the task in question.
+     * @return {@code VBox} the task's comment section.
+     */
     private VBox createCommentSection(Task task) {
         //Create the table to display all comments in
 
@@ -366,6 +433,10 @@ public class MainController {
 
         return commentSection;
     }
+
+    /**
+     * Updates the project list view.
+     */
     private void updateProjectListWrapper() {
         this.projectListWrapper.setAll(this.projectLib.listProjects());
     }
