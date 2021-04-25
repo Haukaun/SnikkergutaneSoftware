@@ -22,6 +22,10 @@ public class Project {
     private String description;
     private final ArrayList<Task> tasks;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
         this.name = projectName;
         this.customerName = customerName;

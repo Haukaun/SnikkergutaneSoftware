@@ -43,6 +43,7 @@ public class MainController {
     @FXML private Label projectStartDateLabel;
     @FXML private TextArea projectDescriptionTextArea;
     @FXML private TabPane projectTabPane;
+    @FXML private Button editProjectButton;
 
     /**
      * loads the demo project on startup,
@@ -141,17 +142,6 @@ public class MainController {
 
         //Adds the tab to the tab pane.
         projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
-    }
-
-    /**
-     * When the add new project button is clicked,
-     * opens a new project wizard that will generate
-     * a new project and add it to the projectLib
-     */
-    @FXML
-    private void addProjectButtonClicked() {
-        Optional<Project> result = new AddProjectController(projectLib).showAndWait();
-        result.ifPresent(this.projectLib::addProject);
     }
 
     /**
@@ -440,4 +430,33 @@ public class MainController {
     private void updateProjectListWrapper() {
         this.projectListWrapper.setAll(this.projectLib.listProjects());
     }
+
+
+    @FXML
+    private void addProjectButton(){
+        ProjectDialog projectDialog = new ProjectDialog();
+
+        Optional<Project> result = projectDialog.showAndWait();
+
+        if (result.isPresent()){
+            Project newProject = result.get();
+            this.projectLib.addProject(newProject);
+            updateProjectListWrapper();
+        }
+    }
+
+    private void editProject(Project project){
+        if(project == null){
+        updateProjectListWrapper();
+        } else {
+            ProjectDialog projectDialog = new ProjectDialog(project, true);
+            projectDialog.showAndWait();
+            updateProjectListWrapper();
+        }
+    }
+
+    private void editProjectButton() {
+
+    }
+
 }

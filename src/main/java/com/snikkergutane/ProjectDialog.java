@@ -41,7 +41,7 @@ public class ProjectDialog extends Dialog<Project> {
     }
 
     private void showContent(){
-        setTitle("Patient Dialog");
+        setTitle("Project Dialog");
 
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -51,23 +51,23 @@ public class ProjectDialog extends Dialog<Project> {
         grid.setPadding(new Insets(20, 105, 10, 10));
 
         TextField projectName = new TextField();
-        projectName.setPromptText("Firstname");
+        projectName.setPromptText("ProjectName");
 
         TextField customerName = new TextField();
-        customerName.setPromptText("Lastname");
+        customerName.setPromptText("CustomerName");
 
         TextField customerEmail = new TextField();
-        customerEmail.setPromptText("SecurityNumber");
+        customerEmail.setPromptText("CustomerEmail");
 
         TextField customerPhoneNumber = new TextField();
-        customerPhoneNumber.setPromptText("Practitioner");
+        customerPhoneNumber.setPromptText("CustomerNumber");
 
         TextField Adress = new TextField();
-        Adress.setPromptText("Diagnosis");
+        Adress.setPromptText("Address");
 
         if((mode == Mode.EDIT) || (mode == Mode.INFO)){
 
-            projectName.setText(existingProject.getProjectName());
+            projectName.setText(existingProject.getName());
             customerName.setText(existingProject.getCustomerName());
             customerEmail.setText(existingProject.getCustomerEmail());
             customerPhoneNumber.setText(existingProject.getCustomerPhoneNumber());
@@ -87,16 +87,16 @@ public class ProjectDialog extends Dialog<Project> {
         grid.add(new Label("ProjectName"), 0, 0);
         grid.add(projectName, 1, 0 );
 
-        grid.add(new Label("Lastname:"), 0, 1);
+        grid.add(new Label("Customer Name:"), 0, 1);
         grid.add(customerName, 1, 1);
 
-        grid.add(new Label("SecurityNumber:"), 0, 2);
+        grid.add(new Label("Customer Email:"), 0, 2);
         grid.add(customerEmail, 1, 2);
 
-        grid.add(new Label("Practitioner:"), 0, 3);
+        grid.add(new Label("Customer Number:"), 0, 3);
         grid.add(customerPhoneNumber, 1, 3);
 
-        grid.add(new Label("Diagnosis:"), 0, 4);
+        grid.add(new Label("Address:"), 0, 4);
         grid.add(Adress,1,4);
 
         getDialogPane().setContent(grid);
@@ -109,7 +109,7 @@ public class ProjectDialog extends Dialog<Project> {
                         if (mode == Mode.NEW) {
                             result = new Project(projectName.getText(), customerName.getText(), customerEmail.getText(), customerPhoneNumber.getText(), Adress.getText());
                         } else if (mode == Mode.EDIT) {
-                            existingProject.setProjectName(projectName.getText());
+                            existingProject.setName(projectName.getText());
                             existingProject.setCustomerName(customerName.getText());
                             existingProject.setCustomerEmail(customerEmail.getText());
                             existingProject.setCustomerPhoneNumber(customerPhoneNumber.getText());
@@ -120,7 +120,6 @@ public class ProjectDialog extends Dialog<Project> {
                     return result;
                 }
         );
-
 
     }
 }
