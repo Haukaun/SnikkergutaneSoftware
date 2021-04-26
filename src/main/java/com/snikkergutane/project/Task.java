@@ -13,7 +13,6 @@ public class Task {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private boolean finished;
     private final ArrayList<String> imageURLs;
     private ArrayList<Comment> comments;
 
@@ -63,15 +62,15 @@ public class Task {
         }
     }
 
-    public List<String[]> getStageAsStringArray() {
-        List<String> stageInfo = new ArrayList<>(Arrays.asList("+" + this.name,"" + this.startDate,"" + this.endDate, this.description));
-        stageInfo.addAll(this.getImageURLs());
+    public List<String[]> getTaskAsStringArray() {
+        List<String> taskInfo = new ArrayList<>(Arrays.asList("+" + this.name,"" + this.startDate,"" + this.endDate, this.description));
+        taskInfo.addAll(this.getImageURLs());
 
-        List<String[]> stageAsStringArray = new ArrayList<>();
-        getComments().forEach(c -> stageAsStringArray.add(c.getCommentAsStringArray()));
-        stageAsStringArray.add(stageInfo.toArray(new String[0]));
+        List<String[]> taskAsStringArray = new ArrayList<>();
+        getComments().forEach(c -> taskAsStringArray.add(c.getCommentAsStringArray()));
+        taskAsStringArray.add(taskInfo.toArray(new String[0]));
 
-        return stageAsStringArray;
+        return taskAsStringArray;
     }
 
     public String getDescription() {
@@ -86,7 +85,7 @@ public class Task {
         return this.startDate;
     }
 
-    public ArrayList<String> getImageURLs() {
+    public List<String> getImageURLs() {
         return this.imageURLs;
     }
 
@@ -120,6 +119,7 @@ public class Task {
         for (String imageUrl : this.imageURLs) {
             if (imageUrl.equals(url)) {
                 success = false;
+                break;
             }
         }
         if (success) {

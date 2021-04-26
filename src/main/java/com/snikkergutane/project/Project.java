@@ -18,7 +18,7 @@ public class Project {
     private String address;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDate deadLine;
+    private LocalDate deadline;
     private String description;
     private final ArrayList<Task> tasks;
 
@@ -34,7 +34,7 @@ public class Project {
         this.address = address;
         this.startDate = null;
         this.endDate = null;
-        this.deadLine = null;
+        this.deadline = null;
         this.tasks = new ArrayList<>();
     }
 
@@ -51,11 +51,11 @@ public class Project {
         this.description = description;
         this.tasks = new ArrayList<>();
         if (LocalDate.now().isBefore(endDate)) {
-            this.deadLine = endDate;
+            this.deadline = endDate;
             this.endDate = null;
         } else {
             this.endDate = endDate;
-            this.deadLine = null;
+            this.deadline = null;
         }
     }
 
@@ -158,8 +158,8 @@ public class Project {
         this.startDate = date;
     }
 
-    public void setDeadLine(LocalDate date) {
-        this.deadLine = date;
+    public void setDeadline(LocalDate date) {
+        this.deadline = date;
     }
 
     public boolean isFinished() {
@@ -187,7 +187,7 @@ public class Project {
         List<String[]> project = new ArrayList<>();
         project.add(projectInfo.toArray(new String[0]));
 
-        this.getTasks().forEach(task -> project.addAll(task.getStageAsStringArray()));
+        this.getTasks().forEach(task -> project.addAll(task.getTaskAsStringArray()));
 
         return project;
     }

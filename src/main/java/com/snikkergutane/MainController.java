@@ -1,5 +1,6 @@
 package com.snikkergutane;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -19,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 /**
  * Controller for the main.fxml,
@@ -150,8 +153,14 @@ public class MainController {
     @FXML
     private void importProjectButtonClicked() {
         //Creates the csvManager to handle the import
-        this.csvManager = new CsvManager(projectTabPane.getScene().getWindow());
-        List<List<String>> records = csvManager.importCsv();
+        this.csvManager = new CsvManager();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser
+                .ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        fileChooser.setTitle("Open resource file");
+        File file = fileChooser.showOpenDialog(projectTabPane.getScene().getWindow());
+        List<List<String>> records = csvManager.importCsv(file);
         try {
             //Checks if the csvManager was able to read the file properly
             if (!records.isEmpty() && records.size() > 1) {
@@ -208,6 +217,50 @@ public class MainController {
             }
         } catch (Exception exception) {
             statusLabel.setText("ERROR: Invalid format in .csv");
+        }
+    }
+
+
+    @FXML
+    private void exportProjectsButtonClicked() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose file save location");
+        File saveDirectory = directoryChooser.showDialog(this.statusLabel.getScene().getWindow());
+        if (null != saveDirectory) {
+            csvManager.setSaveFileDirectory(saveDirectory.getAbsolutePath());
+            Boolean overwriteAll = null;
+            for (Project project : projectLib.getProjects().values()) {
+                boolean success = false;
+                if (csvManager.createCsvFile(project.getName())) {
+                    success = true;
+                } else {
+                    if (null == overwriteAll) {
+                        OverwriteConfirmationDialog ocDialog = new OverwriteConfirmationDialog(project);
+                        Optional<Integer> result = ocDialog.showAndWait();
+
+                        if (result.isPresent()) {
+                            switch (result.get()) {
+                                case 1:
+                                    success = true;
+                                    break;
+                                case 3:
+                                    success = true;
+                                    overwriteAll = true;
+                                    break;
+                                case 4:
+                                    success = false;
+                                    overwriteAll = false;
+                                    break;
+                                default:
+                                    success = false;
+                            }
+                        }
+                    }
+                }
+                if (success || null != overwriteAll && overwriteAll) {
+                    csvManager.writeToCsv(project.getProjectAsStringArrayList());
+                }
+            }
         }
     }
 

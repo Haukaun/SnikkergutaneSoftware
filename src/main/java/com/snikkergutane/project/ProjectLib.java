@@ -1,9 +1,10 @@
 package com.snikkergutane.project;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A collection of projects.
@@ -24,6 +25,10 @@ public class ProjectLib {
     public Project getProject(String name) {
         //TODO: Handle NullPointerExceptions.
         return projects.get(name);
+    }
+
+    public SortedMap<String, Project> getProjects() {
+        return this.projects;
     }
 
     /**

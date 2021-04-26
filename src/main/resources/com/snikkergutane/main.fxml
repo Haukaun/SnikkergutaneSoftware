@@ -90,7 +90,7 @@
                 <Menu mnemonicParsing="false" text="File">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#importProjectButtonClicked" text="importer .csv..." />
-                        <MenuItem mnemonicParsing="false" text="Lagre .csv..." />
+                        <MenuItem mnemonicParsing="false" onAction="#exportProjectsButtonClicked" text="Lagre .csv..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>

@@ -1,8 +1,5 @@
 package com.snikkergutane.project;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -16,11 +13,9 @@ import java.util.stream.Stream;
 public class CsvManager {
     private File csvOutputFile;
     private String saveFileDirectory;
-    private final Window stage;
 
-
-    public CsvManager(Window stage) {
-        this.stage = stage;
+    public CsvManager() {
+        //Intentionally empty
     }
 
     /**
@@ -59,7 +54,7 @@ public class CsvManager {
     public boolean createCsvFile(String fileName) {
         boolean success = false;
         try {
-            csvOutputFile = new File(saveFileDirectory + "/" + fileName + ".csv");
+            csvOutputFile = new File(saveFileDirectory,fileName + ".csv");
             if (csvOutputFile.createNewFile()) {
                 success = true;
             }
@@ -85,7 +80,6 @@ public class CsvManager {
         try (BufferedWriter bw = new BufferedWriter((
                 new OutputStreamWriter(
                         new FileOutputStream(csvOutputFile), StandardCharsets.UTF_8)))) {
-            bw.newLine();
             for (String[] strings : dataList) {
                 String s = convertToCsv(strings);
                 bw.write(s);
@@ -101,13 +95,7 @@ public class CsvManager {
      * @return {@code List<List<String} of the content of the .csv file, returns an empty list if no file is chosen,
      *      and returns a List with one empty String if unable to parse file.
      */
-    public List<List<String>> importCsv() {
-        FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser
-                .ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extensionFilter);
-        fileChooser.setTitle("Open resource file");
-        File file = fileChooser.showOpenDialog(stage);
+    public List<List<String>> importCsv(File file) {
         ArrayList<List<String>> records = new ArrayList<>();
         Charset charset = StandardCharsets.UTF_8;
         if (null != file) {
