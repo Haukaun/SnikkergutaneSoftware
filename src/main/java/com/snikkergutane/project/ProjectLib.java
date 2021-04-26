@@ -84,8 +84,8 @@ public class ProjectLib {
         task.addImage("com/snikkergutane/images/3.jpg");
         task.addImage("com/snikkergutane/images/4.jpg");
 
-        Project newProject = new Project("Portveien 4", "Anne Knutsdotter", "anne.knutsdotter@Steinroys.no", "12345678", "Der ingen skulle tru at nokon kunne bu");
-        newProject.setStartDate(LocalDate.now());
+        Project newProject = new Project("Portveien 4", "Anne Knutsdotter", "anne.knutsdotter@Steinroys.no", "12345678", "Der ingen skulle tru at nokon kunne bu", LocalDate.now());
+
         newProject.addTask(task);
 
         if (this.projects.size() == 0) {

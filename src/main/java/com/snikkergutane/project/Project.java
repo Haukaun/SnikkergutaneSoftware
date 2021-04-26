@@ -26,13 +26,14 @@ public class Project {
         this.name = name;
     }
 
-    public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address) {
+
+    public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address, LocalDate startDate) {
         this.name = projectName;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.customerPhoneNumber = customerPhoneNumber;
         this.address = address;
-        this.startDate = null;
+        this.startDate = startDate;
         this.endDate = null;
         this.deadline = null;
         this.tasks = new ArrayList<>();

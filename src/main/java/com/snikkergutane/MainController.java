@@ -500,8 +500,10 @@ public class MainController {
         }
     }
 
+    @FXML
     private void editProjectButton() {
-
+        Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
+        editProject(project);
     }
 
 }

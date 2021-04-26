@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -17,7 +19,7 @@ class ProjectTest {
 
     @BeforeEach
     public void setUp() {
-        this.project = new Project("Project1", "Snikkerguttane", "test@hotmail.com", "98454796", "test 12");
+        this.project = new Project("Project1", "Snikkerguttane", "test@hotmail.com", "98454796", "test 12", LocalDate.now());
         this.task1 = new Task("Stage1");
         this.task2 = new Task("Stage2");
         this.project.addTask(task1);
