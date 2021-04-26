@@ -2,8 +2,12 @@ package com.snikkergutane;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 
 import com.snikkergutane.project.CsvManager;
 import com.snikkergutane.project.Project;
@@ -154,77 +158,65 @@ public class MainController {
     private void importProjectButtonClicked() {
         //Creates the csvManager to handle the import
         this.csvManager = new CsvManager();
+
+        //Chooses the file to import
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser
                 .ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extensionFilter);
-        fileChooser.setTitle("Open resource file");
+        fileChooser.setTitle("Åpne ressursfil");
         File file = fileChooser.showOpenDialog(projectTabPane.getScene().getWindow());
-        List<List<String>> records = csvManager.importCsv(file);
-        try {
-            //Checks if the csvManager was able to read the file properly
-            if (!records.isEmpty() && records.size() > 1) {
-                List<String> projectInfo = records.get(0);
-                Project project = new Project(projectInfo.get(0), projectInfo.get(1),
-                        projectInfo.get(2), projectInfo.get(3), projectInfo.get(4),
-                        LocalDate.parse(projectInfo.get(5)), LocalDate.parse(projectInfo.get(6)), projectInfo.get(7));
-                records.remove(0);
 
-                List<Comment> commentList = new ArrayList<>();
-                records.forEach(line -> {
-                    //if a line starts with "+" it is interpreted as a new task.
-                    if (line.get(0).startsWith("+")) {
-                        String name = line.get(0).replace("+", "");
-                        LocalDate startDate = LocalDate.parse(line.get(1));
-                        LocalDate endDate = LocalDate.parse(line.get(2));
-                        String description = line.get(3);
-
-                        //Removes the information we've already used so that only the image urls remain.
-                        ArrayList<String> imageUrls = new ArrayList<>(line);
-                        int numberOfImages = line.size() - 4;
-                        while (imageUrls.size() > numberOfImages) {
-                            imageUrls.remove(0);
-                        }
-
-                        //Creates the task
-                        Task task = new Task(name, startDate, endDate, description, imageUrls);
-                        commentList.forEach(task::addComment);
-                        commentList.clear();
-                        project.addTask(task);
-                    } else {
-                        //If the line does not start with "+", it is read as a new comment.
-                        LocalDate date = LocalDate.parse(line.get(0));
-                        String user = line.get(1);
-                        String commentText = line.get(2);
-
-                        //Removes the information we've already used so that only the image urls remain.
-                        ArrayList<String> imageUrls = new ArrayList<>(line);
-                        int numberOfImages = line.size() - 3;
-                        while (imageUrls.size() > numberOfImages) {
-                            imageUrls.remove(0);
-                        }
-
-                        commentList.add(new Comment(date, user, commentText, imageUrls.get(0)));
-                    }
-                });
-                //Adds the newly generated project to the project library,
-                // updates the project list, and displays the new project to the user.
-                projectLib.addProject(project);
+        if (null != file ) {
+            //Adds the newly generated project to the project library,
+            // updates the project list, and displays the new project to the user.
+            try {
+                Project newProject = csvManager.importCsv(file);
+                projectLib.addProject(newProject);
                 updateProjectListWrapper();
                 projectsListView.getSelectionModel().selectLast();
                 projectSelected();
-                statusLabel.setText("Import successful");
+                statusLabel.setText("Successfully imported " + file.getPath());
+            } catch (ArrayIndexOutOfBoundsException a) {
+                statusLabel.setText("Import failed: wrong format in .csv");
             }
-        } catch (Exception exception) {
-            statusLabel.setText("ERROR: Invalid format in .csv");
+        } else {
+            statusLabel.setText("Import aborted");
         }
     }
 
+    @FXML
+    private void importFolderButtonClicked() {
+        csvManager = new CsvManager();
+        //Choose the folder to import
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Velg mappe å importere");
+        File importDirectory = directoryChooser.showDialog(this.statusLabel.getScene().getWindow());
+        //Aborts the import if user cancels choosing a directory
+        if (null == importDirectory) {
+            statusLabel.setText("Import aborted");
+        } else {
+            //Import the projects files
+            try {
+                List<Project> projects = csvManager.importFolder(importDirectory);
+                //If projects were successfully imported
+                if (!projects.isEmpty()) {
+                    projects.forEach(projectLib::addProject);
+                    updateProjectListWrapper();
+                    statusLabel.setText("Successfully imported " + importDirectory);
+                }
+            } catch (IOException e) {
+                statusLabel.setText("Import failed: wrong format of file(s) in folder");
+            } catch (ArrayIndexOutOfBoundsException a) {
+                statusLabel.setText("Import failed: wrong format of file in folder.");
+            }
+        }
+    }
 
     @FXML
     private void exportProjectsButtonClicked() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Choose file save location");
+        directoryChooser.setTitle("Velg plassering for fillagring");
         File saveDirectory = directoryChooser.showDialog(this.statusLabel.getScene().getWindow());
         if (null != saveDirectory) {
             csvManager.setSaveFileDirectory(saveDirectory.getAbsolutePath());
@@ -486,7 +478,7 @@ public class MainController {
 
 
     @FXML
-    private void addProjectButton(){
+    private void addProjectButton() {
         ProjectDialog projectDialog = new ProjectDialog();
 
         Optional<Project> result = projectDialog.showAndWait();

@@ -22,20 +22,23 @@ public class OverwriteConfirmationDialog extends Dialog<Integer> {
     }
 
     private void createContent() {
-        setTitle("Confirm overwrite");
-        setHeaderText(project.getName() + ".csv already exists in this location.");
-        setContentText("Overwrite existing file?");
+        setTitle("Bekreft overskriving");
+        setHeaderText(project.getName() + ".csv finnes allerede i denne filplasseringen.");
+        setContentText("Vil du overskrive eksisterende fil?");
 
-        ButtonType buttonTypeYesToAll = new ButtonType("Yes to all", ButtonBar.ButtonData.LEFT);
-        ButtonType buttonTypeNoToAll = new ButtonType("No to all", ButtonBar.ButtonData.RIGHT);
-        getDialogPane().getButtonTypes().addAll(buttonTypeYesToAll, buttonTypeNoToAll, ButtonType.YES, ButtonType.NO);
+        ButtonType buttonTypeYesToAll = new ButtonType("Ja til alle", ButtonBar.ButtonData.LEFT);
+        ButtonType buttonTypeNoToAll = new ButtonType("Nei til alle", ButtonBar.ButtonData.RIGHT);
+        ButtonType buttonTypeYes = new ButtonType("Ja", ButtonBar.ButtonData.YES);
+        ButtonType buttonTypeNo = new ButtonType("Nei", ButtonBar.ButtonData.NO);
+
+        getDialogPane().getButtonTypes().addAll(buttonTypeYesToAll, buttonTypeNoToAll, buttonTypeYes, buttonTypeNo);
 
         setResultConverter(
                 (ButtonType button) -> {
                     int result = 0;
-                    if (button == ButtonType.YES) {
+                    if (button == buttonTypeYes) {
                         result = 1;
-                    } else if (button == ButtonType.NO) {
+                    } else if (button == buttonTypeNo) {
                         result = 2;
                     } else if (button == buttonTypeYesToAll) {
                         result = 3;
