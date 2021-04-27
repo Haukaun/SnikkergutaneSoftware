@@ -1,6 +1,11 @@
 .check-box .box {
 
-    -fx-background-image: url("images/1.jpg");
-    -fx-background-size: cover, auto;
+    -fx-background-color: transparent;
+
+}
+
+.check-box:selected .mark {
+
+    -fx-background-color: #11ff00;
 
 }

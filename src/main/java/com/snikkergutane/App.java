@@ -2,6 +2,7 @@ package com.snikkergutane;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -51,4 +52,12 @@ public class App extends Application {
         launch(args);
     }
 
+    public static Object getController(Node node) {
+        Object controller = null;
+        do {
+            controller = node.getUserData();
+            node = node.getParent();
+        } while (controller == null && node != null);
+        return controller;
+    }
 }
