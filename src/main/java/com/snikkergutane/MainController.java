@@ -36,8 +36,9 @@ public class MainController {
     private CsvManager csvManager;
     private final ProjectLib projectLib = new ProjectLib();
     private ObservableList<String> projectListWrapper;
+    @FXML BorderPane mainPane;
     @FXML Label statusLabel;
-    @FXML private Button backgroundButton;
+    @FXML private HBox largeImageBackground;
     @FXML private ImageView largeImageView;
     @FXML private ImageView mainImageView;
     @FXML private ListView<String> projectsListView;
@@ -185,6 +186,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Imports all .csv files in folder chosen by user to the projectLib.
+     */
     @FXML
     private void importFolderButtonClicked() {
         csvManager = new CsvManager();
@@ -213,6 +217,10 @@ public class MainController {
         }
     }
 
+    /**
+     * Exports all projects in projectLib to .csv files in a directory chosen by user.
+     * If a file with the same name as a project already exists, an overwrite confirmation is displayed.
+     */
     @FXML
     private void exportProjectsButtonClicked() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -260,10 +268,12 @@ public class MainController {
      * Displays a full size format of the image in the main image view.
      */
     @FXML
-    private void mainImageButtonClicked() {
-        backgroundButton.setVisible(true);
-        largeImageView.setImage(new Image(mainImageView.getImage().getUrl()));
+    private void mainImageButtonClicked(ImageView imageView) {
+        largeImageBackground.setVisible(true);
+        largeImageView.setImage(imageView.getImage());
         largeImageView.setVisible(true);
+        largeImageView.fitHeightProperty().bind(mainPane.heightProperty());
+        largeImageView.fitWidthProperty().bind(mainPane.widthProperty());
     }
 
     /**
@@ -271,8 +281,7 @@ public class MainController {
      */
     @FXML
     private void backgroundButtonClicked() {
-        backgroundButton.setVisible(false);
-        largeImageView.setVisible(false);
+        largeImageBackground.setVisible(false);
     }
 
     /**
@@ -309,16 +318,15 @@ public class MainController {
         VBox imageDisplayVBox = new VBox();
         imageDisplayVBox.setPadding(new Insets(5,0,0,0));
 
-        Button mainImageButton = new Button("");
         String imageUrl = "images/1.jpg";
         if (!task.getImageURLs().isEmpty()) {
             imageUrl = task.getImageURLs().get(0);
         }
         ImageView mainImage = new ImageView(imageUrl);
+        mainImage.setPreserveRatio(true);
         mainImage.setFitHeight(150);
         mainImage.setFitWidth(200);
-        mainImageButton.setGraphic(mainImage);
-        mainImageButton.setOnAction(e -> mainImageButtonClicked());
+        mainImage.setOnMouseClicked(e -> mainImageButtonClicked(mainImage));
 
         FlowPane thumbnailPane = new FlowPane();
         thumbnailPane.setPrefHeight(50);
@@ -329,14 +337,7 @@ public class MainController {
                 ImageView image = new ImageView(imageURL);
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
-                image.setOnMouseClicked(e -> {
-                    ImageView largeImage = new ImageView(imageURL);
-                    largeImage.setPreserveRatio(true);
-                    largeImage.setFitWidth(200);
-                    largeImage.setFitHeight(150);
-                    mainImageButton.setGraphic(largeImage);
-                    mainImageButton.setOnAction(a -> mainImageButtonClicked());
-                });
+                image.setOnMouseClicked(e -> mainImage.setImage(new Image(imageURL)));
                 thumbnailPane.getChildren().add(image);
             });
         }
@@ -476,7 +477,9 @@ public class MainController {
         this.projectListWrapper.setAll(this.projectLib.listProjects());
     }
 
-
+    /**
+     * Opens a new project dialog where the user can create a new project.
+     */
     @FXML
     private void addProjectButton() {
         ProjectDialog projectDialog = new ProjectDialog();
@@ -491,19 +494,24 @@ public class MainController {
     }
 
     private void editProject(Project project){
-        if(project == null){
-        updateProjectListWrapper();
-        } else {
-            ProjectDialog projectDialog = new ProjectDialog(project, true);
-            projectDialog.showAndWait();
-            updateProjectListWrapper();
+        projectLib.removeProject(project.getName());
+
+        ProjectDialog projectDialog = new ProjectDialog(project, true);
+        Optional<Project> result = projectDialog.showAndWait();
+        if (result.isPresent()) {
+            projectLib.addProject(result.get());
         }
+        updateProjectListWrapper();
     }
 
     @FXML
     private void editProjectButton() {
         Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
-        editProject(project);
+        if (null != project) {
+            editProject(project);
+        } else {
+            statusLabel.setText("Error: choose a project from the list");
+        }
     }
 
 }
