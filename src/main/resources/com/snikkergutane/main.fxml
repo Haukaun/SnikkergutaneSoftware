@@ -908,10 +908,7 @@
                         <Button mnemonicParsing="false" style="-fx-background-color: TRANSPARENT;" />
                      </graphic>
                   </Tab>
-                <Tab closable="false" text="Legg til oppgave">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
+                <Tab fx:id="addTaskTab" closable="false" onSelectionChanged="#addTaskTabSelected" text="Legg til oppgave">
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>

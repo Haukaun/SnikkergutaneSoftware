@@ -1,0 +1,6 @@
+.check-box .box {
+
+    -fx-background-image: url("images/1.jpg");
+    -fx-background-size: cover, auto;
+
+}
