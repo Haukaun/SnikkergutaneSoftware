@@ -2,12 +2,8 @@ package com.snikkergutane;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Stream;
 
 import com.snikkergutane.project.CsvManager;
 import com.snikkergutane.project.Project;
@@ -16,8 +12,12 @@ import com.snikkergutane.project.Task;
 import com.snikkergutane.project.Comment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -26,6 +26,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  * Controller for the main.fxml,
@@ -40,7 +41,6 @@ public class MainController {
     @FXML Label statusLabel;
     @FXML private HBox largeImageBackground;
     @FXML private ImageView largeImageView;
-    @FXML private ImageView mainImageView;
     @FXML private ListView<String> projectsListView;
     @FXML private ScrollPane projectInfoScrollPane;
     @FXML private GridPane taskListGridPane;
@@ -51,6 +51,7 @@ public class MainController {
     @FXML private Label projectStartDateLabel;
     @FXML private TextArea projectDescriptionTextArea;
     @FXML private TabPane projectTabPane;
+    @FXML private Tab addTaskTab;
     @FXML private Button editProjectButton;
 
     /**
@@ -113,6 +114,8 @@ public class MainController {
             //Removes all tabs from the tab pane and adds the selected project's information tab.
             projectTabPane.getTabs().clear();
             projectTabPane.getTabs().add(new Tab("Project Info", projectInfoScrollPane));
+            selectedProject.getTasks().forEach(this::taskButtonClicked);
+            projectTabPane.getTabs().add(this.addTaskTab);
         }
     }
 
@@ -150,6 +153,18 @@ public class MainController {
 
         //Adds the tab to the tab pane.
         projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
+    }
+
+    @FXML
+    private void addTaskTabSelected() throws IOException {
+        if (this.addTaskTab.isSelected()) {
+            FXMLLoader taskLoader = new FXMLLoader(getClass().getResource("task.fxml"));
+            Parent root = taskLoader.load();
+            TaskController taskController = new TaskController(this);
+            taskLoader.setController(taskController);
+
+            addTaskTab.setContent(root);
+        }
     }
 
     /**
@@ -448,6 +463,15 @@ public class MainController {
         commentsTableView.setPrefHeight(1000);
 
 
+        //Add comment button
+        ImageView plusIcon = new ImageView("/com/snikkergutane/Icons/plus-icon.png");
+        plusIcon.setFitHeight(20);
+        plusIcon.setFitWidth(20);
+
+        Button addCommentButton = new Button("Legg til kommentar");
+        addCommentButton.setGraphic(plusIcon);
+        addCommentButton.setOnAction(e -> addCommentButtonClicked(task));
+
         //Edit Comment Button
         ImageView gearIcon = new ImageView("/com/snikkergutane/Icons/gear-icon.png");
         gearIcon.setPreserveRatio(true);
@@ -456,6 +480,22 @@ public class MainController {
 
         Button editSelectedCommentButton = new Button("Rediger valgt kommentar");
         editSelectedCommentButton.setGraphic(gearIcon);
+        editSelectedCommentButton.setOnAction(e -> editSelectedCommentButtonClicked());
+
+        //Delete comment button
+        ImageView minusIcon = new ImageView("/com/snikkergutane/Icons/minus-icon.png");
+        minusIcon.setFitHeight(20);
+        minusIcon.setFitWidth(20);
+
+        Button removeCommentButton = new Button("Legg til kommentar");
+        removeCommentButton.setGraphic(minusIcon);
+        removeCommentButton.setOnAction(e -> removeSelectedCommentButtonClicked());
+
+        HBox commentButtonsHBox = new HBox();
+        commentButtonsHBox.setSpacing(10);
+
+        commentButtonsHBox.getChildren().addAll(addCommentButton, editSelectedCommentButton, removeCommentButton);
+
 
         Label commentSectionLabel = new Label("Kommentarer:");
         commentSectionLabel.setFont(new Font("System Bold", 12.0));
@@ -465,9 +505,20 @@ public class MainController {
 
         commentSection.getChildren().add(commentSectionLabel);
         commentSection.getChildren().add(commentsTableView);
-        commentSection.getChildren().add(editSelectedCommentButton);
+        commentSection.getChildren().add(commentButtonsHBox);
 
         return commentSection;
+    }
+
+    private void removeSelectedCommentButtonClicked() {
+
+    }
+
+    private void editSelectedCommentButtonClicked() {
+
+    }
+
+    private void addCommentButtonClicked(Task task) {
     }
 
     /**
