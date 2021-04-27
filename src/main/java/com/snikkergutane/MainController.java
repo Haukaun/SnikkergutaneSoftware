@@ -523,8 +523,7 @@ public class MainController {
             System.err.println("No Item selected");
         }
         else{
-
-            //comment.setCommentText("YES");
+            
             CommentDialog commentDialog = new CommentDialog(comment, true);
             Optional<Comment> result = commentDialog.showAndWait();
             if(result.isPresent()){
@@ -535,12 +534,7 @@ public class MainController {
 
         }
         updateProjectListWrapper();
-        //ProjectDialog projectDialog = new ProjectDialog(project, true);
-        //<Project> result = projectDialog.showAndWait();
-        //if (result.isPresent()) {
-        //    projectLib.addProject(result.get());
-        //}
-        //updateProjectListWrapper();
+
 
     }
 
