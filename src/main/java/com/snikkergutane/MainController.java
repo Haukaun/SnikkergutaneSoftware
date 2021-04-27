@@ -23,7 +23,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -480,16 +482,16 @@ public class MainController {
 
         Button editSelectedCommentButton = new Button("Rediger valgt kommentar");
         editSelectedCommentButton.setGraphic(gearIcon);
-        editSelectedCommentButton.setOnAction(e -> editSelectedCommentButtonClicked());
+        editSelectedCommentButton.setOnAction(e -> editSelectedCommentButtonClicked(task, commentsTableView));
 
         //Delete comment button
         ImageView minusIcon = new ImageView("/com/snikkergutane/Icons/minus-icon.png");
         minusIcon.setFitHeight(20);
         minusIcon.setFitWidth(20);
 
-        Button removeCommentButton = new Button("Legg til kommentar");
+        Button removeCommentButton = new Button("Fjern kommentar");
         removeCommentButton.setGraphic(minusIcon);
-        removeCommentButton.setOnAction(e -> removeSelectedCommentButtonClicked());
+        removeCommentButton.setOnAction(e -> removeSelectedCommentButtonClicked(task, commentsTableView));
 
         HBox commentButtonsHBox = new HBox();
         commentButtonsHBox.setSpacing(10);
@@ -510,15 +512,49 @@ public class MainController {
         return commentSection;
     }
 
-    private void removeSelectedCommentButtonClicked() {
+    private void removeSelectedCommentButtonClicked(Task task, TableView commentsTableview) {
+        Comment comment = (Comment) commentsTableview.getSelectionModel().getSelectedItem();
+        task.removeComment(comment);
+
 
     }
 
-    private void editSelectedCommentButtonClicked() {
+    private void editSelectedCommentButtonClicked(Task task, TableView commentsTableView) {
+        Comment comment = (Comment) commentsTableView.getSelectionModel().getSelectedItem();
+        task.removeComment(comment);
+        if(comment == null){
+            System.err.println("No Item selected");
+        }
+        else{
+
+            //comment.setCommentText("YES");
+            CommentDialog commentDialog = new CommentDialog(comment, true);
+            Optional<Comment> result = commentDialog.showAndWait();
+            if(result.isPresent()){
+                task.addComment(result.get());
+
+            }
+
+
+        }
+        updateProjectListWrapper();
+        //ProjectDialog projectDialog = new ProjectDialog(project, true);
+        //<Project> result = projectDialog.showAndWait();
+        //if (result.isPresent()) {
+        //    projectLib.addProject(result.get());
+        //}
+        //updateProjectListWrapper();
 
     }
 
     private void addCommentButtonClicked(Task task) {
+        CommentDialog commentDialog = new CommentDialog();
+        Optional<Comment> result = commentDialog.showAndWait();
+        if (result.isPresent()){
+            Comment newComment = result.get();
+            task.addComment(newComment);
+            updateProjectListWrapper();
+        }
     }
 
     /**
@@ -540,7 +576,6 @@ public class MainController {
         if (result.isPresent()){
             Project newProject = result.get();
             this.projectLib.addProject(newProject);
-            updateProjectListWrapper();
         }
     }
 
