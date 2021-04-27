@@ -12,8 +12,6 @@ import com.snikkergutane.project.Task;
 import com.snikkergutane.project.Comment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -26,7 +24,6 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 /**
  * Controller for the main.fxml,
@@ -159,8 +156,8 @@ public class MainController {
     private void addTaskTabSelected() throws IOException {
         if (this.addTaskTab.isSelected()) {
             FXMLLoader taskLoader = new FXMLLoader(getClass().getResource("task.fxml"));
-            Parent root = taskLoader.load();
             TaskController taskController = new TaskController(this);
+            Parent root = taskLoader.load();
             taskLoader.setController(taskController);
 
             addTaskTab.setContent(root);
@@ -565,4 +562,7 @@ public class MainController {
         }
     }
 
+    public void addTask(Task task) {
+        projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).addTask(task);
+    }
 }
