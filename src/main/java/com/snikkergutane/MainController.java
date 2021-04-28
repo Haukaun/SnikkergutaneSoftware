@@ -79,8 +79,6 @@ public class MainController {
         projectListWrapper = FXCollections.observableArrayList
                 (this.projectLib.listProjects());
         projectsListView.setItems(projectListWrapper);
-
-
     }
 
     private void showWelcomeTab() {
@@ -197,9 +195,10 @@ public class MainController {
     private void addTaskTabSelected() throws IOException {
         if (this.addTaskTab.isSelected()) {
             FXMLLoader taskLoader = new FXMLLoader(getClass().getResource("task.fxml"));
-            TaskController taskController = new TaskController(this);
             Parent root = taskLoader.load();
-            taskLoader.setController(taskController);
+
+            TaskController taskController = taskLoader.getController();
+            taskController.setMainController(this);
 
             addTaskTab.setContent(root);
         }
@@ -376,8 +375,8 @@ public class MainController {
 
         //Create the main image view
         ImageView mainImage = new ImageView("com/snikkergutane/images/1.jpg");
-        if (!task.getImageURLs().isEmpty()) {
-            mainImage.setImage(new Image(task.getImageURLs().get(0)));
+        if (!task.getImages().isEmpty()) {
+            mainImage.setImage(task.getImages().get(0));
         }
         mainImage.setPreserveRatio(true);
         mainImage.setFitHeight(150);
@@ -397,8 +396,8 @@ public class MainController {
         thumbnailHBox.setMaxHeight(50);
         thumbnailHBox.setSpacing(2);
 
-        if (!task.getImageURLs().isEmpty()) {
-            task.getImageURLs().forEach(imageURL -> {
+        if (!task.getImages().isEmpty()) {
+            task.getImages().forEach(imageURL -> {
                 ImageView image = new ImageView(imageURL);
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
@@ -529,19 +528,20 @@ public class MainController {
 
 
         //Add comment button
-        ImageView plusIcon = new ImageView("/com/snikkergutane/Icons/plus-icon.png");
+        ImageView plusIcon = new ImageView("/com/snikkergutane/icons/plus-icon.png");
         plusIcon.setFitHeight(20);
         plusIcon.setFitWidth(20);
 
         Button addCommentButton = new Button("Legg til kommentar");
         addCommentButton.setGraphic(plusIcon);
+
         addCommentButton.setOnAction(e -> {
             addCommentButtonClicked(task);
             commentListWrapper.setAll(task.getComments());
         });
 
         //Edit Comment Button
-        ImageView gearIcon = new ImageView("/com/snikkergutane/Icons/gear-icon.png");
+        ImageView gearIcon = new ImageView("/com/snikkergutane/icons/gear-icon.png");
         gearIcon.setPreserveRatio(true);
         gearIcon.setFitWidth(20);
         gearIcon.setFitHeight(20);
@@ -554,14 +554,8 @@ public class MainController {
                 commentListWrapper.setAll(task.getComments());
                 });
 
-        editSelectedCommentButton.setOnAction(e -> {
-            editSelectedCommentButtonClicked(task, commentsTableView);
-            commentListWrapper.setAll(task.getComments());
-        });
-
-
         //Delete comment button
-        ImageView minusIcon = new ImageView("/com/snikkergutane/Icons/minus-icon.png");
+        ImageView minusIcon = new ImageView("/com/snikkergutane/icons/minus-icon.png");
         minusIcon.setFitHeight(20);
         minusIcon.setFitWidth(20);
 
@@ -573,16 +567,24 @@ public class MainController {
                 commentListWrapper.setAll(task.getComments());
                 });
 
-        removeCommentButton.setOnAction(e -> {
-            removeSelectedCommentButtonClicked(task, commentsTableView);
-            commentListWrapper.setAll(task.getComments());
-        });
+        Region commentButtonRegion = new Region();
+        commentButtonRegion.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        HBox.setHgrow(commentButtonRegion, Priority.ALWAYS);
+
+        ImageView editTaskImageView = new ImageView("/com/snikkergutane/icons/gear-icon.png");
+        editTaskImageView.setFitWidth(20);
+        editTaskImageView.setFitHeight(20);
+
+        Button editTaskButton = new Button("Endre/Fjern oppgave");
+        editTaskButton.setGraphic(editTaskImageView);
+
+        editTaskButton.setOnAction(e -> editTaskButtonClicked());
 
 
         HBox commentButtonsHBox = new HBox();
         commentButtonsHBox.setSpacing(10);
 
-        commentButtonsHBox.getChildren().addAll(addCommentButton, editSelectedCommentButton, removeCommentButton);
+        commentButtonsHBox.getChildren().addAll(addCommentButton, editSelectedCommentButton, removeCommentButton, commentButtonRegion, editTaskButton);
 
 
         Label commentSectionLabel = new Label("Kommentarer:");
@@ -596,6 +598,34 @@ public class MainController {
         commentSection.getChildren().add(commentButtonsHBox);
 
         return commentSection;
+    }
+
+    private void editTaskButtonClicked() {
+        try {
+            Project project = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
+            Task task = project.getTask(projectTabPane.getSelectionModel().getSelectedItem().getText());
+
+            FXMLLoader taskLoader = new FXMLLoader(getClass().getResource("task.fxml"));
+            Parent root = taskLoader.load();
+            TaskController taskController = taskLoader.getController();
+            taskController.setTask(task);
+            taskController.setMainController(this);
+            taskController.useEditMode();
+
+
+            ImageView icon = new ImageView(getClass().getResource("icons/gear-icon.png").toExternalForm());
+            icon.setFitHeight(15);
+            icon.setFitWidth(15);
+
+            Tab editTab = new Tab("Endre Oppgave", root);
+            editTab.setGraphic(icon);
+
+            projectTabPane.getTabs().add(editTab);
+            projectTabPane.getSelectionModel().selectLast();
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
     }
 
     private void removeSelectedCommentButtonClicked(Task task, TableView commentsTableview) {
@@ -689,7 +719,21 @@ public class MainController {
         projectTabPane.getSelectionModel().select(projectTabPane.getTabs().size()-2);
     }
 
-    public void showPleaseSelectItemDialog() {
+    public void editTask(Task task) {
+        projectSelected();
+        projectTabPane.getTabs().forEach(tab -> {
+            if (tab.getText().equals(task.getName())) {
+                projectTabPane.getSelectionModel().select(tab);
+            }
+        });
+    }
+
+    public void removeTask(Task task) {
+        projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).removeTask(task.getName());
+        projectSelected();
+    }
+
+    private void showPleaseSelectItemDialog() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Information");
         alert.setHeaderText("No item selected");
@@ -699,7 +743,7 @@ public class MainController {
         alert.showAndWait();
     }
 
-    public boolean showDeleteConfirmationDialog() {
+    private boolean showDeleteConfirmationDialog() {
         boolean deleteConfirmed = false;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

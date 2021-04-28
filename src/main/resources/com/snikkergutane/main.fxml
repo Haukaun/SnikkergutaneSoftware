@@ -56,7 +56,7 @@
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@Icons/plus-icon.png" />
+                                    <Image url="@icons/plus-icon.png" />
                                  </image>
                               </ImageView>
                            </graphic></Button>
@@ -64,7 +64,7 @@
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@Icons/gear-icon.png" />
+                                    <Image url="@icons/gear-icon.png" />
                                  </image>
                               </ImageView>
                            </graphic></Button>
@@ -72,7 +72,7 @@
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@Icons/trash-can.png" />
+                                    <Image url="@icons/trash-can.png" />
                                  </image>
                               </ImageView>
                            </graphic></Button>
@@ -447,7 +447,7 @@
                                              <graphic>
                                                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@Icons/gear-icon.png" />
+                                                      <Image url="@icons/gear-icon.png" />
                                                    </image>
                                                 </ImageView>
                                              </graphic>
@@ -915,7 +915,7 @@
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@Icons/plus-icon.png" />
+                              <Image url="@icons/plus-icon.png" />
                            </image>
                         </ImageView>
                      </graphic>

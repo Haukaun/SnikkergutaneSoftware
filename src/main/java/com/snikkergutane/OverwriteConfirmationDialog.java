@@ -17,7 +17,7 @@ public class OverwriteConfirmationDialog extends Dialog<Integer> {
         createContent();
         Stage stage = (Stage) this.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass()
-                .getResource("/com/snikkergutane/Icons/gear-icon.png")
+                .getResource("/com/snikkergutane/icons/gear-icon.png")
                 .toExternalForm()));
     }
 

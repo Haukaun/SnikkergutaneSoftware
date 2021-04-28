@@ -1,7 +1,6 @@
 package com.snikkergutane;
 
 import com.snikkergutane.project.Project;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -159,7 +158,7 @@ public class ProjectDialog extends Dialog<Project> {
 
 
         grid.getStylesheets().add(getClass()
-                .getResource("/com/snikkergutane/newTask.css")
+                .getResource("/com/snikkergutane/task.css")
                 .toExternalForm());
 
         //Creates an error message to display to the user.

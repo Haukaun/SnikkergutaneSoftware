@@ -6,6 +6,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -34,21 +35,27 @@ public class TaskController {
     private ContextMenu startDateValidator;
     private ContextMenu endDateValidator;
     private MainController mainController;
-    private boolean editMode = false;
-    private Task task = null;
+    private boolean editMode;
+    private Task task;
 
     public TaskController() {
         mainController = null;
+        editMode = false;
+        task = null;
     }
 
-    public TaskController(MainController mainController) {
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
     @FXML
     private void initialize() {
         newTaskPane.getStylesheets().add(getClass()
-                .getResource("/com/snikkergutane/newTask.css")
+                .getResource("/com/snikkergutane/task.css")
                 .toExternalForm());
 
         //Creates an error message to display to the user.
@@ -130,6 +137,9 @@ public class TaskController {
                         }
                     }
                 });
+        if (null != this.task) {
+            useEditMode();
+        }
     }
 
     @FXML
@@ -140,36 +150,36 @@ public class TaskController {
         fileChooser.getExtensionFilters().add(extensionFilter);
 
         fileChooser.setTitle("Åpne ressursfil");
-        List<File> fileList = fileChooser.showOpenMultipleDialog(newTaskPane.getScene().getWindow());
+        List<File> fileList =  fileChooser.showOpenMultipleDialog(newTaskPane.getScene().getWindow());
+        List <Image> imageList = new ArrayList<>();
+        fileList.forEach(file -> imageList.add(new Image(file.toURI().toString())));
+        displayImages(imageList);
+    }
 
-        if (null != fileList) {
-            System.out.println(imageDisplayGridPane.getColumnCount());
-            int i = 0;
-            if (imageDisplayGridPane.getColumnCount() > 1) {
-                i = imageDisplayGridPane.getColumnCount();
-            }
-            for (File file : fileList) {
-                ImageView imageView = new ImageView(file.toURI().toString());
+    private void displayImages(List<Image> imageList) {
+        if (null != imageList) {
+
+            for (Image image : imageList) {
+                ImageView imageView = new ImageView(image);
                 imageView.setEffect(new DropShadow());
                 imageView.setPreserveRatio(true);
                 imageView.setFitHeight(150);
 
                 CheckBox checkBox = new CheckBox();
                 checkBox.setFont(Font.font(100f));
-                checkBox.setText(file.toURI().toString());
+                checkBox.setText(image.getUrl());
                 checkBox.contentDisplayProperty().setValue(ContentDisplay.GRAPHIC_ONLY);
                 checkBox.setMaxWidth(200);
-                checkBox.getStylesheets().add("com/snikkergutane/newTask.css");
+                checkBox.getStylesheets().add("com/snikkergutane/task.css");
 
-                if (i >= imageDisplayGridPane.getColumnCount()) {
-                    ColumnConstraints column = new ColumnConstraints();
-                    column.setHalignment(HPos.CENTER);
-                    imageDisplayGridPane.getColumnConstraints().add(column);
-                }
+                ColumnConstraints column = new ColumnConstraints();
+                column.setHalignment(HPos.CENTER);
+                imageDisplayGridPane.getColumnConstraints().add(column);
+
+                int i = imageDisplayGridPane.getColumnCount();
                 imageDisplayGridPane.add(imageView, i, 0);
                 imageDisplayGridPane.add(checkBox, i, 0);
 
-                i++;
             }
         }
     }
@@ -182,7 +192,7 @@ public class TaskController {
                 .filter(node -> ((CheckBox) node).isSelected())
                 .map(CheckBox.class::cast)
                 .collect(toList());
-        //Creates a list containing the imageviews in the imageDisplayGrid
+        //Creates a list containing the ImageViews in the imageDisplayGrid
         List<ImageView> imageViews = imageDisplayGridPane.getChildren().stream()
                 .filter(node -> node instanceof ImageView)
                 .map(ImageView.class::cast)
@@ -215,41 +225,61 @@ public class TaskController {
                     imageUrls.add(((ImageView) node).getImage().getUrl());
                 }
             });
-            System.out.println(imageUrls);
-            task = new Task(newTaskNameTextField.getText(),
-                    newTaskStartDatePicker.getValue(),
-                    newTaskEndDatePicker.getValue(),
-                    newTaskDescriptionTextArea.getText(),
-                    imageUrls);
-            mainController = (MainController) App.getController(newTaskPane.getScene().getRoot());
-            if (mainController != null) {
 
+            ArrayList<Image> images = new ArrayList<>();
+            imageDisplayGridPane.getChildren().forEach(node -> {
+                if (node instanceof ImageView) {
+                    images.add(((ImageView) node).getImage());
+                }
+            });
+
+            if (editMode) {
+                task.setName(newTaskNameTextField.getText());
+                task.setDescription(newTaskDescriptionTextArea.getText());
+                task.setStartDate(newTaskStartDatePicker.getValue());
+                task.setEndDate(newTaskEndDatePicker.getValue());
+                task.setImages(images);
+            } else {
+                task = new Task(newTaskNameTextField.getText(),
+                        newTaskStartDatePicker.getValue(),
+                        newTaskEndDatePicker.getValue(),
+                        newTaskDescriptionTextArea.getText(),
+                        imageUrls, 0);
+            }
+            if (mainController != null && !editMode) {
                 mainController.addTask(task);
+            }
+            else if (mainController != null) {
+                mainController.editTask(task);
             }
         }
     }
 
     @FXML
     private void resetButtonClicked() {
-        if (editMode) {
-            editMode(task);
+        if (editMode && null != mainController) {
+            mainController.removeTask(task);
         } else {
             newTaskNameTextField.setText("");
             newTaskDescriptionTextArea.setText("");
             newTaskStartDatePicker.getEditor().clear();
             newTaskEndDatePicker.getEditor().clear();
+            imageDisplayGridPane.getChildren().clear();
         }
     }
 
-    private void editMode(Task task) {
-        this.task = task;
+    public void useEditMode() {
         editMode = true;
         newTaskLabel.setText("Endre Oppgave");
         newTaskSaveButton.setText("Lagre endringer");
-        newTaskResetButton.setText("Tilbakestill alle felt");
+
+        newTaskResetButton.setText("Fjern Oppgave");
+
         newTaskNameTextField.setText(task.getName());
         newTaskDescriptionTextArea.setText(task.getDescription());
         newTaskStartDatePicker.setValue(task.getStartDate());
         newTaskEndDatePicker.setValue(task.getEndDate());
+
+        displayImages(task.getImages());
     }
 }

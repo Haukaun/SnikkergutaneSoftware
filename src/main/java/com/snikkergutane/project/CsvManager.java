@@ -138,7 +138,7 @@ public class CsvManager {
                     }
 
                     //Creates the task
-                    Task task = new Task(name, startDate, endDate, description, imageUrls);
+                    Task task = new Task(name, startDate, endDate, description, imageUrls, project.getTasks().size()+1);
                     commentList.forEach(task::addComment);
                     commentList.clear();
                     project.addTask(task);

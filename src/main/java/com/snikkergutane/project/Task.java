@@ -1,7 +1,6 @@
 package com.snikkergutane.project;
 
-import javafx.collections.ObservableArray;
-import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -12,27 +11,29 @@ import java.util.*;
  */
 public class Task {
 
+    private int id;
     private String name;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private final ArrayList<String> imageURLs;
+    private final ArrayList<Image> images;
     private ArrayList<Comment> comments;
 
     public Task(String name) {
         this.name = name;
         this.comments = new ArrayList<>();
-        this.imageURLs = new ArrayList<>();
+        this.images = new ArrayList<>();
     }
 
-    public Task(String name, LocalDate startDate, LocalDate endDate, String description, List<String> imageUrls) {
-        super();
+    public Task(String name, LocalDate startDate, LocalDate endDate, String description, List<String> imageUrls, int id) {
+        this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
         this.comments = new ArrayList<>();
-        this.imageURLs = new ArrayList<>(imageUrls);
+        this.images = new ArrayList<>();
+        imageUrls.forEach(url -> this.images.add(new Image(url)));
     }
 
     public List<Comment> getComments() {
@@ -44,7 +45,7 @@ public class Task {
         Iterator<Comment> it = this.comments.iterator();
         while (it.hasNext() && !commentExists) {
             Comment c = it.next();
-            if (c.equals(comment)) {
+            if (c.getCommentText().equals(comment.getCommentText()) && c.getDate().isEqual(comment.getDate()) && c.getUser().equals(comment.getUser())) {
                 commentExists = true;
             }
         }
@@ -67,7 +68,7 @@ public class Task {
 
     public List<String[]> getTaskAsStringArray() {
         List<String> taskInfo = new ArrayList<>(Arrays.asList("+" + this.name,"" + this.startDate,"" + this.endDate, this.description));
-        taskInfo.addAll(this.getImageURLs());
+        this.images.forEach(image -> taskInfo.add(image.getUrl()));
 
         List<String[]> taskAsStringArray = new ArrayList<>();
         getComments().forEach(c -> taskAsStringArray.add(c.getCommentAsStringArray()));
@@ -88,8 +89,8 @@ public class Task {
         return this.startDate;
     }
 
-    public List<String> getImageURLs() {
-        return this.imageURLs;
+    public List<Image> getImages() {
+        return this.images;
     }
 
     public String getName() {
@@ -119,14 +120,54 @@ public class Task {
 
     public void addImage(String url) {
         boolean success = true;
-        for (String imageUrl : this.imageURLs) {
-            if (imageUrl.equals(url)) {
+        for (Image image : this.images) {
+            if (image.getUrl().equals(url)) {
                 success = false;
-                break;
             }
         }
         if (success) {
-            this.imageURLs.add(url);
+            this.images.add(new Image(url));
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        int similarity = 0;
+        int i = 0;
+        if (obj instanceof Task) {
+            String[] objInfo = ((Task) obj).getTaskAsStringArray().get(((Task) obj).getTaskAsStringArray().size()-1);
+            String[] thisInfo = getTaskAsStringArray().get(getTaskAsStringArray().size()-1);
+
+            while (i < thisInfo.length) {
+                if (thisInfo[i].equals(objInfo[i])) {
+                    similarity++;
+                }
+                System.out.println(objInfo[i]);
+                System.out.println(thisInfo[i]);
+                i++;
+            }
+        }
+        double finalValue = 0;
+        if (i != 0) {
+            System.out.println(similarity);
+            System.out.println(i);
+            finalValue = (double) similarity / i;
+            System.out.println(finalValue);
+
+        }
+        return finalValue >= 0.8;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images.clear();
+        this.images.addAll(images);
     }
 }
