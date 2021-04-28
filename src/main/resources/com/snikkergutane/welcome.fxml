@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2000.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="Velkommen!">
-               <font>
-                  <Font size="36.0" />
-               </font>
-            </Label>
-            <TextArea disable="true" editable="false" prefHeight="100.0" prefWidth="300.0" text="For å komme i gang, &#10;opprett et nytt prosjekt ved å klikke på + knappen  nede til venstre." wrapText="true">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextArea>
-         </children>
-      </VBox>
-   </center>
-</BorderPane>
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="BOTTOM_LEFT" text="Velkommen!" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" lineSpacing="10.0" minWidth="10.0" text="For å komme i gang, &#10;opprett et nytt prosjekt ved å klikke på + knappen  nede til venstre." textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</VBox>
