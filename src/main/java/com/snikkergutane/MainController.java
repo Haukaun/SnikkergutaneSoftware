@@ -501,11 +501,12 @@ public class MainController {
             return cell;
         });
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
+        ObservableList<Comment> commentListWrapper = FXCollections.observableArrayList(task.getComments());
 
         TableView<Comment> commentsTableView = new TableView<>();
         commentsTableView.getColumns().addAll(dateTableColumn, userNameColumn, commentColumn, imageColumn);
         commentsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        commentsTableView.setItems(FXCollections.observableArrayList(task.getComments()));
+        commentsTableView.setItems(commentListWrapper);
         commentsTableView.setPrefHeight(1000);
 
 
@@ -516,7 +517,10 @@ public class MainController {
 
         Button addCommentButton = new Button("Legg til kommentar");
         addCommentButton.setGraphic(plusIcon);
-        addCommentButton.setOnAction(e -> addCommentButtonClicked(task));
+        addCommentButton.setOnAction(e -> {
+            addCommentButtonClicked(task);
+            commentListWrapper.setAll(task.getComments());
+        });
 
         //Edit Comment Button
         ImageView gearIcon = new ImageView("/com/snikkergutane/Icons/gear-icon.png");
