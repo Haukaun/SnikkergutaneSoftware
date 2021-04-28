@@ -493,6 +493,8 @@ public class MainController {
                 public void updateItem(Image item, boolean empty) {
                     if (item != null) {
                         imageview.setImage(item);
+                    } else {
+                        imageview.setImage(null);
                     }
                 }
             };
@@ -501,11 +503,14 @@ public class MainController {
             return cell;
         });
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
-        ObservableList<Comment> commentListWrapper = FXCollections.observableArrayList(task.getComments());
+
 
         TableView<Comment> commentsTableView = new TableView<>();
         commentsTableView.getColumns().addAll(dateTableColumn, userNameColumn, commentColumn, imageColumn);
         commentsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        ObservableList<Comment> commentListWrapper = FXCollections.observableArrayList(task.getComments());
+
         commentsTableView.setItems(commentListWrapper);
         commentsTableView.setPrefHeight(1000);
 
@@ -595,11 +600,10 @@ public class MainController {
     @FXML
     private void addCommentButtonClicked(Task task) {
         CommentDialog commentDialog = new CommentDialog();
+
         Optional<Comment> result = commentDialog.showAndWait();
-        if (result.isPresent()) {
-            Comment newComment = result.get();
-            task.addComment(newComment);
-        }
+
+        result.ifPresent(task::addComment);
     }
 
     /**
