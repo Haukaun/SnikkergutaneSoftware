@@ -73,7 +73,7 @@
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#addImageButtonClicked" text="Legg til bilder.." />
-                  <Button mnemonicParsing="false" text="Fjern valgte bilder" />
+                  <Button mnemonicParsing="false" onAction="#removeSelectedImagesButtonClicked" text="Fjern valgte bilder" />
                </children>
             </HBox>
             <Line endX="200.0" startX="-200.0">

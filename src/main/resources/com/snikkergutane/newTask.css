@@ -1,0 +1,26 @@
+.check-box .box {
+    -fx-background-color: transparent;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #11ff00;
+}
+
+.context-menu {
+  -fx-background-color: #0091ff;
+  -fx-text-fill: white;
+  -fx-padding: 0;
+}
+
+.context-menu:hover {
+  -fx-background-color: #0091ff;
+  -fx-text-fill: white;
+}
+
+.menu-item .label {
+  -fx-text-fill: white;
+}
+
+.menu-item:focused .label {
+  -fx-text-fill: white;
+}

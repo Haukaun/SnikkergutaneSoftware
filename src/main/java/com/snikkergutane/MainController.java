@@ -18,12 +18,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -66,8 +66,6 @@ public class MainController {
     private TabPane projectTabPane;
     @FXML
     private Tab addTaskTab;
-    @FXML
-    private Button editProjectButton;
 
     /**
      * loads the demo project on startup,
@@ -167,8 +165,19 @@ public class MainController {
         scrollPane.setFitToHeight(true);
         scrollPane.setContent(stageVBox);
 
-        //Adds the tab to the tab pane.
-        projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
+        //Adds the tab to the tab pane, if it's not already there.
+        //If it's already there; view it.
+        Tab existingTab = null;
+        for (Tab tab : projectTabPane.getTabs()) {
+            if (tab.getText().equals(task.getName())) {
+                existingTab = tab;
+            }
+        }
+        if (null == existingTab) {
+            projectTabPane.getTabs().add(new Tab(task.getName(), scrollPane));
+        } else {
+            projectTabPane.getSelectionModel().select(existingTab);
+        }
     }
 
     @FXML
@@ -301,10 +310,11 @@ public class MainController {
     @FXML
     private void mainImageButtonClicked(ImageView imageView) {
         largeImageBackground.setVisible(true);
+
         largeImageView.setImage(imageView.getImage());
         largeImageView.setVisible(true);
         largeImageView.fitHeightProperty().bind(mainPane.heightProperty());
-        largeImageView.fitWidthProperty().bind(mainPane.widthProperty());
+        largeImageView.fitWidthProperty().bind((mainPane.widthProperty()));
     }
 
     /**
@@ -348,40 +358,58 @@ public class MainController {
      * @return {@code VBox} image display area.
      */
     private VBox createImageDisplayVBox(Task task) {
+
         VBox imageDisplayVBox = new VBox();
         imageDisplayVBox.setPadding(new Insets(5, 0, 0, 0));
 
-        String imageUrl = "images/1.jpg";
+        //Create the main image view
+        ImageView mainImage = new ImageView("com/snikkergutane/images/1.jpg");
         if (!task.getImageURLs().isEmpty()) {
-            imageUrl = task.getImageURLs().get(0);
+            mainImage.setImage(new Image(task.getImageURLs().get(0)));
         }
-        ImageView mainImage = new ImageView(imageUrl);
         mainImage.setPreserveRatio(true);
         mainImage.setFitHeight(150);
         mainImage.setFitWidth(200);
         mainImage.setOnMouseClicked(e -> mainImageButtonClicked(mainImage));
+        mainImage.setEffect(new DropShadow());
 
-        FlowPane thumbnailPane = new FlowPane();
-        thumbnailPane.setPrefHeight(50);
-        thumbnailPane.setMaxHeight(50);
+        BorderPane mainImagePane = new BorderPane();
+        mainImagePane.setPrefSize(200,150);
+        mainImagePane.setMinSize(Region.USE_PREF_SIZE,Region.USE_PREF_SIZE);
+        mainImagePane.setMaxSize(Region.USE_PREF_SIZE,Region.USE_PREF_SIZE);
+        mainImagePane.setCenter(mainImage);
+
+        //Create the thumbnail image view
+        HBox thumbnailHBox = new HBox();
+        thumbnailHBox.setPrefHeight(50);
+        thumbnailHBox.setMaxHeight(50);
+        thumbnailHBox.setSpacing(2);
 
         if (!task.getImageURLs().isEmpty()) {
             task.getImageURLs().forEach(imageURL -> {
                 ImageView image = new ImageView(imageURL);
                 image.setPreserveRatio(true);
                 image.setFitHeight(50);
-                image.setOnMouseClicked(e -> mainImage.setImage(new Image(imageURL)));
-                thumbnailPane.getChildren().add(image);
+                image.setOnMouseClicked(e -> mainImage.setImage(image.getImage()));
+                image.setEffect(new DropShadow());
+                thumbnailHBox.getChildren().add(image);
             });
+        } else {
+            ImageView image = new ImageView(mainImage.getImage());
+            image.setPreserveRatio(true);
+            image.setFitHeight(50);
+            image.setOnMouseClicked(e -> mainImage.setImage(image.getImage()));
+            thumbnailHBox.getChildren().add(image);
         }
 
         ScrollPane thumbnailScroll = new ScrollPane();
         thumbnailScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         thumbnailScroll.setPrefSize(200, 60);
         thumbnailScroll.setMinHeight(Region.USE_PREF_SIZE);
-        thumbnailScroll.setContent(thumbnailPane);
+        thumbnailScroll.setContent(thumbnailHBox);
+        thumbnailScroll.setEffect(new InnerShadow());
 
-        imageDisplayVBox.getChildren().add(mainImage);
+        imageDisplayVBox.getChildren().add(mainImagePane);
         imageDisplayVBox.getChildren().add(thumbnailScroll);
 
         return imageDisplayVBox;
@@ -605,7 +633,7 @@ public class MainController {
     }
 
     @FXML
-    private void editProjectButton() {
+    private void editProjectButtonClicked() {
         Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
         if (null != project) {
             editProject(project);
@@ -616,6 +644,8 @@ public class MainController {
 
     public void addTask(Task task) {
         projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).addTask(task);
+        projectSelected();
+        projectTabPane.getSelectionModel().select(projectTabPane.getTabs().size()-2);
     }
 
     public void showPleaseSelectItemDialog() {
