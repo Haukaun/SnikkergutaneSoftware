@@ -160,7 +160,7 @@ public class MainController {
 
         //The main contents of the task tab.
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPadding(new Insets(0, 18, 0, 18));
+        scrollPane.setPadding(new Insets(20, 18, 0, 18));
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         scrollPane.setContent(stageVBox);
@@ -312,7 +312,6 @@ public class MainController {
         largeImageBackground.setVisible(true);
 
         largeImageView.setImage(imageView.getImage());
-        largeImageView.setVisible(true);
         largeImageView.fitHeightProperty().bind(mainPane.heightProperty());
         largeImageView.fitWidthProperty().bind((mainPane.widthProperty()));
     }

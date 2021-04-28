@@ -29,9 +29,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.MainController">
-   <userData>
-      <fx:reference source="controller" />
-   </userData>
+   
    <children>
       <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
@@ -924,7 +922,7 @@
             </TabPane>
          </center>
       </BorderPane>
-      <HBox fx:id="largeImageBackground" alignment="CENTER" onMouseClicked="#backgroundButtonClicked" style="-fx-background-color: rgba(0, 0, 0, 0.5);" visible="false">
+      <HBox fx:id="largeImageBackground" alignment="CENTER" onMouseClicked="#backgroundButtonClicked" prefHeight="2000.0" prefWidth="2000.0" style="-fx-background-color: rgba(0, 0, 0, 0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="largeImageView" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -933,6 +931,9 @@
                <effect>
                   <DropShadow />
                </effect>
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
             </ImageView>
          </children>
       </HBox>
