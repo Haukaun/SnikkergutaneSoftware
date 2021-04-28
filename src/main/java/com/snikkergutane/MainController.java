@@ -36,22 +36,38 @@ public class MainController {
     private CsvManager csvManager;
     private final ProjectLib projectLib = new ProjectLib();
     private ObservableList<String> projectListWrapper;
-    @FXML BorderPane mainPane;
-    @FXML Label statusLabel;
-    @FXML private HBox largeImageBackground;
-    @FXML private ImageView largeImageView;
-    @FXML private ListView<String> projectsListView;
-    @FXML private ScrollPane projectInfoScrollPane;
-    @FXML private GridPane taskListGridPane;
-    @FXML private Label customerNameLabel;
-    @FXML private Label projectAddressLabel;
-    @FXML private Label customerPhoneNumberLabel;
-    @FXML private Label customerEmailLabel;
-    @FXML private Label projectStartDateLabel;
-    @FXML private TextArea projectDescriptionTextArea;
-    @FXML private TabPane projectTabPane;
-    @FXML private Tab addTaskTab;
-    @FXML private Button editProjectButton;
+    @FXML
+    BorderPane mainPane;
+    @FXML
+    Label statusLabel;
+    @FXML
+    private HBox largeImageBackground;
+    @FXML
+    private ImageView largeImageView;
+    @FXML
+    private ListView<String> projectsListView;
+    @FXML
+    private ScrollPane projectInfoScrollPane;
+    @FXML
+    private GridPane taskListGridPane;
+    @FXML
+    private Label customerNameLabel;
+    @FXML
+    private Label projectAddressLabel;
+    @FXML
+    private Label customerPhoneNumberLabel;
+    @FXML
+    private Label customerEmailLabel;
+    @FXML
+    private Label projectStartDateLabel;
+    @FXML
+    private TextArea projectDescriptionTextArea;
+    @FXML
+    private TabPane projectTabPane;
+    @FXML
+    private Tab addTaskTab;
+    @FXML
+    private Button editProjectButton;
 
     /**
      * loads the demo project on startup,
@@ -60,7 +76,7 @@ public class MainController {
     @FXML
     private void initialize() {
         projectLib.loadDemoProject();
-        projectListWrapper =FXCollections.observableArrayList
+        projectListWrapper = FXCollections.observableArrayList
                 (this.projectLib.listProjects());
         projectsListView.setItems(projectListWrapper);
     }
@@ -121,6 +137,7 @@ public class MainController {
     /**
      * When a task in the project information tab is selected,
      * creates and shows the information tab for the task.
+     *
      * @param task the task to be viewed.
      */
     @FXML
@@ -145,7 +162,7 @@ public class MainController {
 
         //The main contents of the task tab.
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPadding(new Insets(0,18,0,18));
+        scrollPane.setPadding(new Insets(0, 18, 0, 18));
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         scrollPane.setContent(stageVBox);
@@ -182,7 +199,7 @@ public class MainController {
         fileChooser.setTitle("Åpne ressursfil");
         File file = fileChooser.showOpenDialog(projectTabPane.getScene().getWindow());
 
-        if (null != file ) {
+        if (null != file) {
             //Adds the newly generated project to the project library,
             // updates the project list, and displays the new project to the user.
             try {
@@ -300,7 +317,7 @@ public class MainController {
 
     /**
      * If a project is selected in the project list, it is removed from the library and from the tab pane,
-     *  and the list is updated.
+     * and the list is updated.
      */
     @FXML
     private void deleteProjectButtonClicked() {
@@ -316,6 +333,7 @@ public class MainController {
 
     /**
      * Switches back to the login screen.
+     *
      * @throws IOException
      */
     @FXML
@@ -325,12 +343,13 @@ public class MainController {
 
     /**
      * Creates an image display area to show the images in a task.
+     *
      * @param task the task in question.
      * @return {@code VBox} image display area.
      */
     private VBox createImageDisplayVBox(Task task) {
         VBox imageDisplayVBox = new VBox();
-        imageDisplayVBox.setPadding(new Insets(5,0,0,0));
+        imageDisplayVBox.setPadding(new Insets(5, 0, 0, 0));
 
         String imageUrl = "images/1.jpg";
         if (!task.getImageURLs().isEmpty()) {
@@ -358,7 +377,7 @@ public class MainController {
 
         ScrollPane thumbnailScroll = new ScrollPane();
         thumbnailScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        thumbnailScroll.setPrefSize(200,60);
+        thumbnailScroll.setPrefSize(200, 60);
         thumbnailScroll.setMinHeight(Region.USE_PREF_SIZE);
         thumbnailScroll.setContent(thumbnailPane);
 
@@ -370,6 +389,7 @@ public class MainController {
 
     /**
      * Creates the task's description area.
+     *
      * @param task the task in question.
      * @return {@code VBox} task description area.
      */
@@ -383,22 +403,21 @@ public class MainController {
 
 
         Region r2 = new Region();
-        HBox.setHgrow(r2,Priority.ALWAYS);
+        HBox.setHgrow(r2, Priority.ALWAYS);
 
         HBox datesHBox = new HBox();
         datesHBox.getChildren().add(new Label("Startdato: " + task.getStartDate()));
         datesHBox.getChildren().add(r2);
         if (task.isFinished()) {
             datesHBox.getChildren().add(new Label("Fullført dato: " + task.getEndDate()));
-        }
-        else {
+        } else {
             datesHBox.getChildren().add(new Label("Fullføres innen: " + task.getEndDate()));
         }
 
         Label taskDescriptionLabel = new Label("Arbeidsbeskrivelse:");
         taskDescriptionLabel.setFont(new Font("System Bold", 12.0));
 
-        stageDescriptionVBox.setPadding(new Insets(0,0,0,20));
+        stageDescriptionVBox.setPadding(new Insets(0, 0, 0, 20));
         stageDescriptionVBox.getChildren().add(taskDescriptionLabel);
         stageDescriptionVBox.getChildren().add(stageDescriptionArea);
         stageDescriptionVBox.getChildren().add(datesHBox);
@@ -408,6 +427,7 @@ public class MainController {
 
     /**
      * Creates a task's comment section.
+     *
      * @param task the task in question.
      * @return {@code VBox} the task's comment section.
      */
@@ -500,7 +520,7 @@ public class MainController {
         commentSectionLabel.setFont(new Font("System Bold", 12.0));
 
         VBox commentSection = new VBox();
-        commentSection.setPadding(new Insets(25,0,40,0));
+        commentSection.setPadding(new Insets(25, 0, 40, 0));
 
         commentSection.getChildren().add(commentSectionLabel);
         commentSection.getChildren().add(commentsTableView);
@@ -510,41 +530,44 @@ public class MainController {
     }
 
     private void removeSelectedCommentButtonClicked(Task task, TableView commentsTableview) {
-        Comment comment = (Comment) commentsTableview.getSelectionModel().getSelectedItem();
-        task.removeComment(comment);
+        Comment commentSelected = (Comment) commentsTableview.getSelectionModel().getSelectedItem();
+        if (commentSelected == null) {
+            showPleaseSelectItemDialog();
+        } else {
+            if (showDeleteConfirmationDialog()) {
+                task.removeComment(commentSelected);
+            }
 
-
+        }
     }
+
 
     private void editSelectedCommentButtonClicked(Task task, TableView commentsTableView) {
         Comment comment = (Comment) commentsTableView.getSelectionModel().getSelectedItem();
-        task.removeComment(comment);
-        if(comment == null){
-            System.err.println("No Item selected");
-        }
-        else{
-            
+        if (comment == null) {
+            showPleaseSelectItemDialog();
+        } else {
+
             CommentDialog commentDialog = new CommentDialog(comment, true);
             Optional<Comment> result = commentDialog.showAndWait();
-            if(result.isPresent()){
+            if (result.isPresent()) {
                 task.addComment(result.get());
 
             }
 
 
         }
-        updateProjectListWrapper();
 
 
     }
 
+    @FXML
     private void addCommentButtonClicked(Task task) {
         CommentDialog commentDialog = new CommentDialog();
         Optional<Comment> result = commentDialog.showAndWait();
-        if (result.isPresent()){
+        if (result.isPresent()) {
             Comment newComment = result.get();
             task.addComment(newComment);
-            updateProjectListWrapper();
         }
     }
 
@@ -564,13 +587,13 @@ public class MainController {
 
         Optional<Project> result = projectDialog.showAndWait();
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             Project newProject = result.get();
             this.projectLib.addProject(newProject);
         }
     }
 
-    private void editProject(Project project){
+    private void editProject(Project project) {
         projectLib.removeProject(project.getName());
 
         ProjectDialog projectDialog = new ProjectDialog(project, true);
@@ -593,5 +616,32 @@ public class MainController {
 
     public void addTask(Task task) {
         projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).addTask(task);
+    }
+
+    public void showPleaseSelectItemDialog() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Information");
+        alert.setHeaderText("No item selected");
+        alert.setContentText("No item selected.\n"
+                + "Please select an item from the table.");
+
+        alert.showAndWait();
+    }
+
+    public boolean showDeleteConfirmationDialog() {
+        boolean deleteConfirmed = false;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete confirmation");
+        alert.setHeaderText("Delete confirmation");
+        alert.setContentText("Are you sure you want to delete this item?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+            deleteConfirmed = (result.get() == ButtonType.OK);
+        }
+        return deleteConfirmed;
+
     }
 }

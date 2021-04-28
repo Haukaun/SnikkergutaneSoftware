@@ -1,5 +1,8 @@
 package com.snikkergutane.project;
 
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.util.*;
 
