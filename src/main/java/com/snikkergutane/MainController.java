@@ -618,6 +618,7 @@ public class MainController {
             Project newProject = result.get();
             this.projectLib.addProject(newProject);
         }
+        updateProjectListWrapper();
     }
 
     private void editProject(Project project) {

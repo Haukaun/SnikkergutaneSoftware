@@ -16,13 +16,16 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
+    public static Stage stage;
 
     @Override
     public void start(Stage stage) throws IOException {
+        App.stage = stage;
         scene = new Scene(loadFXML("login"));
         stage.setTitle("Snikkergutane Software");
         stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
