@@ -10,8 +10,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.LocalDate;
 
 public class CommentDialog extends Dialog<Comment>{
@@ -69,13 +71,21 @@ public class CommentDialog extends Dialog<Comment>{
         user.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         user.setPromptText("User");
 
-        TextField commentText = new TextField();
+        TextArea commentText = new TextArea();
         commentText.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         commentText.setPromptText("Comment text");
 
         TextField imageURL = new TextField();
         imageURL.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         imageURL.setPromptText("Image URL");
+
+        HBox imageBox = new HBox();
+        Button selectPictureButton = new Button("Rediger valgt kommentar");
+        selectPictureButton.setText("Select Picture");
+        selectPictureButton.setOnAction(e ->{imageURL.setText(choosePicture());});
+        imageBox.getChildren().addAll(imageURL,selectPictureButton);
+
+
 
 
         if((mode == CommentDialog.Mode.EDIT) || (mode == CommentDialog.Mode.INFO)){
@@ -103,7 +113,9 @@ public class CommentDialog extends Dialog<Comment>{
         grid.add(commentText, 2, 1);
 
         grid.add(new Label("Image URL:"), 1, 2);
-        grid.add(imageURL, 2, 2);
+
+        grid.add(new Label(""),1,1);
+        grid.add(imageBox, 2,2) ;
 
 
         Node okButton = getDialogPane().lookupButton(okButtonType);
@@ -118,7 +130,12 @@ public class CommentDialog extends Dialog<Comment>{
                     Comment result = null;
                     if (button == okButtonType) {
                         if (mode == CommentDialog.Mode.NEW) {
-                            result = new Comment(LocalDate.now(),user.getText(),commentText.getText(),imageURL.getText());
+                            if(imageURL != null && !imageURL.equals("") ) {
+                                result = new Comment(LocalDate.now(), user.getText(), commentText.getText(), imageURL.getText());
+                            }
+                            else{
+                                result = new Comment(LocalDate.now(), user.getText(), commentText.getText());
+                            }
                         } else if (mode == CommentDialog.Mode.EDIT) {
                             existingComment.setCommentText(commentText.getText());
                             result = existingComment;
@@ -127,6 +144,23 @@ public class CommentDialog extends Dialog<Comment>{
                     return result;
                 }
         );
+
+    }
+
+    private String choosePicture(){
+        String result = null;
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
+                "Bildefiler (*.png;*.jpg;*.jpeg)", "*.png;*.jpg;*.jpeg");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+
+        fileChooser.setTitle("Åpne ressursfil");
+        File file = fileChooser.showOpenDialog(this.getDialogPane().getScene().getWindow());
+        if(file != null){
+            result = file.toURI().toString();
+            System.out.println(result);
+        }
+        return result;
 
     }
 
