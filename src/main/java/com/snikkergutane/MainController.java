@@ -507,7 +507,7 @@ public class MainController {
                     if (item != null) {
                         imageview.setImage(item);
                     } else {
-                        imageview.setImage(null);
+                        imageview.imageProperty().set(null);
                     }
                 }
             };
@@ -548,17 +548,17 @@ public class MainController {
 
         Button editSelectedCommentButton = new Button("Rediger valgt kommentar");
         editSelectedCommentButton.setGraphic(gearIcon);
-<<<<<<< HEAD
+
         editSelectedCommentButton.setOnAction(e ->{
                 editSelectedCommentButtonClicked(task, commentsTableView);
                 commentListWrapper.setAll(task.getComments());
                 });
-=======
+
         editSelectedCommentButton.setOnAction(e -> {
             editSelectedCommentButtonClicked(task, commentsTableView);
             commentListWrapper.setAll(task.getComments());
         });
->>>>>>> master
+
 
         //Delete comment button
         ImageView minusIcon = new ImageView("/com/snikkergutane/Icons/minus-icon.png");
@@ -567,17 +567,17 @@ public class MainController {
 
         Button removeCommentButton = new Button("Fjern kommentar");
         removeCommentButton.setGraphic(minusIcon);
-<<<<<<< HEAD
+
         removeCommentButton.setOnAction(e ->{
                 removeSelectedCommentButtonClicked(task, commentsTableView);
                 commentListWrapper.setAll(task.getComments());
                 });
-=======
+
         removeCommentButton.setOnAction(e -> {
             removeSelectedCommentButtonClicked(task, commentsTableView);
             commentListWrapper.setAll(task.getComments());
         });
->>>>>>> master
+
 
         HBox commentButtonsHBox = new HBox();
         commentButtonsHBox.setSpacing(10);

@@ -82,7 +82,7 @@ public class CommentDialog extends Dialog<Comment>{
         HBox imageBox = new HBox();
         Button selectPictureButton = new Button("Rediger valgt kommentar");
         selectPictureButton.setText("Select Picture");
-        selectPictureButton.setOnAction(e ->{imageURL.setText(choosePicture());});
+        selectPictureButton.setOnAction(e -> imageURL.setText(choosePicture()));
         imageBox.getChildren().addAll(imageURL,selectPictureButton);
 
 
@@ -95,8 +95,6 @@ public class CommentDialog extends Dialog<Comment>{
             imageURL.setText(existingComment.getImageUrl());
             user.setEditable(false);
             imageURL.setEditable(false);
-
-
 
             if(mode == CommentDialog.Mode.INFO){
                 user.setEditable(false);
@@ -114,7 +112,6 @@ public class CommentDialog extends Dialog<Comment>{
 
         grid.add(new Label("Image URL:"), 1, 2);
 
-        grid.add(new Label(""),1,1);
         grid.add(imageBox, 2,2) ;
 
 
@@ -130,7 +127,7 @@ public class CommentDialog extends Dialog<Comment>{
                     Comment result = null;
                     if (button == okButtonType) {
                         if (mode == CommentDialog.Mode.NEW) {
-                            if(imageURL != null && !imageURL.equals("") ) {
+                            if(null != imageURL.getText() && !imageURL.getText().equals("") ) {
                                 result = new Comment(LocalDate.now(), user.getText(), commentText.getText(), imageURL.getText());
                             }
                             else{
@@ -158,7 +155,6 @@ public class CommentDialog extends Dialog<Comment>{
         File file = fileChooser.showOpenDialog(this.getDialogPane().getScene().getWindow());
         if(file != null){
             result = file.toURI().toString();
-            System.out.println(result);
         }
         return result;
 
