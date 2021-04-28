@@ -73,10 +73,21 @@ public class MainController {
      */
     @FXML
     private void initialize() {
+        projectTabPane.getTabs().clear();
+        showWelcomeTab();
         projectLib.loadDemoProject();
         projectListWrapper = FXCollections.observableArrayList
                 (this.projectLib.listProjects());
         projectsListView.setItems(projectListWrapper);
+    }
+
+    private void showWelcomeTab() {
+        FXMLLoader welcomeLoader = new FXMLLoader(getClass().getResource("welcome.fxml"));
+        try {
+            projectTabPane.getTabs().add(new Tab("Velkommen!", welcomeLoader.load()));
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
     }
 
     /**
@@ -160,7 +171,7 @@ public class MainController {
 
         //The main contents of the task tab.
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPadding(new Insets(20, 18, 0, 18));
+        scrollPane.setPadding(new Insets(20, 20, 0, 18));
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         scrollPane.setContent(stageVBox);
@@ -535,7 +546,10 @@ public class MainController {
 
         Button editSelectedCommentButton = new Button("Rediger valgt kommentar");
         editSelectedCommentButton.setGraphic(gearIcon);
-        editSelectedCommentButton.setOnAction(e -> editSelectedCommentButtonClicked(task, commentsTableView));
+        editSelectedCommentButton.setOnAction(e -> {
+            editSelectedCommentButtonClicked(task, commentsTableView);
+            commentListWrapper.setAll(task.getComments());
+        });
 
         //Delete comment button
         ImageView minusIcon = new ImageView("/com/snikkergutane/Icons/minus-icon.png");
@@ -544,7 +558,10 @@ public class MainController {
 
         Button removeCommentButton = new Button("Fjern kommentar");
         removeCommentButton.setGraphic(minusIcon);
-        removeCommentButton.setOnAction(e -> removeSelectedCommentButtonClicked(task, commentsTableView));
+        removeCommentButton.setOnAction(e -> {
+            removeSelectedCommentButtonClicked(task, commentsTableView);
+            commentListWrapper.setAll(task.getComments());
+        });
 
         HBox commentButtonsHBox = new HBox();
         commentButtonsHBox.setSpacing(10);

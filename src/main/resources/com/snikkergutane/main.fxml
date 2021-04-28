@@ -28,11 +28,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snikkergutane.MainController">
-<userData>
-   <fx:reference source="controller" />
-</userData>
+   <userData>
+      <fx:reference source="controller" />
+   </userData>
    <children>
       <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
@@ -147,7 +146,7 @@
                                                    </font>
                                                 </Label>
                                                 <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="exportPDFButton" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" />
+                                                <Button fx:id="exportPDFButton" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" visible="false" />
                                              </children>
                                           </HBox>
                                        </children>
