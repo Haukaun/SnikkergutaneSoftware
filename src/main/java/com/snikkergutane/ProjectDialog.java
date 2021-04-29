@@ -67,20 +67,20 @@ public class ProjectDialog extends Dialog<Project> {
 
 
     /**
-     * Makes dialog with button and TextFields.
-     * SafeProofing with TextField that only accepts numbers and button that will appear when changes have been made.
+     * Creates the dialog with required buttons and text fields.
+     * SafeProofing with TextField that only accepts numbers and buttons which appear whenever a change is made.
      */
     private void showContent(){
 
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-small.png").toExternalForm()));
         stage.setTitle("Prosjekt Håndtering");
 
         //Make Buttons in dialog
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-        getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/SnikkergutaneLogo.png").toExternalForm()));
+        getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-big.png").toExternalForm()));
         getDialogPane().setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
         //Creates GridPane
@@ -120,7 +120,7 @@ public class ProjectDialog extends Dialog<Project> {
         description.setPromptText("Beskrivelse");
 
 
-        //Grabs Info from Objects and returns them into TextFields.
+        //Gets Info from Objects and returns them into TextFields.
         if((mode == Mode.EDIT) || (mode == Mode.INFO)){
 
             projectName.setText(existingProject.getName());
@@ -131,7 +131,7 @@ public class ProjectDialog extends Dialog<Project> {
             datePicker.setValue(existingProject.getStartDate());
             description.setText(existingProject.getDescription());
 
-        //Makes TextFields not editable while Mode is Info.
+        //Sets TextFields as non-editable while Mode is Info.
             if(mode == Mode.INFO){
                 projectName.setEditable(false);
                 customerName.setEditable(false);
@@ -210,11 +210,11 @@ public class ProjectDialog extends Dialog<Project> {
         projectName.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if newTaskNameTextField is empty
+                        //Shows error message if newTaskNameTextField is empty
                         if (projectName.getText().isBlank()) {
                             projectNameValidator.show(projectName, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             projectNameValidator.hide();
                         }
                     }
@@ -230,11 +230,11 @@ public class ProjectDialog extends Dialog<Project> {
         customerName.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if newTaskNameTextField is empty
+                        //Shows error message if newTaskNameTextField is empty
                         if (customerName.getText().isBlank()) {
                             customerNameValidator.show(customerName, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             customerNameValidator.hide();
                         }
                     }
@@ -250,11 +250,11 @@ public class ProjectDialog extends Dialog<Project> {
         customerEmail.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if newTaskNameTextField is empty
+                        //Shows error message if newTaskNameTextField is empty
                         if (customerEmail.getText().isBlank()) {
                             customerEmailValidator.show(customerEmail, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             customerEmailValidator.hide();
                         }
                     }
@@ -270,11 +270,11 @@ public class ProjectDialog extends Dialog<Project> {
         customerPhoneNumber.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if newTaskNameTextField is empty
+                        //Shows error message if newTaskNameTextField is empty
                         if (customerPhoneNumber.getText().isBlank()) {
                             customerNumberValidator.show(customerPhoneNumber, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             customerNumberValidator.hide();
                         }
                     }
@@ -291,11 +291,11 @@ public class ProjectDialog extends Dialog<Project> {
         address.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if newTaskNameTextField is empty
+                        //Shows error message if newTaskNameTextField is empty
                         if (address.getText().isBlank()) {
                             customerAddressValidator.show(address, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             customerAddressValidator.hide();
                         }
                     }
@@ -311,11 +311,11 @@ public class ProjectDialog extends Dialog<Project> {
         datePicker.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if no valid date has been set
+                        //Shows error message if no valid date has been set
                         if (null == datePicker.getValue()) {
                             dateValidator.show(datePicker, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             dateValidator.hide();
                         }
                     }
@@ -331,11 +331,11 @@ public class ProjectDialog extends Dialog<Project> {
         projectName.focusedProperty()
                 .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                     if (Boolean.FALSE.equals(newPropertyValue)) {
-                        //Showing error message if newTaskNameTextField is empty
+                        //Shows error message if newTaskNameTextField is empty
                         if (description.getText().isBlank()) {
                             descriptionValidator.show(description, Side.RIGHT, 10, 0);
                         } else {
-                            //Hiding the error message if valid input
+                            //Hides the error message if valid input
                             descriptionValidator.hide();
                         }
                     }

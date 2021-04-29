@@ -116,12 +116,12 @@ public class MainController {
                 taskListGridPane.add(button, 0, y);
 
                 if (task.isFinished()) {
-                    ImageView finishedImage = new ImageView("com/snikkergutane/images/person.png");
+                    ImageView finishedImage = new ImageView("com/snikkergutane/icons/person-icon.png");
                     finishedImage.setPreserveRatio(true);
                     finishedImage.setFitHeight(30);
                     taskListGridPane.add(finishedImage, 1, y);
                 } else {
-                    ImageView unfinishedImage = new ImageView("com/snikkergutane/images/key.png");
+                    ImageView unfinishedImage = new ImageView("com/snikkergutane/icons/key-icon.png");
                     unfinishedImage.setPreserveRatio(true);
                     unfinishedImage.setFitHeight(30);
                     taskListGridPane.add(unfinishedImage, 1, y);
