@@ -102,6 +102,7 @@ public class ProjectDialog extends Dialog<Project> {
             customerEmail.setText(existingProject.getCustomerEmail());
             customerPhoneNumber.setText(existingProject.getCustomerPhoneNumber());
             address.setText(existingProject.getAddress());
+            datePicker.setValue(existingProject.getStartDate());
 
 
             if(mode == Mode.INFO){
@@ -110,6 +111,7 @@ public class ProjectDialog extends Dialog<Project> {
                 customerEmail.setEditable(false);
                 customerPhoneNumber.setEditable(false);
                 address.setEditable(false);
+                datePicker.setEditable(false);
             }
         }
 
@@ -165,7 +167,7 @@ public class ProjectDialog extends Dialog<Project> {
         projectNameValidator = new ContextMenu();
         projectNameValidator.setAutoHide(false);
         projectNameValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et Prosjekt navn"));
+                new MenuItem("Vennligst gi oppgaven et ProsjektNavn!"));
 
         //Adds a listener to show error message if the TextField is left empty
         projectName.focusedProperty()
@@ -185,7 +187,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerNameValidator = new ContextMenu();
         customerNameValidator.setAutoHide(false);
         customerNameValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et kunde navn"));
+                new MenuItem("Vennligst gi oppgaven et KundeNavn!"));
 
         //Adds a listener to show error message if the TextField is left empty
         customerName.focusedProperty()
@@ -205,7 +207,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerEmailValidator = new ContextMenu();
         customerEmailValidator.setAutoHide(false);
         customerEmailValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven en kunde email"));
+                new MenuItem("Vennligst gi oppgaven en Email!"));
 
         //Adds a listener to show error message if the TextField is left empty
         customerEmail.focusedProperty()
@@ -225,7 +227,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerNumberValidator = new ContextMenu();
         customerNumberValidator.setAutoHide(false);
         customerNumberValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et navn"));
+                new MenuItem("Vennligst gi oppgaven et Mobilnummer!"));
 
         //Adds a listener to show error message if the TextField is left empty
         customerPhoneNumber.focusedProperty()
@@ -246,7 +248,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerAddressValidator = new ContextMenu();
         customerAddressValidator.setAutoHide(false);
         customerAddressValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et navn"));
+                new MenuItem("Vennligst gi oppgaven en Addresse"));
 
         //Adds a listener to show error message if the TextField is left empty
         address.focusedProperty()

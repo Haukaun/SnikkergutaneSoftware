@@ -693,24 +693,29 @@ public class MainController {
     }
 
     private void editProject(Project project) {
-        projectLib.removeProject(project.getName());
-
         ProjectDialog projectDialog = new ProjectDialog(project, true);
+
+
         Optional<Project> result = projectDialog.showAndWait();
         if (result.isPresent()) {
             projectLib.addProject(result.get());
         }
         updateProjectListWrapper();
+
     }
 
     @FXML
     private void editProjectButtonClicked() {
-        Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
-        if (null != project) {
-            editProject(project);
-        } else {
+        try{
+            Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
+            if(project != null){
+                editProject(project);
+            }
+        } catch (NullPointerException np) {
             statusLabel.setText("Error: choose a project from the list");
+            showPleaseSelectItemDialog();
         }
+
     }
 
     public void addTask(Task task) {
