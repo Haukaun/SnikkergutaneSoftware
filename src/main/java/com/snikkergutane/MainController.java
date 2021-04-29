@@ -400,7 +400,7 @@ public class MainController {
         imageDisplayVBox.setPadding(new Insets(5, 0, 0, 0));
 
         //Create the main image view
-        ImageView mainImage = new ImageView("com/snikkergutane/images/1.jpg");
+        ImageView mainImage = new ImageView("com/snikkergutane/icons/blank-image-icon.png");
         if (!task.getImages().isEmpty()) {
             mainImage.setImage(task.getImages().get(0));
         }
