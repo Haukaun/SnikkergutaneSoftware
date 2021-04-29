@@ -93,7 +93,7 @@ public class MainController {
         //Checks that a project is selected.
         if (projectsListView.getSelectionModel().getSelectedItem() != null) {
 
-            //Gets the selected project from the library.
+            //Gets the selected project from the library, and sets it as the selected project.
             Project selectedProject = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
 
             //Sets the text of the labels in the information tab to the information in the selected project.
@@ -336,39 +336,45 @@ public class MainController {
     }
 
     /**
-     * If a project is selected in the project list, it is removed from the library and from the tab pane,
-     * and the list is updated.
+     * If a project is selected in the project list, it is removed from the library,
+     * from the tab pane, and from the projects folder, and the list is updated.
      */
     @FXML
     private void deleteProjectButtonClicked() {
-        //Deletes the file from the directory
-        File projectDirectory = new File(System.getProperty("user.home") + File.separator +
-                "SnikkerGutaneSoftware" + File.separator + "projects");
-        String deleteString = projectsListView.getSelectionModel().getSelectedItem() + ".csv";
-        Path dir = projectDirectory.toPath();
-        try {
-            DirectoryStream<Path> stream =
-                    Files.newDirectoryStream(dir, "*.csv");
-            for (Path entry : stream) {
-                if (entry.endsWith(deleteString)) {
-                    File file = entry.toFile();
-                    file.delete();
+        if (null == projectsListView.getSelectionModel().getSelectedItem()) {
+            showPleaseSelectProjectDialog();
+        } else {
+            if (showDeleteProjectConfirmationDialog(projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()))) {
+                //Deletes the file from the directory
+                File projectDirectory = new File(System.getProperty("user.home") + File.separator +
+                        "SnikkerGutaneSoftware" + File.separator + "projects");
+                String deleteString = projectsListView.getSelectionModel().getSelectedItem() + ".csv";
+                Path dir = projectDirectory.toPath();
+                try {
+                    DirectoryStream<Path> stream =
+                            Files.newDirectoryStream(dir, "*.csv");
+                    for (Path entry : stream) {
+                        if (entry.endsWith(deleteString)) {
+                            File file = entry.toFile();
+                            file.delete();
+                        }
+                    }
+                    stream.close();
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
+
+                //Removes the file from the projectLib
+                this.projectLib.removeProject
+                        (this.projectsListView.getSelectionModel().getSelectedItem());
+
+                updateProjectListWrapper();
+                this.projectsListView.getSelectionModel().selectLast();
+                projectSelected();
+                if (this.projectLib.listProjects().isEmpty()) {
+                    this.projectTabPane.getTabs().clear();
                 }
             }
-            stream.close();
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-
-        //Removes the file from the projectLib
-        this.projectLib.removeProject
-                (this.projectsListView.getSelectionModel().getSelectedItem());
-
-        updateProjectListWrapper();
-        this.projectsListView.getSelectionModel().selectLast();
-        projectSelected();
-        if (this.projectLib.listProjects().isEmpty()) {
-            this.projectTabPane.getTabs().clear();
         }
     }
 
@@ -664,9 +670,9 @@ public class MainController {
     private void removeSelectedCommentButtonClicked(Task task, TableView<Comment> commentsTableview) {
         Comment selectedComment = commentsTableview.getSelectionModel().getSelectedItem();
         if (selectedComment == null) {
-            showPleaseSelectItemDialog();
+            showPleaseSelectCommentDialog();
         } else {
-            if (showDeleteConfirmationDialog(selectedComment)) {
+            if (showDeleteCommentConfirmationDialog(selectedComment)) {
                 task.removeComment(selectedComment);
             }
         }
@@ -680,7 +686,7 @@ public class MainController {
     private void editSelectedCommentButtonClicked(Task task, TableView<Comment> commentsTableView) {
         Comment comment = commentsTableView.getSelectionModel().getSelectedItem();
         if (comment == null) {
-            showPleaseSelectItemDialog();
+            showPleaseSelectCommentDialog();
         } else {
 
             CommentDialog commentDialog = new CommentDialog(comment, true);
@@ -738,7 +744,7 @@ public class MainController {
             }
         } catch (NullPointerException np) {
             statusLabel.setText("Error: choose a project from the list");
-            showPleaseSelectItemDialog();
+            showPleaseSelectCommentDialog();
         }
     }
 
@@ -797,9 +803,9 @@ public class MainController {
     }
 
     /**
-     * Displays a warning dialog asking the user to select a comment from the comment table.
+     * Displays a dialog asking the user to select a comment from the comment table.
      */
-    private void showPleaseSelectItemDialog() {
+    private void showPleaseSelectCommentDialog() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Informasjon");
         alert.setHeaderText("Ingen kommentar valgt");
@@ -814,7 +820,7 @@ public class MainController {
      * @param comment {@code Comment} of which deletion is to be confirmed.
      * @return {@code true} if confirmed, or {@code false} if not.
      */
-    private boolean showDeleteConfirmationDialog(Comment comment) {
+    private boolean showDeleteCommentConfirmationDialog(Comment comment) {
         boolean deleteConfirmed = false;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -828,6 +834,40 @@ public class MainController {
             deleteConfirmed = (result.get() == ButtonType.OK);
         }
         return deleteConfirmed;
+    }
+
+    /**
+     * Displays a confirmation dialog to delete the given project.
+     * @param project {@code Project} of which deletion is to be confirmed.
+     * @return {@code true} if confirmed, or {@code false} if not.
+     */
+    private boolean showDeleteProjectConfirmationDialog(Project project) {
+        boolean deleteConfirmed = false;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Bekreft fjerning");
+        alert.setHeaderText("Bekreft fjerning");
+        alert.setContentText("Er du sikker at du vil fjerne " + project.getName() + "?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+            deleteConfirmed = (result.get() == ButtonType.OK);
+        }
+        return deleteConfirmed;
+    }
+
+    /**
+     * Displays a dialog asking the user to select a project from the project list.
+     */
+    private void showPleaseSelectProjectDialog() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Informasjon");
+        alert.setHeaderText("Ingen prosjekt valgt");
+        alert.setContentText("Ingen prosjekt er valgt.\n"
+                + "Vennligst velg et prosjekt fra listen.");
+
+        alert.showAndWait();
     }
 
     /**

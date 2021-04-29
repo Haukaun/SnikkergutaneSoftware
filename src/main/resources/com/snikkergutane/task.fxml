@@ -109,8 +109,22 @@
    <bottom>
       <HBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="newTaskSaveButton" mnemonicParsing="false" onAction="#saveNewTaskButtonClicked" text="Legg til oppgave" />
-            <Button fx:id="newTaskResetButton" mnemonicParsing="false" onAction="#resetButtonClicked" text="Tøm alle felt" />
+            <Button fx:id="newTaskSaveButton" mnemonicParsing="false" onAction="#saveNewTaskButtonClicked" text="Legg til oppgave">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/plus-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="newTaskResetButton" mnemonicParsing="false" onAction="#resetButtonClicked" text="Tøm alle felt">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/trash-can.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
          </children>
       </HBox>
    </bottom>

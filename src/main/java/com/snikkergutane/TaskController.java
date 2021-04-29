@@ -13,10 +13,12 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -168,9 +170,11 @@ public class TaskController {
 
         fileChooser.setTitle("Åpne ressursfil");
         List<File> fileList =  fileChooser.showOpenMultipleDialog(newTaskPane.getScene().getWindow());
-        List <Image> imageList = new ArrayList<>();
-        fileList.forEach(file -> imageList.add(new Image(file.toURI().toString())));
-        displayImages(imageList);
+        if (null != fileList) {
+            List<Image> imageList = new ArrayList<>();
+            fileList.forEach(file -> imageList.add(new Image(file.toURI().toString())));
+            displayImages(imageList);
+        }
     }
 
     /**
@@ -293,7 +297,9 @@ public class TaskController {
     @FXML
     private void resetButtonClicked() {
         if (editMode && null != mainController) {
-            mainController.removeTask(task);
+            if (showDeletionConfirmationDialog(task)) {
+                mainController.removeTask(task);
+            }
         } else {
             newTaskNameTextField.setText("");
             newTaskDescriptionTextArea.setText("");
@@ -301,6 +307,29 @@ public class TaskController {
             newTaskEndDatePicker.getEditor().clear();
             imageDisplayGridPane.getChildren().clear();
         }
+    }
+    /**
+     * Asks the user for a deletion confirmation of given task.
+     * @param task the {@code Task} to be deleted.
+     * @return {@code boolean} true if confirmed, or false if cancelled.
+     */
+    private boolean showDeletionConfirmationDialog(Task task) {
+        boolean deleteConfirmed = false;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("com/snikkergutane/icons/trash-can.png"));
+        alert.setTitle("Bekreft fjerning");
+        alert.setHeaderText("Bekreft fjerning");
+        alert.setContentText("Slette "
+                + task.getName() + "?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+            deleteConfirmed = (result.get() == ButtonType.OK);
+        }
+        return deleteConfirmed;
     }
 
     /**
