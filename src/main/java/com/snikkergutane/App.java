@@ -27,7 +27,7 @@ public class App extends Application {
         App.stage = stage;
         scene = new Scene(loadFxml("login"));
         stage.setTitle("Snikkergutane Software");
-        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-small.png").toExternalForm()));
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

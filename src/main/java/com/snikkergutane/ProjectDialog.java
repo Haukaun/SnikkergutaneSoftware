@@ -74,13 +74,13 @@ public class ProjectDialog extends Dialog<Project> {
 
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-small.png").toExternalForm()));
         stage.setTitle("Prosjekt Håndtering");
 
         //Make Buttons in dialog
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-        getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/SnikkergutaneLogo.png").toExternalForm()));
+        getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-big.png").toExternalForm()));
         getDialogPane().setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
         //Creates GridPane
