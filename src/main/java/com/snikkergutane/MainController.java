@@ -627,6 +627,8 @@ public class MainController {
         return commentSection;
     }
 
+
+
     private void editTaskButtonClicked() {
         try {
             Project project = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
@@ -655,6 +657,11 @@ public class MainController {
         }
     }
 
+    /**
+     * Removes the selected comment. Checks if comment is null and produces an Confirmation Dialog.
+     * @param task Removes Selected Comment
+     * @param commentsTableview Comment you want to Remove.
+     */
     private void removeSelectedCommentButtonClicked(Task task, TableView commentsTableview) {
         Comment commentSelected = (Comment) commentsTableview.getSelectionModel().getSelectedItem();
         if (commentSelected == null) {
@@ -667,7 +674,11 @@ public class MainController {
         }
     }
 
-
+    /**
+     * Opens Dialog if Comment is selected and checks for user to do some interaction with button.
+     * @param task Adds Comment task
+     * @param commentsTableView Comment you want to Edit.
+     */
     private void editSelectedCommentButtonClicked(Task task, TableView commentsTableView) {
         Comment comment = (Comment) commentsTableView.getSelectionModel().getSelectedItem();
         if (comment == null) {
@@ -687,6 +698,10 @@ public class MainController {
 
     }
 
+    /**
+     * Opens Dialog and adds Comment true interactions from user.
+     * @param task
+     */
     @FXML
     private void addCommentButtonClicked(Task task) {
         CommentDialog commentDialog = new CommentDialog();
@@ -719,6 +734,13 @@ public class MainController {
         updateProjectListWrapper();
     }
 
+    /**
+     * Creates projectDialog, waits for users actions on Button clicks
+     * and give you dialog filled with existing values.
+     * When saved it removes existing project and adds a new one.
+     *
+     * @param project {@code Project} Grabs ProjectsName For Editing.
+     */
     private void editProject(Project project) {
         String oldProject = project.getName();
         ProjectDialog projectDialog = new ProjectDialog(project, true);
@@ -737,6 +759,10 @@ public class MainController {
         }
     }
 
+    /**
+     * Makes Project Object of selected item in listView.
+     * if project is null it return an dialog and label that says you have to choose an Object.
+     */
     @FXML
     private void editProjectButtonClicked() {
         try{
@@ -751,12 +777,21 @@ public class MainController {
 
     }
 
+
+    /**
+     * Adds Task, and Updates All of the existing tasks.
+     * @param task
+     */
     public void addTask(Task task) {
         projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).addTask(task);
         projectSelected();
         projectTabPane.getSelectionModel().select(projectTabPane.getTabs().size()-2);
     }
 
+    /**
+     * Selects the newly added tab.
+     * @param task
+     */
     public void editTask(Task task) {
         projectSelected();
         projectTabPane.getTabs().forEach(tab -> {
@@ -766,11 +801,19 @@ public class MainController {
         });
     }
 
+    /**
+     *Revomes selected task.
+     * @param task
+     */
     public void removeTask(Task task) {
         projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).removeTask(task.getName());
         projectSelected();
     }
 
+
+    /**
+     * Creates AlertBox with Type Warning.
+     */
     private void showPleaseSelectItemDialog() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Informasjon");
@@ -781,6 +824,11 @@ public class MainController {
         alert.showAndWait();
     }
 
+
+    /**
+     * Creates AlertBox with type Confirmation, and checks if user pressed buttons.
+     * @return
+     */
     private boolean showDeleteConfirmationDialog() {
         boolean deleteConfirmed = false;
 

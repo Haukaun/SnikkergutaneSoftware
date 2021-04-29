@@ -69,27 +69,4 @@ public class ProjectLib {
     public List<String> listProjects() {
         return new ArrayList<>(projects.keySet());
     }
-
-    /**
-     * Creates a demo project and adds it to the projectLib.
-     */
-    public void loadDemoProject() {
-        Task task = new Task("Balkongdør Stue");
-        task.setDescription("Skifte balkongdør på stue.\n" +
-                "\n" +
-                "Så mye tekst som ønskelig kan legges til her for å tilstrekkelig formidle informasjon nødvendig for utførelse av oppgaven.");
-        task.setStartDate(LocalDate.now());
-        task.addImage("com/snikkergutane/images/1.jpg");
-        task.addImage("com/snikkergutane/images/2.jpg");
-        task.addImage("com/snikkergutane/images/3.jpg");
-        task.addImage("com/snikkergutane/images/4.jpg");
-
-        Project newProject = new Project("Portveien 4", "Anne Knutsdotter", "anne.knutsdotter@Steinroys.no", "12345678", "Der ingen skulle tru at nokon kunne bu", LocalDate.now());
-
-        newProject.addTask(task);
-
-        if (this.projects.size() == 0) {
-            this.projects.put(newProject.getName(), newProject);
-        }
-    }
 }

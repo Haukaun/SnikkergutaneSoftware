@@ -12,7 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
-
+/**
+ * The type Project dialog. Dialog that pops up were you can make changes to project and add new projects.
+ */
 public class ProjectDialog extends Dialog<Project> {
 
     private final Mode mode;
@@ -23,21 +25,45 @@ public class ProjectDialog extends Dialog<Project> {
     private ContextMenu customerNumberValidator;
     private ContextMenu customerAddressValidator;
     private ContextMenu dateValidator;
+    private ContextMenu descriptionValidator;
 
+    /**
+     * Instantiates a new Project dialog.
+     */
     public ProjectDialog() {
         super();
         this.mode = Mode.NEW;
         showContent();
     }
 
+    /**
+     * The enum Mode.
+     */
     public enum Mode{
-        NEW, EDIT, INFO
+        /**
+         * New mode.
+         */
+        NEW,
+        /**
+         * Edit mode.
+         */
+        EDIT,
+        /**
+         * Info mode.
+         */
+        INFO
     }
 
 
     private Project existingProject= null;
 
 
+    /**
+     * Instantiates a new Project dialog.
+     *
+     * @param project  the project
+     * @param editable the editable
+     */
     public ProjectDialog (Project project, boolean editable){
         super();
 
@@ -51,24 +77,31 @@ public class ProjectDialog extends Dialog<Project> {
         showContent();
     }
 
+
+    /**
+     * Makes dialog with button and TextFields.
+     * SafeProofing with TextField that only accepts numbers and button that will appear when changes have been made.
+     */
     private void showContent(){
+
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
         stage.setTitle("Prosjekt Håndtering");
 
+        //Make Buttons in dialog
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
         getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/SnikkergutaneLogo.png").toExternalForm()));
         getDialogPane().setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
-
+        //Creates GridPane
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10, 50, 10, 10));
 
-
+        //Creates the TextFields that holds Object information.
         TextField projectName = new TextField();
         projectName.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         projectName.setPromptText("ProsjektNavn");
@@ -94,7 +127,12 @@ public class ProjectDialog extends Dialog<Project> {
         datePicker.setPromptText("Oppstartsdato");
         datePicker.setEditable(false);
 
+        TextField description = new TextField();
+        description.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        description.setPromptText("Beskrivelse");
 
+
+        //Grabs Info from Objects and returns them into TextFields.
         if((mode == Mode.EDIT) || (mode == Mode.INFO)){
 
             projectName.setText(existingProject.getName());
@@ -103,8 +141,9 @@ public class ProjectDialog extends Dialog<Project> {
             customerPhoneNumber.setText(existingProject.getCustomerPhoneNumber());
             address.setText(existingProject.getAddress());
             datePicker.setValue(existingProject.getStartDate());
+            description.setText(existingProject.getDescription());
 
-
+        //Makes TextFields not editable while Mode is Info.
             if(mode == Mode.INFO){
                 projectName.setEditable(false);
                 customerName.setEditable(false);
@@ -112,9 +151,11 @@ public class ProjectDialog extends Dialog<Project> {
                 customerPhoneNumber.setEditable(false);
                 address.setEditable(false);
                 datePicker.setEditable(false);
+                description.setEditable(false);
             }
         }
 
+        //Adds Label and TextFields to specified grid coordinates.
         grid.add(new Label("ProsjektNavn:"), 1, 0);
         grid.add(projectName, 2, 0 );
 
@@ -133,11 +174,15 @@ public class ProjectDialog extends Dialog<Project> {
         grid.add(new Label("Oppstartsdato:"), 1 , 5);
         grid.add(datePicker, 2,5);
 
+        grid.add(new Label("Beskrivelse:"), 1 , 6);
+        grid.add(description, 2, 6);
 
 
+        //Disables SaveButton.
         Node okButton = getDialogPane().lookupButton(okButtonType);
         okButton.setDisable(true);
 
+        //Listener that makes SaveButton appear when something is written in Fields.
         projectName.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.trim().isEmpty());
         });
@@ -158,6 +203,10 @@ public class ProjectDialog extends Dialog<Project> {
             okButton.setDisable(newValue.trim().isEmpty());
         });
 
+        description.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty());
+        });
+
 
         grid.getStylesheets().add(getClass()
                 .getResource("/com/snikkergutane/task.css")
@@ -167,7 +216,7 @@ public class ProjectDialog extends Dialog<Project> {
         projectNameValidator = new ContextMenu();
         projectNameValidator.setAutoHide(false);
         projectNameValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et ProsjektNavn!"));
+                new MenuItem("Vennligst angi et navn!"));
 
         //Adds a listener to show error message if the TextField is left empty
         projectName.focusedProperty()
@@ -187,7 +236,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerNameValidator = new ContextMenu();
         customerNameValidator.setAutoHide(false);
         customerNameValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et KundeNavn!"));
+                new MenuItem("Vennligst angi en kunde!"));
 
         //Adds a listener to show error message if the TextField is left empty
         customerName.focusedProperty()
@@ -207,7 +256,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerEmailValidator = new ContextMenu();
         customerEmailValidator.setAutoHide(false);
         customerEmailValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven en Email!"));
+                new MenuItem("Vennligst angi en email!"));
 
         //Adds a listener to show error message if the TextField is left empty
         customerEmail.focusedProperty()
@@ -227,7 +276,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerNumberValidator = new ContextMenu();
         customerNumberValidator.setAutoHide(false);
         customerNumberValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven et Mobilnummer!"));
+                new MenuItem("Vennligst angi ett mobilnummer!"));
 
         //Adds a listener to show error message if the TextField is left empty
         customerPhoneNumber.focusedProperty()
@@ -248,7 +297,7 @@ public class ProjectDialog extends Dialog<Project> {
         customerAddressValidator = new ContextMenu();
         customerAddressValidator.setAutoHide(false);
         customerAddressValidator.getItems().add(
-                new MenuItem("Vennligst gi oppgaven en Addresse"));
+                new MenuItem("Vennligst angi en addresse"));
 
         //Adds a listener to show error message if the TextField is left empty
         address.focusedProperty()
@@ -285,6 +334,26 @@ public class ProjectDialog extends Dialog<Project> {
                 });
 
 
+        descriptionValidator = new ContextMenu();
+        descriptionValidator.setAutoHide(false);
+        descriptionValidator.getItems().add(
+                new MenuItem("Vennligst angi en beskrivelse!"));
+
+        //Adds a listener to show error message if the TextField is left empty
+        projectName.focusedProperty()
+                .addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+                    if (Boolean.FALSE.equals(newPropertyValue)) {
+                        //Showing error message if newTaskNameTextField is empty
+                        if (description.getText().isBlank()) {
+                            descriptionValidator.show(description, Side.RIGHT, 10, 0);
+                        } else {
+                            //Hiding the error message if valid input
+                            descriptionValidator.hide();
+                        }
+                    }
+                });
+
+        //Listener that only accepts Numbers and +.
         customerPhoneNumber.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 if (!newValue.matches("[0-9+]*")) {
@@ -296,24 +365,28 @@ public class ProjectDialog extends Dialog<Project> {
             }
         });
 
+        //Just for Testing.
+        /*
         datePicker.getEditor().setOnKeyTyped(event -> {
             if (!"0123456789/".contains(event.getCharacter())) {
                 return;
             }
             datePicker.getEditor().selectForward();
             datePicker.getEditor().cut();
-        });
+        });*/
 
         getDialogPane().setContent(grid);
 
 
-
+        //SetResultConverter checks if Mode is New or Edit.
         setResultConverter(
                 (ButtonType button) -> {
                     Project result = null;
                     if (button == okButtonType) {
                         if (mode == Mode.NEW) {
-                            result = new Project(projectName.getText(), customerName.getText(), customerEmail.getText(), customerPhoneNumber.getText(), address.getText(), datePicker.getValue());
+                            //Mode = New, returns and Object with all of the values typed in.
+                            result = new Project(projectName.getText(), customerName.getText(), customerEmail.getText(), customerPhoneNumber.getText(), address.getText(), datePicker.getValue(), description.getText());
+                        //Mode = Edit, returns the new Value that has been Entered.
                         } else if (mode == Mode.EDIT) {
                             existingProject.setName(projectName.getText());
                             existingProject.setCustomerName(customerName.getText());
@@ -321,6 +394,7 @@ public class ProjectDialog extends Dialog<Project> {
                             existingProject.setCustomerPhoneNumber(customerPhoneNumber.getText());
                             existingProject.setAddress(address.getText());
                             existingProject.setStartDate(datePicker.getValue());
+                            existingProject.setDescription(description.getText());
                             result = existingProject;
                         }
                     }

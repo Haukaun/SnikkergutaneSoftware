@@ -26,7 +26,7 @@ public class Project {
     }
 
 
-    public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address, LocalDate startDate) {
+    public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address, LocalDate startDate, String description) {
         this.name = projectName;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -34,8 +34,12 @@ public class Project {
         this.address = address;
         this.startDate = startDate;
         this.endDate = startDate;
-        this.description = "Legg til prosjektbeskrivelse.";
+        this.description = description;
         this.tasks = new ArrayList<>();
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Project(String projectName, String customerName, String customerEmail,
