@@ -2,6 +2,9 @@ package com.snikkergutane;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -76,10 +79,11 @@ public class MainController {
     private void initialize() {
         projectTabPane.getTabs().clear();
         showWelcomeTab();
-        projectLib.loadDemoProject();
+
         projectListWrapper = FXCollections.observableArrayList
                 (this.projectLib.listProjects());
         projectsListView.setItems(projectListWrapper);
+        loadProjectsFromDefaultDirectory();
     }
 
     private void showWelcomeTab() {
@@ -344,8 +348,29 @@ public class MainController {
      */
     @FXML
     private void deleteProjectButtonClicked() {
+        //Deletes the file from the directory
+        File projectDirectory = new File(System.getProperty("user.home") + File.separator +
+                "SnikkerGutaneSoftware" + File.separator + "projects");
+        String deleteString = projectsListView.getSelectionModel().getSelectedItem() + ".csv";
+        Path dir = projectDirectory.toPath();
+        try {
+            DirectoryStream<Path> stream =
+                    Files.newDirectoryStream(dir, "*.csv");
+            for (Path entry : stream) {
+                if (entry.endsWith(deleteString)) {
+                    File file = entry.toFile();
+                    System.out.println(file.delete());
+                }
+            }
+            stream.close();
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+
+        //Removes the file from the projectLib
         this.projectLib.removeProject
                 (this.projectsListView.getSelectionModel().getSelectedItem());
+
         updateProjectListWrapper();
         this.projectsListView.getSelectionModel().selectLast();
         projectSelected();
@@ -770,6 +795,53 @@ public class MainController {
             deleteConfirmed = (result.get() == ButtonType.OK);
         }
         return deleteConfirmed;
+    }
 
+    /**
+     * Imports the projects from the default project directory (user\SnikkerGutaneSoftware\projects).
+     */
+    private void loadProjectsFromDefaultDirectory() {
+        csvManager = new CsvManager();
+        File projectDirectory = new File(System.getProperty("user.home") + File.separator +
+                "SnikkerGutaneSoftware" + File.separator + "projects");
+        try {
+            List<Project> projects = csvManager.importFolder(projectDirectory);
+            //If projects were successfully imported
+            if (!projects.isEmpty()) {
+                projects.forEach(projectLib::addProject);
+                updateProjectListWrapper();
+                statusLabel.setText("Successfully imported " + projectDirectory);
+            }
+        } catch (IOException e) {
+            statusLabel.setText("Import failed: wrong format of file(s) in folder");
+        } catch (ArrayIndexOutOfBoundsException a) {
+            statusLabel.setText("Import failed: wrong format of file in folder.");
+        }
+    }
+
+    /**
+     * Saves all projects to the default projects directory (user\SnikkerGutaneSoftware\projects).
+     */
+    public void saveProjectsToDefaultDirectory() {
+        csvManager = new CsvManager();
+        String path = System.getProperty("user.home") + File.separator +
+                "SnikkerGutaneSoftware" + File.separator + "projects";
+        File saveDirectory = new File(path);
+
+        boolean success = false;
+        if (!saveDirectory.exists()) {
+            if (saveDirectory.mkdirs()) {
+                success = true;
+            }
+        } else {
+            success = true;
+        }
+        if (success) {
+            csvManager.setSaveFileDirectory(saveDirectory.getAbsolutePath());
+            for (Project project : projectLib.getProjects().values()) {
+                System.out.println("File created:" + csvManager.createCsvFile(project.getName()));
+                csvManager.writeToCsv(project.getProjectAsStringArrayList());
+            }
+        }
     }
 }

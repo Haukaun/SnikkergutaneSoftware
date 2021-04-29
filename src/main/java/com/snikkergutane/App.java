@@ -17,6 +17,7 @@ public class App extends Application {
 
     private static Scene scene;
     public static Stage stage;
+    private static MainController mainController;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -26,13 +27,6 @@ public class App extends Application {
         stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.show();
-    }
-
-    static void newWindow(String URL) throws IOException {
-        Stage stage = new Stage();
-        Scene scene = new Scene(loadFXML(URL));
-        stage.setScene(scene);
         stage.show();
     }
 
@@ -48,7 +42,11 @@ public class App extends Application {
 
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
+        Parent parent = fxmlLoader.load();
+        if (fxml.equals("main")) {
+            App.mainController = fxmlLoader.getController();
+        }
+        return parent;
     }
 
     public static void main(String[] args) {
@@ -62,5 +60,11 @@ public class App extends Application {
             node = node.getParent();
         } while (controller == null && node != null);
         return controller;
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("Stage is closing");
+        mainController.saveProjectsToDefaultDirectory();
     }
 }

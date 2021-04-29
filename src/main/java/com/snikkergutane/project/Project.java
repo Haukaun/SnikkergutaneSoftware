@@ -18,7 +18,6 @@ public class Project {
     private String address;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDate deadline;
     private String description;
     private final ArrayList<Task> tasks;
 
@@ -34,8 +33,8 @@ public class Project {
         this.customerPhoneNumber = customerPhoneNumber;
         this.address = address;
         this.startDate = startDate;
-        this.endDate = null;
-        this.deadline = null;
+        this.endDate = startDate;
+        this.description = "Legg til prosjektbeskrivelse.";
         this.tasks = new ArrayList<>();
     }
 
@@ -51,13 +50,7 @@ public class Project {
         this.startDate = startDate;
         this.description = description;
         this.tasks = new ArrayList<>();
-        if (LocalDate.now().isBefore(endDate)) {
-            this.deadline = endDate;
-            this.endDate = null;
-        } else {
-            this.endDate = endDate;
-            this.deadline = null;
-        }
+        this.endDate = endDate;
     }
 
     /**
@@ -159,9 +152,6 @@ public class Project {
         this.startDate = date;
     }
 
-    public void setDeadline(LocalDate date) {
-        this.deadline = date;
-    }
 
     public boolean isFinished() {
         if (null != this.endDate) {
@@ -180,9 +170,8 @@ public class Project {
     }
 
     public List<String[]> getProjectAsStringArrayList() {
-
         List<String> projectInfo = new ArrayList<>(Arrays.asList(this.getName(),this.customerName,
-                this.customerEmail,this.address,"" + this.getStartDate(),
+                this.customerEmail, this.customerPhoneNumber, this.address,"" + this.getStartDate(),
                 "" + this.getEndDate(), this.getDescription()));
 
         List<String[]> project = new ArrayList<>();
