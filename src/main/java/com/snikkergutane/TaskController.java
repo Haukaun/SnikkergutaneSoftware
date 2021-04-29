@@ -20,6 +20,9 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Controller class for the task.fxml
+ */
 public class TaskController {
     @FXML private BorderPane newTaskPane;
     @FXML private Label newTaskLabel;

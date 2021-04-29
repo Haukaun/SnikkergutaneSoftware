@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 
 /**
- * The type Project dialog. Dialog that pops up were you can make changes to project and add new projects.
+ * The type Project dialog. Dialog that pops up where you can make changes to project and add new projects.
  */
 public class ProjectDialog extends Dialog<Project> {
 
@@ -28,7 +28,7 @@ public class ProjectDialog extends Dialog<Project> {
     private ContextMenu descriptionValidator;
 
     /**
-     * Instantiates a new Project dialog.
+     * Instantiates a new Project dialog in the NEW mode.
      */
     public ProjectDialog() {
         super();
@@ -37,23 +37,11 @@ public class ProjectDialog extends Dialog<Project> {
     }
 
     /**
-     * The enum Mode.
+     * The dialog has three modes: new, edit and info, and reacts differently depending on the mode.
      */
-    public enum Mode{
-        /**
-         * New mode.
-         */
-        NEW,
-        /**
-         * Edit mode.
-         */
-        EDIT,
-        /**
-         * Info mode.
-         */
-        INFO
+    public enum Mode {
+        NEW, EDIT, INFO
     }
-
 
     private Project existingProject= null;
 

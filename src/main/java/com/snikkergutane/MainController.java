@@ -810,8 +810,9 @@ public class MainController {
     }
 
     /**
-     * Creates AlertBox with type Confirmation, and checks if user pressed buttons.
-     * @return {@true} if confirmed, or {@code false} if not.
+     * Displays a confirmation dialog to delete the given comment.
+     * @param comment {@code Comment} of which deletion is to be confirmed.
+     * @return {@code true} if confirmed, or {@code false} if not.
      */
     private boolean showDeleteConfirmationDialog(Comment comment) {
         boolean deleteConfirmed = false;

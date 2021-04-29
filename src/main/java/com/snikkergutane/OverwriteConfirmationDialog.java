@@ -7,10 +7,23 @@ import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Dialog to be displayed when attempting to overwrite an existing project file.
+ * The dialog returns an Integer that is to be parsed by the caller.
+ *
+ * Returns 1 if the previous file is to be overwritten,
+ *   2 if the previous file is not to be overwritten,
+ *   3 if all files are to be overwritten, or
+ *   4 if no files are to be overwritten.
+ */
 public class OverwriteConfirmationDialog extends Dialog<Integer> {
 
-    private Project project;
+    private final Project project;
 
+    /**
+     * Creates a new instance of the class.
+     * @param project {@code Project} that already has a save file.
+     */
     public OverwriteConfirmationDialog(Project project) {
         super();
         this.project = project;
@@ -21,6 +34,9 @@ public class OverwriteConfirmationDialog extends Dialog<Integer> {
                 .toExternalForm()));
     }
 
+    /**
+     * Creates the contents of the dialog.
+     */
     private void createContent() {
         setTitle("Bekreft overskriving");
         setHeaderText(project.getName() + ".csv finnes allerede i denne filplasseringen.");
