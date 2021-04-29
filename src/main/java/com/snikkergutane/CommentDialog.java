@@ -110,7 +110,7 @@ public class CommentDialog extends Dialog<Comment>{
 
             user.setText(existingComment.getUser());
             commentText.setText(existingComment.getCommentText());
-            imageURL.setText(existingComment.getImageUrl());
+            imageURL.setText(existingComment.getImage().getUrl());
             user.setEditable(false);
             imageURL.setEditable(false);
 

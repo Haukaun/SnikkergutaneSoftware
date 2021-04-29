@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents a comment in a task.
+ * A comment contains a date, a username, a comment text and may contain an image.
+ */
 public class Comment {
     private LocalDate date;
     private final String user;
@@ -14,6 +18,12 @@ public class Comment {
     private Image image;
     private String imageUrl;
 
+    /**
+     * Creates a new instance of the class, without an image.
+     * @param date {@code LocalDate} date of the comment.
+     * @param user {@code String} name of the poster.
+     * @param commentText {@code String} the comment text.
+     */
     public Comment(LocalDate date, String user, String commentText) {
         this.date = date;
         this.user = user;
@@ -22,6 +32,13 @@ public class Comment {
         this.imageUrl = null;
     }
 
+    /**
+     * Creates a new instance of the class, with an image.
+     * @param date {@code LocalDate} date of the comment.
+     * @param user {@code String} name of the poster.
+     * @param commentText {@code String} the comment text.
+     * @param imageUrl {@code String} url of the image.
+     */
     public Comment(LocalDate date, String user, String commentText,String imageUrl) {
         this.date = date;
         this.user = user;
@@ -30,46 +47,60 @@ public class Comment {
         this.image = new Image(imageUrl);
     }
 
+    /**
+     * Returns the date of the comment.
+     * @return {@code LocalDate} date of the comment.
+     */
     public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
+    /**
+     * Returns the name of the user who posted the comment.
+     * @return {@code String} user of the comment.
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * Returns the comment's comment text.
+     * @return {@code String} comment text of the comment.
+     */
     public String getCommentText() {
         return commentText;
     }
 
+    /**
+     * Sets the comment text of the comment.
+     * @param commentText {@code String} comment text of the comment.
+     */
     public void setCommentText(String commentText) {
         this.commentText = commentText;
     }
 
+    /**
+     * Returns the comment's image.
+     * @return {@code Image} of the comment.
+     */
     public Image getImage() {
         return this.image;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
+    /**
+     * Sets the comment's image.
+     * @param image {@code Image} of the comment.
+     */
     public void setImage(Image image) {
 
         this.imageUrl = image.getUrl();
         this.image = new Image(imageUrl);
     }
 
-    public void removeImage() {
-        this.image = null;
-        this.imageUrl = null;
-    }
-
-
+    /**
+     * Generates a String array of the comments' details.
+     * @return {@code String[]} comment information.
+     */
     public String[] getCommentAsStringArray() {
         List<String> commentInfo = new ArrayList<>(Arrays.asList("" + this.date, this.user, this.commentText, this.imageUrl));
         return commentInfo.toArray(new String[0]);
@@ -87,6 +118,6 @@ public class Comment {
         return this.user.equals(emp.getUser())
                 && this.date.isEqual(emp.getDate())
                 && this.commentText.equals(emp.getCommentText())
-                && this.imageUrl.equals(emp.getImageUrl());
+                && this.image.getUrl().equals(emp.getImage().getUrl());
     }
 }

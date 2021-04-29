@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a project containing
- * a number of stages to be completed.
+ * Represents a construction project.
  */
 public class Project {
 
@@ -21,11 +20,15 @@ public class Project {
     private String description;
     private final ArrayList<Task> tasks;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
+    /**
+     * Creates a new instance of the class.
+     * @param projectName {@code String} name of the project.
+     * @param customerName {@code String} name of the project's customer.
+     * @param customerEmail {@code String} customer's email address.
+     * @param customerPhoneNumber {@code String} customer's phone number.
+     * @param address {@code String} address of the project.
+     * @param startDate {@code LocalDate} of the project's start.
+     */
     public Project(String projectName, String customerName, String customerEmail, String customerPhoneNumber, String address, LocalDate startDate, String description) {
         this.name = projectName;
         this.customerName = customerName;
@@ -42,6 +45,17 @@ public class Project {
         this.description = description;
     }
 
+    /**
+     * Creates a new instance of the project, including end date and description.
+     * @param projectName {@code String} name of the project.
+     * @param customerName {@code String} name of the project's customer.
+     * @param customerEmail {@code String} customer's email address.
+     * @param customerPhoneNumber {@code String} customer's phone number.
+     * @param address {@code String} address of the project.
+     * @param startDate {@code LocalDate} of the project's start.
+     * @param endDate {@code LocalDate} of the project's deadline or end date.
+     * @param description {@code String} description of the project.
+     */
     public Project(String projectName, String customerName, String customerEmail,
                    String customerPhoneNumber, String address, LocalDate startDate,
                    LocalDate endDate, String description) {
@@ -104,75 +118,123 @@ public class Project {
         tasks.remove(removeTask);
     }
 
+    /**
+     * Returns the customer's name.
+     * @return {@code String} of the customer's name.
+     */
     public String getCustomerName() {
         return customerName;
     }
 
+    /**
+     * Sets the name of the project's customer.
+     * @param customerName {@code String} name of the project's customer.
+     */
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
 
+    /**
+     * Returns the email address of the project's customer.
+     * @return {@code String} email address of the project's customer.
+     */
     public String getCustomerEmail() {
         return customerEmail;
     }
 
+    /**
+     * Sets the email address of the project's customer.
+     * @param customerEmail {@code String} email address of the project's customer.
+     */
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
     }
 
+    /**
+     * Returns the phone number of the project's customer.
+     * @return {@code String} phone number of the project's customer.
+     */
     public String getCustomerPhoneNumber() {
         return customerPhoneNumber;
     }
 
+    /**
+     * Sets the phone number of the project's customer.
+     * @param customerPhoneNumber {@code String} of the project's customer.
+     */
     public void setCustomerPhoneNumber(String customerPhoneNumber) {
         this.customerPhoneNumber = customerPhoneNumber;
     }
 
+    /**
+     * Returns the project's address.
+     * @return {@code String} address of the project.
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Sets the project's address.
+     * @param address {@code String} address of the project.
+     */
     public void setAddress(String address) {
         this.address = address;
     }
 
+    /**
+     * Returns the start date of the project.
+     * @return {@code LocalDate} start date of the project.
+     */
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public LocalDate getEndDate() {
-        return this.endDate;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
+    /**
+     * Sets the start date of the project.
+     * @param date {@code LocalDate} start date of the project.
+     */
     public void setStartDate(LocalDate date) {
         this.startDate = date;
     }
 
-
-    public boolean isFinished() {
-        if (null != this.endDate) {
-            return LocalDate.now().isAfter(this.endDate);
-        } else {
-            return false;
-        }
+    /**
+     * Returns the end date of the project.
+     * @return {@code LocalDate} end date of the project.
+     */
+    public LocalDate getEndDate() {
+        return this.endDate;
     }
 
-    public void setFinished(boolean finished) {
-        if (finished) {
-            this.endDate = LocalDate.now();
-        } else {
-            this.endDate = null;
-        }
+    /**
+     * Returns the name of the project.
+     * @return {@code String} name of the project.
+     */
+    public String getName() {
+        return this.name;
     }
 
+    /**
+     * Sets the name of the project.
+     * @param name {@code String} name of the project.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the description of the project.
+     * @return {@code String} description of the project.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Returns a List of string arrays containing all information about the project,
+     *   including all it's tasks and their eventual comments.
+     * @return {@code List<String[]>} of all information about the project.
+     */
     public List<String[]> getProjectAsStringArrayList() {
         List<String> projectInfo = new ArrayList<>(Arrays.asList(this.getName(),this.customerName,
                 this.customerEmail, this.customerPhoneNumber, this.address,"" + this.getStartDate(),
@@ -185,5 +247,4 @@ public class Project {
 
         return project;
     }
-
 }
