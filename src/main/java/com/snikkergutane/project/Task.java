@@ -6,12 +6,10 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * Represents a task in the project, and has a start date, finish date and/or deadline.
+ * Represents a task in the project, and has a start date and end date.
  * It also contains a list of comments, and a list of imageURLs.
  */
 public class Task {
-
-    private int id;
     private String name;
     private String description;
     private LocalDate startDate;
@@ -19,14 +17,25 @@ public class Task {
     private final ArrayList<Image> images;
     private ArrayList<Comment> comments;
 
+    /**
+     * Creates a new instance of the class.
+     * @param name {@code String} name of the task.
+     */
     public Task(String name) {
         this.name = name;
         this.comments = new ArrayList<>();
         this.images = new ArrayList<>();
     }
 
-    public Task(String name, LocalDate startDate, LocalDate endDate, String description, List<String> imageUrls, int id) {
-        this.id = id;
+    /**
+     * Creates a new instance of the class.
+     * @param name {@code String} name of the task.
+     * @param startDate {@code LocalDate} start date of the task.
+     * @param endDate {@code LocalDate} end date of the task.
+     * @param description {@code String} description of the task.
+     * @param imageUrls {@code List<String>} urls of the task's images.
+     */
+    public Task(String name, LocalDate startDate, LocalDate endDate, String description, List<String> imageUrls) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -36,6 +45,10 @@ public class Task {
         imageUrls.forEach(url -> this.images.add(new Image(url)));
     }
 
+    /**
+     * Returns the task's comments.
+     * @return {@code List<Comment>} of the task's comments.
+     */
     public List<Comment> getComments() {
         return this.comments;
     }
@@ -54,6 +67,10 @@ public class Task {
         }
     }
 
+    /**
+     * Removes a comment from the task.
+     * @param comment {@code Comment} to be removed.
+     */
     public void removeComment(Comment comment) {
         boolean commentExists = false;
         Iterator<Comment> it = this.comments.iterator();
@@ -66,6 +83,10 @@ public class Task {
         }
     }
 
+    /**
+     * Returns a List of string arrays containing all information about the task, and its comments.
+     * @return {@code List<String[]>} of all information about the task and its comments.
+     */
     public List<String[]> getTaskAsStringArray() {
         List<String> taskInfo = new ArrayList<>(Arrays.asList("+" + this.name,"" + this.startDate,"" + this.endDate, this.description));
         this.images.forEach(image -> taskInfo.add(image.getUrl()));
@@ -77,31 +98,82 @@ public class Task {
         return taskAsStringArray;
     }
 
+    /**
+     * Returns the description of the task.
+     * @return {@code String} description of the task.
+     */
     public String getDescription() {
         return this.description;
     }
 
-    public LocalDate getEndDate() {
-        return this.endDate;
+    /**
+     * Sets the description of the task.
+     * @param description {@code String} description of the task.
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    /**
+     * Returns the task's start date.
+     * @return {@code LocalDate} start date of the task.
+     */
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    /**
+     * Sets the start date for the task.
+     * @param startDate {@code LocalDate} start date of the task.
+     */
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * Returns the task's end date.
+     * @return {@code LocalDate} end date of the task.
+     */
+    public LocalDate getEndDate() {
+        return this.endDate;
+    }
+
+    /**
+     * Sets the end date of the task.
+     * @param endDate {@code LocalDate} end date of the task.
+     */
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    /**
+     * Returns a list of this tasks images.
+     * @return {@code List<Image>} of the task's images.
+     */
     public List<Image> getImages() {
         return this.images;
     }
 
+    /**
+     * Returns the name of the task.
+     * @return {@code String} name of the task.
+     */
     public String getName() {
         return this.name;
     }
 
-    @Override
-    public String toString() {
-        return this.getName();
+    /**
+     * Sets the name of the task.
+     * @param name {@code String} name of the task.
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
+    /**
+     * Returns true if the task is past it's end date, or false if not.
+     * @return {@code true} if end date is before current day, or {@code false} if not.
+     */
     public boolean isFinished() {
         if (null != this.endDate) {
             return this.endDate.isBefore(LocalDate.now());
@@ -110,14 +182,10 @@ public class Task {
         }
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
+    /**
+     * Adds a new image from given url to the task's images if it doesn't already exist.
+     * @param url {@code String} url of the image that is to be added.
+     */
     public void addImage(String url) {
         boolean success = true;
         for (Image image : this.images) {
@@ -128,6 +196,15 @@ public class Task {
         if (success) {
             this.images.add(new Image(url));
         }
+    }
+
+    /**
+     * Sets the task's images.
+     * @param images {@code List<Image>} images of the task.
+     */
+    public void setImages(List<Image> images) {
+        this.images.clear();
+        this.images.addAll(images);
     }
 
     @Override
@@ -142,32 +219,19 @@ public class Task {
                 if (thisInfo[i].equals(objInfo[i])) {
                     similarity++;
                 }
-                System.out.println(objInfo[i]);
-                System.out.println(thisInfo[i]);
                 i++;
             }
         }
         double finalValue = 0;
         if (i != 0) {
-            System.out.println(similarity);
-            System.out.println(i);
             finalValue = (double) similarity / i;
-            System.out.println(finalValue);
 
         }
         return finalValue >= 0.8;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images.clear();
-        this.images.addAll(images);
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

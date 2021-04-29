@@ -244,7 +244,7 @@ public class TaskController {
                         newTaskStartDatePicker.getValue(),
                         newTaskEndDatePicker.getValue(),
                         newTaskDescriptionTextArea.getText(),
-                        imageUrls, 0);
+                        imageUrls);
             }
             if (mainController != null && !editMode) {
                 mainController.addTask(task);

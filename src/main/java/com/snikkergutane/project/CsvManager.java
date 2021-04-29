@@ -17,6 +17,9 @@ public class CsvManager {
     private File csvOutputFile;
     private String saveFileDirectory;
 
+    /**
+     * Creates a new instance of the class.
+     */
     public CsvManager() {
         //Intentionally empty
     }
@@ -95,8 +98,10 @@ public class CsvManager {
 
     /**
      * Parses a .csv file and returns it in a list format.
+     * @param file the file to be imported.
      * @return {@code List<List<String} of the content of the .csv file, returns an empty list if no file is chosen,
      *      and returns a List with one empty String if unable to parse file.
+     * @throws ArrayIndexOutOfBoundsException if file is of wrong format.
      */
     public Project importCsv(File file) throws ArrayIndexOutOfBoundsException {
         Project returnProject = null;
@@ -136,7 +141,7 @@ public class CsvManager {
                     }
 
                     //Creates the task
-                    Task task = new Task(name, startDate, endDate, description, imageUrls, project.getTasks().size()+1);
+                    Task task = new Task(name, startDate, endDate, description, imageUrls);
                     commentList.forEach(task::addComment);
                     commentList.clear();
                     project.addTask(task);
@@ -161,6 +166,12 @@ public class CsvManager {
         return returnProject;
     }
 
+    /**
+     * Parses all .csv files in given directory and returns them as a list of Projects.
+     * @param directory {@code File} directory to be imported.
+     * @return {@code ArrayList<Project>} of projects.
+     * @throws IOException if unable to read a file.
+     */
     public List<Project> importFolder(File directory) throws IOException {
         List<Project> projects = new ArrayList<>();
         Path dir = directory.toPath();

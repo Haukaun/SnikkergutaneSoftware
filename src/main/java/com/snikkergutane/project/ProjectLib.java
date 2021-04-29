@@ -20,32 +20,42 @@ public class ProjectLib {
     /**
      * Returns the project with given name.
      * @param name name of the project.
-     * @return {@code Project} the project with given name.
+     * @return {@code Project} the project with given name,
+     *    or {@code null} if no project with given name exists.
      */
     public Project getProject(String name) {
-        //TODO: Handle NullPointerExceptions.
-        return projects.get(name);
+        Project project;
+        try {
+            project = projects.get(name);
+        } catch (NullPointerException np) {
+            project = null;
+        }
+        return project;
     }
 
+    /**
+     * Returns a SorterMap of all projects.
+     * @return {@code SortedMap<String, Project>} of all projects.
+     */
     public SortedMap<String, Project> getProjects() {
         return this.projects;
     }
 
     /**
-     * Adds a project to the collection.
+     * Adds a project to the project map, if a project with the same name doesn't already exist in the map.
      * @param project the project to be added.
      */
     public void addProject(Project project) {
-        //TODO: Handle NullPointerExceptions.
-        this.projects.put(project.getName(),project);
+        if (null != project) {
+            this.projects.put(project.getName(), project);
+        }
     }
 
     /**
-     * Removes a project from the collection.
+     * Removes a given project from the project map, if it exists in the map.
      * @param name the name of the project to be removed.
      */
     public void removeProject(String name) {
-        //TODO: Handle NullPointerExceptions.
         projects.remove(name);
     }
 

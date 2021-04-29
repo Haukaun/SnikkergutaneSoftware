@@ -40,40 +40,26 @@ public class MainController {
     private final ProjectLib projectLib = new ProjectLib();
     private ObservableList<String> projectListWrapper;
 
-    @FXML
-    BorderPane mainPane;
-    @FXML
-    Label statusLabel;
-    @FXML
-    private HBox largeImageBackground;
-    @FXML
-    private ImageView largeImageView;
-    @FXML
-    private ListView<String> projectsListView;
-    @FXML
-    private ScrollPane projectInfoScrollPane;
-    @FXML
-    private GridPane taskListGridPane;
-    @FXML
-    private Label customerNameLabel;
-    @FXML
-    private Label projectAddressLabel;
-    @FXML
-    private Label customerPhoneNumberLabel;
-    @FXML
-    private Label customerEmailLabel;
-    @FXML
-    private Label projectStartDateLabel;
-    @FXML
-    private TextArea projectDescriptionTextArea;
-    @FXML
-    private TabPane projectTabPane;
-    @FXML
-    private Tab addTaskTab;
+    @FXML BorderPane mainPane;
+    @FXML Label statusLabel;
+    @FXML private HBox largeImageBackground;
+    @FXML private ImageView largeImageView;
+    @FXML private ListView<String> projectsListView;
+    @FXML private ScrollPane projectInfoScrollPane;
+    @FXML private GridPane taskListGridPane;
+    @FXML private Label customerNameLabel;
+    @FXML private Label projectAddressLabel;
+    @FXML private Label customerPhoneNumberLabel;
+    @FXML private Label customerEmailLabel;
+    @FXML private Label projectStartDateLabel;
+    @FXML private TextArea projectDescriptionTextArea;
+    @FXML private TabPane projectTabPane;
+    @FXML private Tab addTaskTab;
 
     /**
-     * loads the demo project on startup,
-     * and shows the projects in the project list.
+     * Displays the welcome tab,
+     * loads all projects in the project folder,
+     * and displays them in the project list.
      */
     @FXML
     private void initialize() {
@@ -86,6 +72,9 @@ public class MainController {
         loadProjectsFromDefaultDirectory();
     }
 
+    /**
+     * Adds a welcome tab and adds it to the tab pane.
+     */
     private void showWelcomeTab() {
         FXMLLoader welcomeLoader = new FXMLLoader(getClass().getResource("welcome.fxml"));
         try {
@@ -196,6 +185,10 @@ public class MainController {
         }
     }
 
+    /**
+     * Loads the task.fxml and sets it as the addTaskTab's content.
+     * @throws IOException
+     */
     @FXML
     private void addTaskTabSelected() throws IOException {
         if (this.addTaskTab.isSelected()) {
@@ -359,7 +352,7 @@ public class MainController {
             for (Path entry : stream) {
                 if (entry.endsWith(deleteString)) {
                     File file = entry.toFile();
-                    System.out.println(file.delete());
+                    file.delete();
                 }
             }
             stream.close();
@@ -382,7 +375,7 @@ public class MainController {
     /**
      * Switches back to the login screen.
      *
-     * @throws IOException
+     * @throws IOException if the login.fxml couldn't be loaded.
      */
     @FXML
     private void switchToLogin() throws IOException {
@@ -627,8 +620,9 @@ public class MainController {
         return commentSection;
     }
 
-
-
+    /**
+     * Creates a new tab where the user can edit the chosen task.
+     */
     private void editTaskButtonClicked() {
         try {
             Project project = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
@@ -887,7 +881,7 @@ public class MainController {
         if (success) {
             csvManager.setSaveFileDirectory(saveDirectory.getAbsolutePath());
             for (Project project : projectLib.getProjects().values()) {
-                System.out.println("File created:" + csvManager.createCsvFile(project.getName()));
+                csvManager.createCsvFile(project.getName());
                 csvManager.writeToCsv(project.getProjectAsStringArrayList());
             }
         }
