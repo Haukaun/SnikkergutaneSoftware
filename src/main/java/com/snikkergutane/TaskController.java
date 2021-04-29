@@ -21,7 +21,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Controller class for the task.fxml
+ * Controller class for the task.fxml.
  */
 public class TaskController {
     @FXML private BorderPane newTaskPane;
@@ -41,12 +41,19 @@ public class TaskController {
     private boolean editMode;
     private Task task;
 
+    /**
+     * Creates a new instace of the class.
+     */
     public TaskController() {
         mainController = null;
         editMode = false;
         task = null;
     }
 
+    /**
+     * Sets the Task that is to be handled by the controllers other methods.
+     * @param task {@code Task} the task to be set.
+     */
     public void setTask(Task task) {
         this.task = task;
     }
@@ -55,6 +62,10 @@ public class TaskController {
         this.mainController = mainController;
     }
 
+    /**
+     * Adds the .css file to the contents of the fxml, instantiates the validators for the text fields,
+     * and sets the controller's edit mode to true if no task has been set.
+     */
     @FXML
     private void initialize() {
         newTaskPane.getStylesheets().add(getClass()
@@ -145,6 +156,9 @@ public class TaskController {
         }
     }
 
+    /**
+     * Opens a file chooser and adds the chosen image files to the image display.
+     */
     @FXML
     private void addImageButtonClicked() {
         FileChooser fileChooser = new FileChooser();
@@ -159,6 +173,12 @@ public class TaskController {
         displayImages(imageList);
     }
 
+    /**
+     * Displays all the images in given list to the image display,
+     * as well as a transparent CheckBox in front of each image,
+     * to allow the user to select images.
+     * @param imageList {@code List<Image>} of the images to be added.
+     */
     private void displayImages(List<Image> imageList) {
         if (null != imageList) {
 
@@ -187,6 +207,9 @@ public class TaskController {
         }
     }
 
+    /**
+     * Removes the selected images from the image display.
+     */
     @FXML
     private void removeSelectedImagesButtonClicked() {
         //Creates a list containing the checked checkboxes in the imageDisplayGrid
@@ -211,6 +234,11 @@ public class TaskController {
         }
     }
 
+    /**
+     * If this class' edit mode is true - edits this class' task.
+     * If this class' edit mode is false - creates a new task from the information entered,
+     * adds it to the project selected in the project list, and shows it to the user.
+     */
     @FXML
     private void saveNewTaskButtonClicked() {
         if (newTaskNameTextField.getText().isBlank()) {
@@ -258,6 +286,10 @@ public class TaskController {
         }
     }
 
+    /**
+     * If this class' edit mode is true - calls for the mainController to remove the task from its project.
+     * If this class' edit mode is false - removes all text and images from the fields and image display.
+     */
     @FXML
     private void resetButtonClicked() {
         if (editMode && null != mainController) {
@@ -271,6 +303,10 @@ public class TaskController {
         }
     }
 
+    /**
+     * Sets the class to edit mode,
+     * and updates the text of the affected graphical elements to reflect this.
+     */
     public void useEditMode() {
         editMode = true;
         newTaskLabel.setText("Endre Oppgave");
