@@ -351,7 +351,7 @@
          <children>
             <ImageView fx:id="largeImageView" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@images/1.jpg" />
+                  <Image url="@icons/blank-image-icon.png" />
                </image>
                <effect>
                   <DropShadow />
