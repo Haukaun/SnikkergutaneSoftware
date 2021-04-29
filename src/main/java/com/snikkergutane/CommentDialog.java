@@ -52,9 +52,9 @@ public class CommentDialog extends Dialog<Comment>{
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
-        stage.setTitle("Comment");
+        stage.setTitle("Kommentar");
 
-        ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType okButtonType = new ButtonType("Lagre", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
         getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/SnikkergutaneLogo.png").toExternalForm()));
@@ -69,19 +69,19 @@ public class CommentDialog extends Dialog<Comment>{
 
         TextField user = new TextField();
         user.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        user.setPromptText("User");
+        user.setPromptText("Bruker");
 
         TextArea commentText = new TextArea();
         commentText.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        commentText.setPromptText("Comment text");
+        commentText.setPromptText("Kommentar felt");
 
         TextField imageURL = new TextField();
         imageURL.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        imageURL.setPromptText("Image URL");
+        imageURL.setPromptText("Bilde URL");
 
         HBox imageBox = new HBox();
         Button selectPictureButton = new Button("Rediger valgt kommentar");
-        selectPictureButton.setText("Select Picture");
+        selectPictureButton.setText("Velg Bilde");
         selectPictureButton.setOnAction(e -> imageURL.setText(choosePicture()));
         imageBox.getChildren().addAll(imageURL,selectPictureButton);
 
@@ -104,13 +104,13 @@ public class CommentDialog extends Dialog<Comment>{
 
         }
 
-        grid.add(new Label("User:"), 1, 0);
+        grid.add(new Label("Bruker:"), 1, 0);
         grid.add(user, 2, 0 );
 
-        grid.add(new Label("Comment Text:"), 1, 1);
+        grid.add(new Label("Kommentar felt:"), 1, 1);
         grid.add(commentText, 2, 1);
 
-        grid.add(new Label("Image URL:"), 1, 2);
+        grid.add(new Label("Bilde URL:"), 1, 2);
 
         grid.add(imageBox, 2,2) ;
 

@@ -475,22 +475,22 @@ public class MainController {
 
         //Define the columns
         //The Date column
-        TableColumn<Comment, LocalDate> dateTableColumn = new TableColumn<>("Date");
+        TableColumn<Comment, LocalDate> dateTableColumn = new TableColumn<>("Dato");
         dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateTableColumn.setMinWidth(75);
         dateTableColumn.setMaxWidth(100);
 
         //The User column
-        TableColumn<Comment, String> userNameColumn = new TableColumn<>("User");
+        TableColumn<Comment, String> userNameColumn = new TableColumn<>("Bruker");
         userNameColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
         userNameColumn.setMinWidth(100);
         userNameColumn.setMaxWidth(500);
 
         //The Comment column
-        TableColumn<Comment, String> commentColumn = new TableColumn<>("Comment");
+        TableColumn<Comment, String> commentColumn = new TableColumn<>("Kommentar");
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("commentText"));
 
-        TableColumn<Comment, Image> imageColumn = new TableColumn<>("Image");
+        TableColumn<Comment, Image> imageColumn = new TableColumn<>("Bilde");
         imageColumn.setMinWidth(50);
         imageColumn.setMaxWidth(500);
         imageColumn.setCellFactory(param -> {
@@ -735,10 +735,10 @@ public class MainController {
 
     private void showPleaseSelectItemDialog() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Information");
-        alert.setHeaderText("No item selected");
-        alert.setContentText("No item selected.\n"
-                + "Please select an item from the table.");
+        alert.setTitle("Informasjon");
+        alert.setHeaderText("Ingen fil valgt");
+        alert.setContentText("Ingen fil valgt.\n"
+                + "Prøv å velg en fil først.");
 
         alert.showAndWait();
     }
@@ -747,9 +747,9 @@ public class MainController {
         boolean deleteConfirmed = false;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete confirmation");
-        alert.setHeaderText("Delete confirmation");
-        alert.setContentText("Are you sure you want to delete this item?");
+        alert.setTitle("Slette bekreftelse");
+        alert.setHeaderText("Slette bekreftelse");
+        alert.setContentText("Er du sikker at du vil slette denne her?");
 
         Optional<ButtonType> result = alert.showAndWait();
 
