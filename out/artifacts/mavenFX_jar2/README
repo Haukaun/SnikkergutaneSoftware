@@ -1,6 +1,22 @@
-InstallasjonsGuide:
+Snikkergutanesoftware, a project-manager application developed for the System Development class at NTNU,
+and the carpenter company Snikkergutane.
 
-1. Last ned Komprimert mappe.
-2. Opprett en mappe med ett brukendes navn og pakk ut filene i den mappen
-3. I mappe vil du finne meg(README) og en jar fil som er selveprogrammet.
-4. Dobbelklikk på programmet, login og du er klar til å ta i bruk SnikkerGutane Software.
+Developers:
+Espen Otlo
+Håkon Fladmark Sætre
+Qiaoduo Shi
+Fransisco Glomset
+Yasmine Celine Vinding
+Sindre Skorpen
+
+Getting started:
+1. Download the compressed folder from our repository on Gitlab: https://gitlab.com/vinnergruppa/snikkergutanesoftware
+2. Use 7zip or a similar program to extract the folder to an empty folder on your hard drive.
+3. Run the extracted jar-file to run the software.
+4. You will not need to fill in your log in information to start the software at this point, so just press the login. Button
+
+Using the application:
+Press the plus icon in the bottom left corner to start documenting a new project.
+Fill in the required information to start tracking your workflow.
+
+You can alternatively use the File menu in the top right corner to import an existing file or folder.
