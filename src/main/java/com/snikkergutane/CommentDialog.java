@@ -5,7 +5,6 @@ import com.snikkergutane.project.Project;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.ImageInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -68,13 +67,13 @@ public class CommentDialog extends Dialog<Comment>{
     private void showContent(){
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/logoSG .png").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-small.png").toExternalForm()));
         stage.setTitle("Kommentar");
 
         ButtonType okButtonType = new ButtonType("Lagre", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
-        getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/SnikkergutaneLogo.png").toExternalForm()));
+        getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/snikkergutane-logo-big.png").toExternalForm()));
         getDialogPane().setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
         //Adds the grid pane to the UI
