@@ -36,6 +36,7 @@ public class MainController {
     private CsvManager csvManager;
     private final ProjectLib projectLib = new ProjectLib();
     private ObservableList<String> projectListWrapper;
+
     @FXML
     BorderPane mainPane;
     @FXML
@@ -275,6 +276,7 @@ public class MainController {
      */
     @FXML
     private void exportProjectsButtonClicked() {
+        this.csvManager = new CsvManager();
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Velg plassering for fillagring");
         File saveDirectory = directoryChooser.showDialog(this.statusLabel.getScene().getWindow());
@@ -693,15 +695,21 @@ public class MainController {
     }
 
     private void editProject(Project project) {
+        String oldProject = project.getName();
         ProjectDialog projectDialog = new ProjectDialog(project, true);
-
-
         Optional<Project> result = projectDialog.showAndWait();
-        if (result.isPresent()) {
-            projectLib.addProject(result.get());
-        }
-        updateProjectListWrapper();
 
+        if(result.isPresent()){
+            this.projectLib.removeProject(oldProject);
+            this.projectLib.addProject(result.get());
+            updateProjectListWrapper();
+            projectsListView.getItems().forEach(item -> {
+                if (item.equals(result.get().getName())){
+                    projectsListView.getSelectionModel().select(item);
+                }
+            });
+            projectSelected();
+        }
     }
 
     @FXML
