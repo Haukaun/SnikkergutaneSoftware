@@ -250,7 +250,7 @@ public class TaskController {
                 mainController.addTask(task);
             }
             else if (mainController != null) {
-                mainController.editTask(task);
+                mainController.viewTask(task);
             }
         }
     }

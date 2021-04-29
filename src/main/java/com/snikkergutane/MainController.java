@@ -536,7 +536,6 @@ public class MainController {
         });
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
 
-
         TableView<Comment> commentsTableView = new TableView<>();
         commentsTableView.getColumns().addAll(dateTableColumn, userNameColumn, commentColumn, imageColumn);
         commentsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -591,16 +590,18 @@ public class MainController {
         commentButtonRegion.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         HBox.setHgrow(commentButtonRegion, Priority.ALWAYS);
 
+        //Create icon for the edit task button
         ImageView editTaskImageView = new ImageView("/com/snikkergutane/icons/gear-icon.png");
         editTaskImageView.setFitWidth(20);
         editTaskImageView.setFitHeight(20);
 
+        //Create edit task button
         Button editTaskButton = new Button("Endre/Fjern oppgave");
         editTaskButton.setGraphic(editTaskImageView);
 
         editTaskButton.setOnAction(e -> editTaskButtonClicked());
 
-
+        //Create HBox to hold the buttons
         HBox commentButtonsHBox = new HBox();
         commentButtonsHBox.setSpacing(10);
 
@@ -610,6 +611,7 @@ public class MainController {
         Label commentSectionLabel = new Label("Kommentarer:");
         commentSectionLabel.setFont(new Font("System Bold", 12.0));
 
+        //Create the final VBox to hold all components of the comment section
         VBox commentSection = new VBox();
         commentSection.setPadding(new Insets(25, 0, 40, 0));
 
@@ -625,9 +627,11 @@ public class MainController {
      */
     private void editTaskButtonClicked() {
         try {
+            //Get the task that will be edited
             Project project = projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem());
             Task task = project.getTask(projectTabPane.getSelectionModel().getSelectedItem().getText());
 
+            //Load the task edit pane
             FXMLLoader taskLoader = new FXMLLoader(getClass().getResource("task.fxml"));
             Parent root = taskLoader.load();
             TaskController taskController = taskLoader.getController();
@@ -635,7 +639,7 @@ public class MainController {
             taskController.setMainController(this);
             taskController.useEditMode();
 
-
+            //Create icon for the edit pane
             ImageView icon = new ImageView(getClass().getResource("icons/gear-icon.png").toExternalForm());
             icon.setFitHeight(15);
             icon.setFitWidth(15);
@@ -643,6 +647,7 @@ public class MainController {
             Tab editTab = new Tab("Endre Oppgave", root);
             editTab.setGraphic(icon);
 
+            //Add the edit tab to the tab pane and views it to the user
             projectTabPane.getTabs().add(editTab);
             projectTabPane.getSelectionModel().selectLast();
 
@@ -653,48 +658,40 @@ public class MainController {
 
     /**
      * Removes the selected comment. Checks if comment is null and produces an Confirmation Dialog.
-     * @param task Removes Selected Comment
-     * @param commentsTableview Comment you want to Remove.
+     * @param task {@code Task} the task that holds the comment that is to be removed.
+     * @param commentsTableview {@code TableView<Comment>} the tableview holding the comment to be removed.
      */
-    private void removeSelectedCommentButtonClicked(Task task, TableView commentsTableview) {
-        Comment commentSelected = (Comment) commentsTableview.getSelectionModel().getSelectedItem();
-        if (commentSelected == null) {
+    private void removeSelectedCommentButtonClicked(Task task, TableView<Comment> commentsTableview) {
+        Comment selectedComment = commentsTableview.getSelectionModel().getSelectedItem();
+        if (selectedComment == null) {
             showPleaseSelectItemDialog();
         } else {
-            if (showDeleteConfirmationDialog()) {
-                task.removeComment(commentSelected);
+            if (showDeleteConfirmationDialog(selectedComment)) {
+                task.removeComment(selectedComment);
             }
-
         }
     }
 
     /**
      * Opens Dialog if Comment is selected and checks for user to do some interaction with button.
-     * @param task Adds Comment task
-     * @param commentsTableView Comment you want to Edit.
+     * @param task {@code Task} holding the comment that is to be edited.
+     * @param commentsTableView {@code TableView<Comment>} the tableview holding the comment to be edited.
      */
-    private void editSelectedCommentButtonClicked(Task task, TableView commentsTableView) {
-        Comment comment = (Comment) commentsTableView.getSelectionModel().getSelectedItem();
+    private void editSelectedCommentButtonClicked(Task task, TableView<Comment> commentsTableView) {
+        Comment comment = commentsTableView.getSelectionModel().getSelectedItem();
         if (comment == null) {
             showPleaseSelectItemDialog();
         } else {
 
             CommentDialog commentDialog = new CommentDialog(comment, true);
             Optional<Comment> result = commentDialog.showAndWait();
-            if (result.isPresent()) {
-                task.addComment(result.get());
-
-            }
-
-
+            result.ifPresent(task::addComment);
         }
-
-
     }
 
     /**
-     * Opens Dialog and adds Comment true interactions from user.
-     * @param task
+     * Shows a dialog where the user can create a new comment, and add it to given task.
+     * @param task {@code Task} where the comment will be created.
      */
     @FXML
     private void addCommentButtonClicked(Task task) {
@@ -729,11 +726,25 @@ public class MainController {
     }
 
     /**
-     * Creates projectDialog, waits for users actions on Button clicks
-     * and give you dialog filled with existing values.
-     * When saved it removes existing project and adds a new one.
-     *
-     * @param project {@code Project} Grabs ProjectsName For Editing.
+     * If a project is selected in the project list - opens a dialog where the user can edit the chosen project.
+     * If no project is selected - displays a warning dialog asking the user to first select a project from the list.
+     */
+    @FXML
+    private void editProjectButtonClicked() {
+        try{
+            Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
+            if(project != null){
+                editProject(project);
+            }
+        } catch (NullPointerException np) {
+            statusLabel.setText("Error: choose a project from the list");
+            showPleaseSelectItemDialog();
+        }
+    }
+
+    /**
+     * Opens a dialog where the user can edit the given project.
+     * @param project {@code Project} to be edited.
      */
     private void editProject(Project project) {
         String oldProject = project.getName();
@@ -754,27 +765,8 @@ public class MainController {
     }
 
     /**
-     * Makes Project Object of selected item in listView.
-     * if project is null it return an dialog and label that says you have to choose an Object.
-     */
-    @FXML
-    private void editProjectButtonClicked() {
-        try{
-            Project project = this.projectLib.getProject(this.projectsListView.getSelectionModel().getSelectedItem());
-            if(project != null){
-                editProject(project);
-            }
-        } catch (NullPointerException np) {
-            statusLabel.setText("Error: choose a project from the list");
-            showPleaseSelectItemDialog();
-        }
-
-    }
-
-
-    /**
-     * Adds Task, and Updates All of the existing tasks.
-     * @param task
+     * Adds given task to the selected project, and views it to the user.
+     * @param task {@code Task} to be added.
      */
     public void addTask(Task task) {
         projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).addTask(task);
@@ -783,10 +775,10 @@ public class MainController {
     }
 
     /**
-     * Selects the newly added tab.
-     * @param task
+     * Updates the project view, and displays the given task to the user.
+     * @param task {@code Task} to be viewed.
      */
-    public void editTask(Task task) {
+    public void viewTask(Task task) {
         projectSelected();
         projectTabPane.getTabs().forEach(tab -> {
             if (tab.getText().equals(task.getName())) {
@@ -796,40 +788,38 @@ public class MainController {
     }
 
     /**
-     *Revomes selected task.
-     * @param task
+     * Removes given task from the project selected in the project list view.
+     * @param task {@code Task} to be removed.
      */
     public void removeTask(Task task) {
         projectLib.getProject(projectsListView.getSelectionModel().getSelectedItem()).removeTask(task.getName());
         projectSelected();
     }
 
-
     /**
-     * Creates AlertBox with Type Warning.
+     * Displays a warning dialog asking the user to select a comment from the comment table.
      */
     private void showPleaseSelectItemDialog() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Informasjon");
-        alert.setHeaderText("Ingen fil valgt");
-        alert.setContentText("Ingen fil valgt.\n"
-                + "Prøv å velg en fil først.");
+        alert.setHeaderText("Ingen kommentar valgt");
+        alert.setContentText("Ingen kommentar valgt.\n"
+                + "Vennligst velg en kommentar først.");
 
         alert.showAndWait();
     }
 
-
     /**
      * Creates AlertBox with type Confirmation, and checks if user pressed buttons.
-     * @return
+     * @return {@true} if confirmed, or {@code false} if not.
      */
-    private boolean showDeleteConfirmationDialog() {
+    private boolean showDeleteConfirmationDialog(Comment comment) {
         boolean deleteConfirmed = false;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Slette bekreftelse");
-        alert.setHeaderText("Slette bekreftelse");
-        alert.setContentText("Er du sikker at du vil slette denne her?");
+        alert.setTitle("Bekreft fjerning");
+        alert.setHeaderText("Bekreft fjerning");
+        alert.setContentText("Er du sikker at du vil fjerne kommentaren av " + comment.getUser() + ", " + comment.getDate() + "?");
 
         Optional<ButtonType> result = alert.showAndWait();
 
