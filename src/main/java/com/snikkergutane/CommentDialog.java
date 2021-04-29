@@ -21,12 +21,20 @@ public class CommentDialog extends Dialog<Comment>{
 
     private final CommentDialog.Mode mode;
 
+    /**
+     * Creates an instance of the CommentDialog
+     */
     public CommentDialog() {
         super();
         this.mode = CommentDialog.Mode.NEW;
         showContent();
     }
 
+    /**
+     * The mode of the Dialog. If the dialog is open to edit on existing
+     * comment, the made is set to <code>Mode.EDIT</code>. If the dialog is
+     * opened to create a new comment, the <code>Mode.NEW</code> is used
+     */
     public enum Mode{
         NEW, EDIT, INFO
     }
@@ -34,7 +42,13 @@ public class CommentDialog extends Dialog<Comment>{
 
     private Comment existingComment = null;
 
-
+    /**
+     * Creates an instance of the CommentDialog
+     * @param comment the comment instance to edit
+     * @param editable if set to <code>true</code>, the dialog will enable
+     *                 editing of the fields in the dialog. if <code>false</code>
+     *                 the information will be displayed in non-editable fields.
+     */
     public CommentDialog (Comment comment, boolean editable){
         super();
 
@@ -48,6 +62,9 @@ public class CommentDialog extends Dialog<Comment>{
         showContent();
     }
 
+    /**
+     * Creates the content of the dialog
+     */
     private void showContent(){
 
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
@@ -60,13 +77,13 @@ public class CommentDialog extends Dialog<Comment>{
         getDialogPane().setGraphic(new ImageView(getClass().getResource("/com/snikkergutane/images/SnikkergutaneLogo.png").toExternalForm()));
         getDialogPane().setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
-
+        //Adds the grid pane to the UI
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10, 50, 10, 10));
 
-
+        //Creates text fields for the dialog
         TextField user = new TextField();
         user.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         user.setPromptText("Bruker");
@@ -79,6 +96,7 @@ public class CommentDialog extends Dialog<Comment>{
         imageURL.setBorder(new Border(new BorderStroke(Color.LIGHTBLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         imageURL.setPromptText("Bilde URL");
 
+        //Creates the Image button for the dialog
         HBox imageBox = new HBox();
         Button selectPictureButton = new Button("Rediger valgt kommentar");
         selectPictureButton.setText("Velg Bilde");
@@ -104,6 +122,7 @@ public class CommentDialog extends Dialog<Comment>{
 
         }
 
+        // Adds the text fields and image button
         grid.add(new Label("Bruker:"), 1, 0);
         grid.add(user, 2, 0 );
 
@@ -121,7 +140,7 @@ public class CommentDialog extends Dialog<Comment>{
         getDialogPane().setContent(grid);
 
 
-
+        //Sets the user input
         setResultConverter(
                 (ButtonType button) -> {
                     Comment result = null;
@@ -144,6 +163,11 @@ public class CommentDialog extends Dialog<Comment>{
 
     }
 
+    /**
+     * This button opens a file chooser in order to choose image.
+     * This will open file explorer and let the user choose a picture to add to the comment
+     * @return returns the imageURL as a String to the text field.
+     */
     private String choosePicture(){
         String result = null;
         FileChooser fileChooser = new FileChooser();
